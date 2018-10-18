@@ -1,0 +1,377 @@
+<% content_for :title do %>Server <%= server.to_s %><% end %>
+
+<% content_for :header do %>
+    Server Details
+
+    <div class="header-controls">
+        <span id="state"><%= server.render_state %></span>
+        <% if server.active? %>
+            <span id="power_state"><small><i class="icon-cog icon-spin"></i></small></span>
+        <% end %>
+    </div>
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Servers', [:admin, @account, :solus, :servers] %></li>
+    <li><%= link_to server.to_s, [:admin, @account, :solus, @server] %></li>
+<% end %>
+
+<% if server.pending_suspension? %>
+    <div class="alert alert-danger">This server is past-due and will be suspended on <%= server.suspend_on %>.</div>
+<% end %>
+
+<% if server.pending_termination? %>
+    <div class="alert alert-danger">This server is past-due and will be terminated on <%= server.terminate_on %>.</div>
+<% end %>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav" id="power_controls">
+            <% if current_power.updatable_admin_account_solus_server?(account, server) %>
+                <li>
+                    <%= link_to [:edit, :admin, @account, :solus, @server] do %>
+                        <i class="fa fa-pencil"></i> Edit
+                    <% end %>
+                </li>
+            <% end %>
+
+            <% if server.pending_completion? %>
+                <li>
+                    <%= link_to [:admin, @account, :solus, @server, :consoles], id: 'server_console', data: { popup: true, popup_width: server.console_popup_dimensions[:width], popup_height: server.console_popup_dimensions[:height] } do %>
+                        <i class="fa fa-terminal"></i> Console
+                    <% end %>
+                </li>
+            <% end %>
+
+            <% if server.suspended? %>
+                <li>
+                    <%= link_to [:admin, @account, :solus, @server, :unsuspensions], id: 'server_suspend' do %>
+                        <i class="fa fa-play"></i> Unsuspend
+                    <% end %>
+                </li>
+                <li>
+                    <%= link_to [:admin, @account, :solus, @server, :terminations], id: 'server_terminate' do %>
+                        <i class="fa fa-times"></i> Terminate
+                    <% end %>
+                </li>
+            <% end %>
+        </ul>
+    </div>
+</nav>
+
+<% if server.provisioning? %>
+    <div class="progress active">
+        <div class="progress-bar" id="provision_progress"></div>
+    </div>
+    <p class="text-center">
+        <span id="provision_status">Loading...</span> <span id="provision_countdown"></span>
+    </p>
+<% end %>
+
+<div class="row gutter30">
+    <div class="<%= server.active? ? 'col-md-8' : 'col-md-12' %>">
+        <div class="block">
+            <div class="block-title">
+                <h2>System Info</h2>
+            </div>
+
+            <%= display_for server do |d| %>
+                <%= d.display :hostname %>
+
+                <%= d.display :plan_name %>
+
+                <%= d.display :render_ram %>
+                <%= d.display :render_disk %>
+
+                <%= d.display :render_amount %>
+                <% if server.coupon.present? %>
+                    <%= d.display :render_coupon_code %>
+                <% end %>
+
+                <% if server.active? %>
+                    <%= d.display :render_prorated_amount, label: 'Remaining Pre-Paid Time' %>
+                    <%= d.display :next_due %>
+                <% end %>
+
+                <%= d.display :render_managed %>
+
+                <% if server.active? %>
+                    <%= d.display :render_enable_smtp %>
+                <% end %>
+
+                <%= d.display :cluster_name %>
+                <%= d.display :render_node_name %>
+                <%= d.display :xen_id %>
+                <%= d.display :template_name %>
+
+                <% if server.provisioning? %>
+                    <%= d.display :render_install_time %>
+                <% end %>
+
+                <% if server.active? %>
+                    <%= d.display :render_root_username %>
+                    <%= d.display :root_password do %>
+                        <span id="root_password"><%= link_to "Show Password", [:admin, @account, :solus, @server, :root_passwords], id: 'show_password', remote: true %></span>
+                    <% end %>
+
+                    <%= d.display :render_patch_at %>
+
+                    <% if server.is_cpanel? %>
+                        <%= d.display :render_whm_url %>
+                    <% end %>
+
+                    <% if server.backup_user.present? %>
+                        <%= d.display :backup_user %>
+                    <% end %>
+                <% end %>
+
+                <% if server.suspended? %>
+                    <%= d.display :render_suspension_reason %>
+                <% end %>
+
+                <% if server.terminated? %>
+                    <%= d.display :render_termination_reason %>
+                <% end %>
+            <% end %>
+        </div>
+
+        <% if server.active? %>
+            <div class="block full">
+                <div class="block-title"><h2>Transfer</h2></div>
+                <div class="text-center transfer-graph">
+                    <%= image_tag url_for([:admin, @account, :solus, @server, :transfer_graphs, t: Time.zone.now.to_i]), id: 'transfer_graph', onerror: 'this.style.display = "none"' %>
+                </div>
+
+                <div class="progress progress-striped">
+                    <div class="progress-bar <%= server.transfer_class %>" style="width: <%= server.used_transfer_percentage %>%"></div>
+                </div>
+                <div class="text-center">
+                    <%= server.render_used_transfer %> / <%= server.render_transfer %>
+                </div>
+            </div>
+        <% end %>
+    </div>
+
+    <% if server.active? %>
+        <div class="col-md-4">
+            <div class="block full">
+                <div class="block-title"><h2>IP Addresses</h2></div>
+                <div id="ip_addresses">
+                    <div class="text-center"><i class="fa fa-gear fa-spin fa-4x"></i></div>
+                </div>
+            </div>
+        </div>
+    <% end %>
+</div>
+
+<% if server.active? && server.has_checks? %>
+    <div class="block">
+        <div class="block-title">
+            <h2>Monitoring</h2>
+            <div class="block-options pull-right">
+                <%= link_to [:new, :admin, @account, :solus, @server, :check], class: 'btn btn-sm btn-primary' do %>
+                    <i class="fa fa-check"></i> New Check
+                <% end %>
+            </div>
+        </div>
+
+        <table id="checks" class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th class="col-md-1">#</th>
+                <th class="col-md-1">Active</th>
+                <th class="col-md-1">Result</th>
+                <th>Check</th>
+                <th>Last Run At</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+<% end %>
+
+<% if server.visit.present? %>
+    <div class="block">
+        <div class="block-title"><h2>Analytics</h2></div>
+
+        <%= display_for server.visit do |d| %>
+            <%= d.display :landing_page %>
+            <%= d.display :referrer %>
+            <%= d.display :referring_domain %>
+            <%= d.display :search_keyword %>
+            <%= d.display :utm_medium %>
+            <%= d.display :utm_campaign %>
+            <%= d.display :utm_source %>
+        <% end %>
+    </div>
+<% end %>
+
+<div class="block">
+    <div class="block-title"><h2>Event Log</h2></div>
+
+    <table id="events" class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Category</th>
+            <th class="hidden-xs">User</th>
+            <th>Message</th>
+            <th class="hidden-xs">IP Address</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% server.events.each do |event| %>
+            <tr>
+                <td><%= event.to_param %></td>
+                <td><%= event.render_category %></td>
+                <td class="hidden-xs"><%= event.link_user_name :admin %></td>
+                <td><%= event.render_message %></td>
+                <td class="hidden-xs"><%= event.render_ip_address %></td>
+                <td><%= event.render_created_at %></td>
+            </tr>
+        <% end %>
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="ip-addresses-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Reverse DNS</h4>
+            </div>
+            <div class="modal-body remove-margin block" id="ip-addresses-modal-content">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="muzzle-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content" id="muzzle-modal-content">
+
+        </div>
+    </div>
+</div>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#events').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[5, "desc"]],
+                "aoColumns": [
+                    null,
+                    null,
+                    {"sType": "raw-string"},
+                    null,
+                    {"sType": "ip-address"},
+                    {"sType": "raw-numeric"},
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+
+    <% if server.active? %>
+        <script type="text/javascript">
+            $(function() {
+                function updateStatus() {
+                    $.ajax({
+                        type: "GET",
+                        url: "<%= url_for [:admin, @account, :solus, @server, :statuses] %>"
+                    });
+
+                    d = new Date();
+                    $("#transfer_graph").attr("src", "<%= escape_javascript url_for([:admin, @account, :solus, @server, :transfer_graphs]) %>?t=" + d.getTime());
+                }
+                updateStatus();
+                setInterval(updateStatus, 30000);
+            });
+        </script>
+
+        <% if server.has_checks? %>
+            <script type="text/javascript">
+                $(function() {
+                    webApp.datatables();
+
+                    $('#checks').dataTable({
+                        "sAjaxSource": "<%= escape_javascript url_for([:admin, @account, :solus, @server, :checks, { format: :json }]) %>",
+                        "bDestroy": true,
+                        "bServerSide": true,
+                        "aaSorting": [[3, "asc"]],
+                        "aoColumns": [
+                            {"mDataProp": "long_id"},
+                            {"mDataProp": "active", "bSortable": false, "sClass": "text-center"},
+                            {"mDataProp": "status_code", "sClass": "text-center"},
+                            {"mDataProp": "test_to_s"},
+                            {"mDataProp": "last_run_at"},
+                        ],
+                        "fnCreatedRow": function ( row, data, index ) {
+                            $('td', row).addClass(data["row_class"]);
+                        }
+                    });
+
+                    $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+                    $('.dataTables_length select').addClass('form-control');
+                });
+            </script>
+        <% end %>
+    <% end %>
+
+    <% if server.pending_completion? %>
+        <script type="text/javascript">
+            $('a[data-popup]').click(function(e) {
+                window.open($(this).attr('href'), "console_<%= server.long_id %>", "toolbar=no, scrollbars=yes, resizable=yes, width="+$(this).data('popup-width')+", height="+$(this).data('popup-height'));
+                e.preventDefault();
+            });
+        </script>
+    <% end %>
+
+    <% if server.provisioning? %>
+        <script type="text/javascript">
+            Provisioner = {}
+            Provisioner.duration = <%= (server.install_time) * 1000 %>;
+
+            function updatePercentage() {
+                var now = new Date();
+                var timeDiff = now.getTime() - Provisioner.start.getTime();
+                var percent = 10 + (timeDiff / Provisioner.duration * 90);
+
+                if(percent >= 100) {
+                    percent = 100;
+                    $("#provision_countdown").text("Taking a bit longer than expected...")
+                } else {
+                    var seconds = Math.round((Provisioner.duration - timeDiff) / 1000);
+                    $("#provision_countdown").text(webApp.formatDuration(seconds) + " remaining.");
+                }
+
+                $("#provision_progress").css("width", percent + "%");
+            }
+
+            function startProgress(start) {
+                if(!Provisioner.redraw) {
+                    Provisioner.start = start;
+                    Provisioner.redraw = setInterval(updatePercentage, 100);
+                }
+            }
+
+            function updateState() {
+                $.ajax({
+                    type: "GET",
+                    url: "<%= url_for [:admin, @account, :solus, @server, :provision_progresses] %>"
+                });
+            }
+            updateState();
+            Provisioner.refresh = setInterval(updateState, 2000);
+        </script>
+    <% end %>
+<% end %>

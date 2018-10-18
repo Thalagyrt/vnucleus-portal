@@ -1,0 +1,286 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+en:
+  account:
+    event:
+      category:
+        access: 'Access'
+        automation: 'Automation'
+        billing: 'Billing'
+        event: 'Event'
+        security: 'Security'
+      message:
+        account_activated: 'Account activated.'
+        account_rejected: 'Account rejected.'
+        credit_card_expiration_notice: 'Credit card expiration notice sent.'
+        credit_card_removed: 'Credit card removed.'
+        credit_card_updated: 'Credit card updated.'
+        invite_claimed: 'Account invitation claimed.'
+        invite_disabled: 'Account invitation disabled.'
+        invite_sent: 'Account invitation sent.'
+        license_billed: 'License billed.'
+        mailbox_approved: 'Mailbox approved.'
+        mailbox_billed: 'Mailbox billed.'
+        mailbox_confirmed: 'Mailbox confirmed.'
+        mailbox_password_reset: 'Mailbox password reset.'
+        mailbox_provisioned: 'Mailbox provisioned.'
+        mailbox_suspended: 'Mailbox suspended.'
+        mailbox_termination_requested: 'Mailbox queued for termination.'
+        mailbox_unsuspended: 'Mailbox unsuspended.'
+        mailbox_updated: 'Mailbox updated.'
+        new_credit_card_found: 'Credit card updated.'
+        payment_failed: 'Payment failed.'
+        payment_received: 'Payment received.'
+        root_password_viewed: 'Root password viewed.'
+        server_billed: 'Server billed.'
+        server_booted: 'Server booted.'
+        server_confirmed: 'Order submitted.'
+        server_console_evicted: 'Active console session evicted.'
+        server_console_opened: 'Console session opened.'
+        server_details_updated: 'Server details updated.'
+        server_installed: 'Server install completed.'
+        server_patched: 'Server patched.'
+        server_provisioned: 'Server provisioned.'
+        server_rebooted: 'Server rebooted.'
+        server_reinstall_requested: 'Server queued for reinstall.'
+        server_shut_down: 'Server shut down.'
+        server_suspended: 'Server suspended.'
+        server_terminated: 'Server terminated.'
+        server_termination_requested: 'Server queued for termination.'
+        server_unsuspended: 'Server unsuspended.'
+        transfer_notification_sent: 'Transfer usage warning notification sent.'
+      system: 'System'
+  activemodel:
+    attributes:
+      accounts/statement:
+        ending_balance: 'Ending Balance'
+        total_credits: 'Total Credits'
+        total_debits: 'Total Debits'
+        net_change: 'Net Change'
+        starting_balance: 'Starting Balance'
+      admin/dashboard:
+        available_disk: 'Available Disk'
+        available_ipv4: 'Available IPv4'
+        available_ipv6: 'Available IPv6'
+        available_ram: 'Available RAM'
+        current_dedicated_servers: 'Current Dedicated Servers'
+        current_email_mailboxes: 'Current Mailboxes'
+        current_solus_servers: 'Current Virtual Servers'
+        disk_utilization: 'Disk Utilization'
+        fees_this_year: 'Fees This Year'
+        income_this_year: 'Income This Year'
+        monthly_rate: 'Monthly Rate'
+        ram_utilization: 'RAM Utilization'
+  activerecord:
+    attributes:
+      accounts/account:
+        monthly_rate: 'Monthly Rate'
+        open_tickets_count: 'Open Tickets'
+        referral_count: 'Referred Accounts'
+        referral_income: 'Referral Income'
+        server_count: 'Total Servers'
+        tickets_awaiting_client_action_count: 'Tickets Pending Action'
+        tickets_awaiting_staff_action_count: 'Tickets Pending Action'
+        total_disk: 'Total Disk'
+        total_income: 'Total Income'
+        total_ram: 'Total RAM'
+      ahoy/visit:
+        device_type: 'Device Type'
+        ip: 'IP Address'
+        landing_page: 'Landing Page'
+        os: 'Operating System'
+        referring_domain: 'Referring Domain'
+        search_keyword: 'Search Keyword'
+        utm_medium: 'UTM Medium'
+        utm_campaign: 'UTM Campaign'
+        utm_source: 'UTM Source'
+      email/domain:
+        domain_name: 'Domain Name'
+        mx_records_valid?: 'MX Records'
+        spf_record_valid?: 'SPF Record'
+        srv_record_valid?: "Autodiscover Record"
+        webmail_uri: 'Webmail URI'
+      email/mailbox:
+        alias: 'Email Alias'
+        email: 'Email Address'
+        amount: 'Monthly Rate'
+        display_name: 'Display Name'
+        first_name: 'First Name'
+        initial_password: 'Initial Password'
+        last_name: 'Last Name'
+        next_due: 'Next Due'
+        suspension_reason: 'Suspension Reason'
+        termination_reason: 'Termination Reason'
+        webmail_uri: 'Webmail URI'
+      dedicated/server:
+        amount: 'Monthly Rate'
+        ip_address: 'IP Address'
+        next_due: 'Next Due'
+        patch_at: 'Patch At'
+        root_password: 'Admin Password'
+        root_username: 'Admin Username'
+        suspension_reason: 'Suspension Reason'
+        termination_reason: 'Termination Reason'
+      monitoring/check:
+        disable_reason: 'Disable Reason'
+        failure_count: 'Failure Count'
+        notify_account: 'Notify Account Members'
+        notify_after_failures: 'Notify After Failures'
+        notify_staff: 'Notify vNucleus Staff'
+        test_to_s: 'Check Information'
+        last_run_at: 'Last Run At'
+      solus/cluster:
+        available_disk: 'Available Disk'
+        available_ipv4: 'Available IPv4'
+        available_ipv6: 'Available IPv6'
+        available_ram: 'Available RAM'
+        disk_limit: 'Total Disk'
+        disk_utilization: 'Disk Utilization'
+        hostname_link: 'Hostname'
+        ram_limit: 'Total RAM'
+        ram_utilization: 'RAM Utilization'
+        synchronized_at: 'Last Synchronization'
+      solus/server:
+        amount: 'Monthly Rate'
+        backup_user: 'Backup User'
+        cluster_name: 'Datacenter'
+        coupon_code: 'Coupon Code'
+        enable_smtp: 'SMTP Email Sending'
+        install_time: 'Average Install Time'
+        next_due: 'Next Due'
+        node_name: 'Node'
+        patch_at: 'Patch At'
+        ptr_hostname: 'PTR Hostname'
+        ram: 'RAM'
+        root_password: 'Admin Password'
+        root_username: 'Admin Username'
+        suspension_reason: 'Suspension Reason'
+        template_name: 'Operating System'
+        termination_reason: 'Termination Reason'
+        plan_name: 'Plan'
+        whm_url: 'WHM URL'
+        xen_id: 'Xen ID'
+      users/user:
+        active_at: 'Last Activity'
+        email_confirmed: 'Email Confirmed?'
+        is_staff: 'Is Staff?'
+        legal_accepted: 'Legal Accepted?'
+        profile_complete: 'Profile Complete?'
+        security_answer: 'Security Answer'
+        security_question: 'Security Question'
+  monitoring:
+    check:
+      check_data_name:
+        icmp: ''
+        tcp: 'Target Port'
+        nrpe: 'Check'
+        ssl_validity: 'Target URL'
+        http: 'Target URL'
+  dedicated:
+    server:
+      state:
+        active: 'Active'
+        admin_suspended: 'Suspended'
+        admin_terminated: 'Terminated'
+        automation_suspended: 'Suspended'
+        automation_terminated: 'Terminated'
+        order_cancelled: 'Order Cancelled'
+        pending_admin_suspension: 'Queued for Suspension'
+        pending_admin_termination: 'Queued for Termination'
+        pending_automation_suspension: 'Queued for Suspension'
+        pending_automation_termination: 'Queued for Termination'
+        pending_billing: 'Billing'
+        pending_confirmation: 'Draft Order'
+        pending_payment: 'Awaiting Payment'
+        pending_provision: 'Provisioning'
+        pending_user_termination: 'Queued for Termination'
+        user_terminated: 'Terminated'
+  email:
+    domain:
+      state:
+        active: 'Active'
+        order_cancelled: 'Order Cancelled'
+        pending_validation: 'Pending Validation'
+        terminated: 'Terminated'
+    mailbox:
+      state:
+        active: 'Active'
+        admin_suspended: 'Suspended'
+        admin_terminated: 'Terminated'
+        automation_suspended: 'Suspended'
+        automation_terminated: 'Terminated'
+        order_cancelled: 'Order Cancelled'
+        pending_admin_termination: 'Queued for Termination'
+        pending_approval: 'Pending Approval'
+        pending_automation_termination: 'Queued for Termination'
+        pending_billing: 'Billing'
+        pending_confirmation: 'Draft Order'
+        pending_payment: 'Awaiting Payment'
+        pending_provision: 'Awaiting Provision'
+        pending_user_termination: 'Queued for Termination'
+        user_terminated: 'Terminated'
+      suspension_reason:
+        payment_not_received: 'Non-Payment'
+      termination_reason:
+        payment_not_received: 'Non-Payment'
+  enumerize:
+    announcement_type:
+      product_announcement: 'Product Announcement (New products, etc)'
+      security_bulletin: 'Security Bulletin'
+      service_announcement: 'Service Announcement (Service outages, maintenance, etc)'
+    check_type:
+      icmp: 'ICMP'
+      tcp: 'TCP'
+      http: 'HTTP'
+      nrpe: 'Nagios NRPE'
+      ssl_validity: 'SSL Validity'
+    status:
+      client_reply: 'Client Reply'
+      staff_reply: 'Staff Reply'
+  errors:
+    messages:
+      password:
+        password_strength: "too weak"
+  notification:
+    message:
+      admin:
+        account_pending_activation: "Account %{target} requires manual activation."
+        server_confirmed: "Server %{target} was confirmed for provision by %{actor}."
+        server_terminated: "Server %{target} was terminated by %{actor}."
+        ticket_created: "Ticket %{target} was created by %{actor}."
+        ticket_updated: "Ticket %{target} was updated by %{actor}."
+      users:
+        server_confirmed: "Server %{target} was confirmed for provision by %{actor}."
+        server_provisioned: "Server %{target} has completed provision and is ready for use."
+        server_terminated: "Server %{target} was terminated by %{actor}."
+        ticket_created: "Ticket %{target} was created by %{actor}."
+        ticket_updated: "Ticket %{target} was updated by %{actor}."
+  solus:
+    server:
+      power_state:
+        offline: 'Offline'
+        online: 'Online'
+      state:
+        active: 'Active'
+        admin_suspended: 'Suspended'
+        admin_terminated: 'Terminated'
+        automation_suspended: 'Suspended'
+        automation_terminated: 'Terminated'
+        order_cancelled: 'Order Cancelled'
+        pending_admin_termination: 'Queued for Termination'
+        pending_automation_termination: 'Queued for Termination'
+        pending_billing: 'Billing'
+        pending_completion: 'Installing'
+        pending_confirmation: 'Draft Order'
+        pending_payment: 'Awaiting Payment'
+        pending_provision: 'Provisioning'
+        pending_reinstall: 'Cleaning Up'
+        pending_user_termination: 'Queued for Termination'
+        user_terminated: 'Terminated'
+      suspension_reason:
+        payment_not_received: 'Non-Payment'
+      termination_reason:
+        payment_not_received: 'Non-Payment'
+  ticket:
+    critical_warning: "Please be aware that submitting a critical priority support ticket for any reason other than a currently occurring unscheduled service outage may result in a $20 service fee being assessed to your account.<br/><br/><strong>Why is this?</strong><br/>A critical ticket will be immediately escalated to one of our senior engineers to resolve your outage, even if they are currently busy or asleep. We don't want to waste your time with level 1 tech support and would rather get your service back up and running quickly if it goes down. Due to this, we ask that you use this priority only in emergencies."
+    priority_text: '<ul><li>Normal: General account inquiries and help with service issues.<br>Response guaranteed within 24 hours.</li><li>Critical: Your service is unavailable.<br>Response guaranteed within 30 minutes</li></ul>'

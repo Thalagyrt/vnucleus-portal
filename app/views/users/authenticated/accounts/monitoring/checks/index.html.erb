@@ -1,0 +1,67 @@
+<% content_for :title do %>Checks<% end %>
+
+<% content_for :header do %>Checks<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Monitoring', [:users, @account, :monitoring, :checks] %></li>
+<% end %>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <% if params[:show_successful].present? %>
+                    <%= link_to [:users, @account, :monitoring, :checks] do %>
+                        <i class="fa fa-eye-slash"></i> Hide Successful Checks
+                    <% end %>
+                <% else %>
+                    <%= link_to [:users, @account, :monitoring, :checks, show_successful: true] do %>
+                        <i class="fa fa-eye"></i> Show Successful Checks
+                    <% end %>
+                <% end %>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<table id="checks" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th class="col-md-1">#</th>
+        <th class="col-md-1">Active</th>
+        <th class="col-md-1">Result</th>
+        <th>Server</th>
+        <th>Check</th>
+        <th>Last Run At</th>
+    </tr>
+    </thead>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#checks').dataTable({
+                "sAjaxSource": "<%= escape_javascript url_for([:users, @account, :monitoring, :checks, { format: :json, show_successful: params[:show_successful] }.select { |k,v| v.present? }]) %>",
+                "bDestroy": true,
+                "bServerSide": true,
+                "aaSorting": [[3, "asc"]],
+                "aoColumns": [
+                    {"mDataProp": "long_id"},
+                    {"mDataProp": "active", "bSortable": false, "sClass": "text-center"},
+                    {"mDataProp": "status_code", "sClass": "text-center"},
+                    {"mDataProp": "server"},
+                    {"mDataProp": "test_to_s"},
+                    {"mDataProp": "last_run_at"},
+                ],
+                "fnCreatedRow": function ( row, data, index ) {
+                    $('td', row).addClass(data["row_class"]);
+                }
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

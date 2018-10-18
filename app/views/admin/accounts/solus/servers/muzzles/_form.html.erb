@@ -1,0 +1,23 @@
+<%= simple_form_for @muzzle, url: [:admin, @account, :solus, @server, @muzzle], html: { id: 'muzzle_server', class: 'form-horizontal' }, remote: true do |f| %>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Monitoring Muzzle</h4>
+    </div>
+    <div class="modal-body remove-margin block" id="muzzle-modal-content">
+        <p>
+            Muzzling monitoring will silence all currently existing montitors for a duration of time.
+            We recommend using this if you're going to do maintenance that will cause an outage in your service,
+            as it will prevent alarms from being sent.
+        </p>
+
+        <div>
+        <%= f.input :duration, collection: ::Monitoring::Muzzle::OPTIONS, include_blank: false%>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <%= f.submit 'Muzzle', class: 'btn btn-primary' %>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    </div>
+<% end %>
+

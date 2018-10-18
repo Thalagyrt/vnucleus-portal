@@ -1,0 +1,138 @@
+<% content_for :title do %>New Account<% end %>
+
+<% content_for :header do %>
+    <h1>New Account</h1>
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'My Accounts', [:users, :accounts] %></li>
+    <li><%= link_to 'New Account', [:new, :users, :account] %></li>
+<% end %>
+
+<%= simple_form_for @account_form, url: [:users, :accounts], html: { id: 'new_account', class: 'form-horizontal' } do |f| %>
+    <%= f.error_notification %>
+    <div id="payment_errors" style="display: none" class="alert alert-danger"></div>
+
+    <h4 class="sub-header"><span class="col-md-offset-2">Account Information</span></h4>
+
+    <%= f.input :account_entity_name, wrapper: :medium_input %>
+    <%= f.input :account_nickname, wrapper: :medium_input %>
+
+    <h4 class="sub-header"><span class="col-md-offset-2">Billing Information</span></h4>
+
+    <%= f.input :credit_card_name, wrapper: :medium_input %>
+    <%= f.input :credit_card_number, wrapper: :small_input, required: true do %>
+        <input class="form-control" id="account_form_credit_card_number" name="account_form[credit_card_number]" size="20" type="text">
+    <% end %>
+    <%= f.input :credit_card_cvc, wrapper: :tiny_input, required: true do %>
+        <input class="form-control" id="account_form_credit_card_cvc" name="account_form[credit_card_cvc]" size="6" type="text">
+    <% end %>
+    <%= f.input :credit_card_expiration_date, required: true do %>
+        <div class="row">
+            <div class="col-xs-4 col-md-1"><input class="form-control" name="account_form[credit_card_expiration_month]" id="account_form_credit_card_expiration_month" size="2" type="text" placeholder="MM"></div>
+            <div class="col-xs-8 col-md-2"><input class="form-control" name="account_form[credit_card_expiration_year]" id="account_form_credit_card_expiration_year" size="4" type="text" placeholder="YYYY"></div>
+        </div>
+    <% end %>
+    <%= f.input :credit_card_address_line1, wrapper: :medium_input %>
+    <%= f.input :credit_card_address_line2, wrapper: :medium_input %>
+    <%= f.input :credit_card_address_city, wrapper: :medium_input %>
+    <%= f.input :credit_card_address_state, wrapper: :small_input %>
+    <%= f.input :credit_card_address_zip, wrapper: :tiny_input %>
+    <%= f.input :credit_card_address_country, input_html: { class: 'select-chosen' }, wrapper: :medium_input %>
+
+    <%= f.input :affiliate_id, as: :hidden %>
+
+    <div class="form-group">
+        <div class="col-md-10 col-md-offset-2">
+            <p class="hidden-js lead">This form requires JavaScript to securely process your credit card.</p>
+            <%= f.button :submit, 'Create Account', data: { disable_with: 'Creating...' }, id: 'account_form_submit', class: 'hidden-no-js btn btn-primary' %>
+        </div>
+    </div>
+<% end %>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        function stripeResponseHandler(status, response) {
+
+            if (response.error) {
+                $("#payment_errors").text(response.error.message);
+                $("#payment_errors").show();
+                $('#account_form_submit').removeAttr('disable');
+                $('#account_form_submit').val("Create Account");
+
+                $('#account_form_credit_card_number').attr('name', 'account_form[credit_card_number]');
+                $('#account_form_credit_card_cvc').attr('name', 'account_form[credit_card_cvc]');
+            }
+            else {
+                $('#account_form_credit_card_number').removeAttr('name');
+                $('#account_form_credit_card_cvc').removeAttr('name');
+
+
+                var form$ = $("#new_account");
+                var token = response['id'];
+                form$.append("<input type='hidden' name='account_form[credit_card_token]' value='" + token + "'/>");
+                form$.get(0).submit();
+            }
+        }
+
+        $(document).ready(function() {
+            $('#new_account').validate({
+                errorClass: 'help-block', // You can add help-inline instead of help-block if you like validation messages to the right of the inputs
+                errorElement: 'div',
+                errorPlacement: function(error, e) {
+                    e.parents('.form-group > div').append(error);
+                },
+                submitHandler: function(form) {
+                    $('#account_form_submit').attr('disable','disable');
+                    $('#account_form_submit').val("Saving...");
+
+                    Stripe.createToken({
+                        name: $('#account_form_credit_card_name').val(),
+                        number: $('#account_form_credit_card_number').val(),
+                        cvc: $('#account_form_credit_card_cvc').val(),
+                        exp_month: $('#account_form_credit_card_expiration_month').val(),
+                        exp_year: $('#account_form_credit_card_expiration_year').val(),
+                        address_line1: $('#account_form_credit_card_address_line1').val(),
+                        address_line2: $('#account_form_credit_card_address_line2').val(),
+                        address_city: $('#account_form_credit_card_address_city').val(),
+                        address_state: $('#account_form_credit_card_address_state').val(),
+                        address_zip: $('#account_form_credit_card_address_zip').val(),
+                        address_country: $('#account_form_credit_card_address_country').val(),
+                    }, stripeResponseHandler);
+
+                    // prevent the form from submitting with the default action
+                    return false;
+                },
+                highlight: function(e) {
+                    $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                    $(e).closest('.help-block').remove();
+                },
+                success: function(e) {
+                    // You can remove the .addClass('has-success') part if you don't want the inputs to get green after success!
+                    e.closest('.form-group').removeClass('has-success has-error').addClass('has-success');
+                    e.closest('.help-block').remove();
+                },
+                rules: {
+                    "account_form[credit_card_number]": {
+                        required: true,
+                        luhnCheck: true
+                    },
+                    "account_form[credit_card_cvc]": {
+                        required: true,
+                        number: true
+                    },
+                    "account_form[credit_card_expiration_month]": {
+                        required: true,
+                        number: true,
+                        range: [01, 12]
+                    },
+                    "account_form[credit_card_expiration_year]": {
+                        required: true,
+                        number: true,
+                        range: [new Date().getFullYear(), new Date().getFullYear() + 20]
+                    }
+                }
+            });
+        });
+    </script>
+<% end %>

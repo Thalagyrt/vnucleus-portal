@@ -1,0 +1,68 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <% if server_status.online? %>
+                <li>
+                    <%= link_to [:users, @account, :solus, @server, :consoles], id: 'server_console', data: { popup: true, popup_width: server.console_popup_dimensions[:width], popup_height: server.console_popup_dimensions[:height] } do %>
+                        <i class="fa fa-terminal"></i> Console
+                    <% end %>
+                </li>
+            <% end %>
+            <% if server_status.online? %>
+                <li>
+                    <%= link_to [:users, @account, :solus, @server, :shutdowns], method: :post, id: 'server_shutdown', data: { confirm: "Are you sure you want to shut down server #{@server.to_s}? Any monitoring will be disabled until it's booted back up, and will have to be verified again before alerting.", confirm_button: 'Shut Down' } do %>
+                        <i class="fa fa-stop"></i> Shut Down
+                    <% end %>
+                </li>
+                <li>
+                    <%= link_to [:users, @account, :solus, @server, :reboots], method: :post, id: 'server_reboot', data: { confirm: "Are you sure you want to reboot server #{@server.to_s}? Any monitoring will be silenced for 5 minutes.", confirm_button: 'Reboot' } do %>
+                        <i class="fa fa-refresh"></i> Reboot
+                    <% end %>
+                </li>
+            <% elsif server_status.offline? %>
+                <li>
+                    <%= link_to [:users, @account, :solus, @server, :boots], method: :post, id: 'server_boot', data: { confirm: "Are you sure you want to boot server #{@server.to_s}?", confirm_button: 'Boot' } do %>
+                        <i class="fa fa-play"></i> Boot
+                    <% end %>
+                </li>
+            <% end %>
+            <% if @server.reinstallable? %>
+                <li>
+                    <%= link_to [:users, @account, :solus, @server, :reinstalls], id: 'server_reinstall' do %>
+                        <i class="fa fa-retweet"></i> Reinstall
+                    <% end %>
+                </li>
+            <% end %>
+            <li>
+                <%= link_to [:new, :users, @account, :solus, @server, :terminations], id: 'server_terminate' do %>
+                    <i class="fa fa-times"></i> Terminate
+                <% end %>
+            </li>
+            <li>
+                <%= link_to [:users, @account, :solus, @server, :ip_addresses], id: 'dropdown-ip-addresses-link', remote: true, class: "dropdown-toggle", data: { target: "#ip-addresses-modal", toggle: "modal" } do %>
+                    <i class="fa fa-sitemap"></i> Reverse DNS
+                <% end %>
+            </li>
+            <li>
+                <%= link_to [:new, :users, @account, :solus, @server, :check], id: 'new_check' do %>
+                    <i class="fa fa-check"></i> New Check
+                <% end %>
+            </li>
+            <% if @server.has_checks? %>
+                <li>
+                    <%= link_to [:new, :users, @account, :solus, @server, :muzzles], id: 'dropdown-muzzle-link', remote: true, class: "dropdown-toggle", data: { target: "#muzzle-modal", toggle: "modal" } do %>
+                        <i class="fa fa-volume-off"></i> Muzzle
+                    <% end %>
+                </li>
+            <% end %>
+
+        </ul>
+    </div>
+</nav>
+
+<script type="text/javascript">
+    $('a[data-popup]').click(function(e) {
+        window.open($(this).attr('href'), "console_<%= server.long_id %>", "toolbar=no, scrollbars=yes, resizable=yes, width="+$(this).data('popup-width')+", height="+$(this).data('popup-height'));
+        e.preventDefault();
+    });
+</script>

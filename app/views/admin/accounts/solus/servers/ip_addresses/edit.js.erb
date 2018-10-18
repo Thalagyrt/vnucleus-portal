@@ -1,0 +1,1 @@
+$("#ip-address-<%= @ip_address.anchor_name %>").html("<%= escape_javascript(render(partial: 'form', locals: { ip_address: @ip_address })) %>");

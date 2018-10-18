@@ -1,0 +1,24 @@
+<% content_for :title do %>New Backup User<% end %>
+
+<% content_for :header do %>New Backup User<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Backup Users', [:admin, @account, :backup_users] %></li>
+    <li><%= link_to 'New', [:new, :admin, @account, :backup_user] %></li>
+<% end %>
+
+<%= simple_form_for @backup_user, url: [:admin, @account, @backup_user], html: { class: 'form-horizontal form-box' } do |f| %>
+    <%= f.error_notification %>
+
+    <%= f.input :username, wrapper: :medium_input %>
+    <%= f.input :password, wrapper: :medium_input do %>
+        <%= f.text_field :password, class: 'form-control' %>
+    <% end %>
+    <%= f.input :hostname, wrapper: :medium_input %>
+
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= f.button :submit, 'Save', data: { disable_with: 'Saving...' }, id: 'server_submit', class: 'btn btn-primary' %>
+        </div>
+    </div>
+<% end %>

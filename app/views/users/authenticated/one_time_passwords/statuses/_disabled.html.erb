@@ -1,0 +1,9 @@
+<div class="text-center">
+    <h1>
+        <i class="fa fa-lock"></i> Disabled
+    </h1>
+
+    <p>Two factor authentication is not enabled on your profile. Anyone logging in with your credentials will be granted access to your account without the requirement for a one time password.</p>
+
+    <p><%= link_to "Enable Two Factor", [:new, :users, :one_time_passwords, :enables], class: 'btn btn-success btn-lg' %></p>
+</div>

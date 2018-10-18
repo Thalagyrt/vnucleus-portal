@@ -1,0 +1,143 @@
+en:
+  simple_form:
+    error_notification:
+      default_message: "Please review the problems below:"
+    hints:
+      account:
+        entity_name: "This should be the legal name of the account owner. If this is a personal account, your name should be entered. If it's a business account, the full legal name of the business should be entered."
+        nickname: "An optional friendly name to make it easier to differentiate multiple accounts with the same owner."
+      account_form:
+        account_entity_name: "This should be the legal name of the account owner. If this is a personal account, your name should be entered. If it's a business account, the full legal name of the business should be entered."
+        account_nickname: "An optional friendly name to make it easier to differentiate multiple accounts with the same owner."
+      enable_form:
+        otp: 'Scan the QR code with Google Authenticator, and enter the password generated to continue.'
+      payment_form:
+        amount_dollars: 'The minimum pre-payment amount is $10 USD.'
+      user:
+        last_name: "Your first and last name must be your legal given name. We reserve the right to suspend service on accounts with falsified information."
+        phone: "Please include your country code."
+        security_answer: "The security question and answer are used to validate your identity for phone support. They're optional, but recommended."
+    labels:
+      account:
+        affiliate_enabled: 'Affiliate Enabled'
+        email_enabled: 'Email Enabled'
+        entity_name: "Owner's Legal Name"
+      alias:
+        alias: 'Email Address'
+      article:
+        tag_list: 'Applies To'
+      check:
+        check_data: 'Data'
+        check_type: 'Type'
+        notify_account: 'Notify Account Members'
+        notify_after_failures: 'Notify After Failures'
+        notify_staff: 'Notify vNucleus Staff'
+      credit_card:
+        address_city: 'City'
+        address_country: 'Country'
+        address_line1: 'Address Line 1'
+        address_line2: 'Address Line 2'
+        address_state: 'State'
+        address_zip: 'Postal Code'
+        cvc: 'CVC'
+        expiration_date: 'Expiration Date'
+        name: 'Name On Card'
+        number: 'Card Number'
+      credit_form:
+        amount: 'Amount'
+      defaults:
+        account_entity_name: "Owner's Legal Name"
+        account_nickname: 'Nickname'
+        amount: 'Price'
+        coupon_code: 'Coupon Code'
+        credit_card_address_city: 'City'
+        credit_card_address_country: 'Country'
+        credit_card_address_line1: 'Address Line 1'
+        credit_card_address_line2: 'Address Line 2'
+        credit_card_address_state: 'State'
+        credit_card_address_zip: 'Postal Code'
+        credit_card_cvc: 'CVC'
+        credit_card_expiration_date: 'Expiration Date'
+        credit_card_name: 'Name On Card'
+        credit_card_number: 'Card Number'
+        node_group: 'Node Group'
+        otp: 'One Time Password'
+        password_confirmation: 'Password (again)'
+        plan_part: 'Plan Part'
+        ram: 'RAM'
+        user_email: 'Email'
+        user_first_name: 'First Name'
+        user_last_name: 'Last Name'
+        user_password: 'Password'
+        user_password_confirmation: 'Password (again)'
+        user_phone: 'Phone'
+        user_security_answer: 'Security Answer'
+        user_security_question: 'Security Question'
+        vcpus: 'vCPUs'
+      domain:
+        domain_name: 'Domain Name'
+      mailbox:
+        display_name: 'Display Name'
+        first_name: 'First Name'
+        last_name: 'Last Name'
+      mailbox_form:
+        alias: 'Email Address'
+        display_name: 'Display Name'
+        first_name: 'First Name'
+        last_name: 'Last Name'
+      order_form:
+        server_hostname: 'Hostname'
+        account_name: 'Company'
+      out_of_band_patch_form:
+        managed_only: 'Managed Only'
+        template_ids: 'Affected Templates'
+      payment_form:
+        amount_dollars: 'Amount'
+      plan:
+        disk_type: 'Disk Type'
+        feature_status: 'Feature Status'
+        ip_addresses: 'IP Addresses'
+        ipv6_addresses: 'IPv6 Addresses'
+        network_out: 'Connection'
+      server:
+        backup_user_id: 'Backup User'
+        cluster: 'Location'
+        enable_smtp: 'Enable SMTP'
+        next_due: 'Next Due'
+        patch_at: 'Patch At'
+        patch_out_of_band: 'Patch Out Of Band'
+        patch_period: 'Patch Period'
+        plan_amount: 'Plan Price'
+        root_password: 'Admin Password'
+        root_username: 'Admin Username'
+        suspend_on: 'Suspend On'
+        suspension_reason: 'Suspension Reason'
+        template_amount: 'Template Price'
+        terminate_on: 'Terminate On'
+        termination_reason: 'Termination Reason'
+        vserver_id: 'vServer ID'
+      template:
+        root_username: 'Admin Username'
+        virtualization_type: 'Virtualization Type'
+        autocomplete_provision: "Auto-Complete Provision (Enable for templates that don't ping in when ready)"
+        generate_root_password: "Generate root password (Enable for templates that ask the portal for a password over the network)"
+      ticket_form:
+        body: 'Message'
+        secure_body: 'Sensitive Data'
+      update:
+        body: 'Reply'
+        secure_body: 'Sensitive Data'
+      user_form:
+        email: 'Email'
+        first_name: 'First Name'
+        last_name: 'Last Name'
+        password: 'Password'
+        password_confirmation: 'Password (again)'
+        phone: 'Phone'
+        security_answer: 'Security Answer'
+        security_question: 'Security Question'
+    no: 'No'
+    required:
+      mark: '*'
+      text: 'Required'
+    yes: 'Yes'

@@ -1,0 +1,20 @@
+<% content_for :title do %><%= membership.user.full_name %><% end %>
+
+<% content_for :header do %>
+    <%= membership.user.render_full_name %>
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Memberships', [:users, @account, :memberships] %></li>
+    <li><%= link_to membership.user.full_name, [:edit, :users, @account, @membership] %></li>
+<% end %>
+
+<%= simple_form_for @membership, url: [:users, @account, @membership], html: { class: 'form-horizontal', id: 'edit_membership' } do |f| %>
+    <%= f.input :roles, wrapper: :radio_and_checkboxes, collection: @membership.class.valid_roles, as: :check_boxes, checked: @membership.roles, label_method: proc { |l| l.to_s.titleize } %>
+
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= f.button :submit, "Update Membership", id: 'membership_submit', data: { disable_with: 'Updating...' }, class: 'btn btn-primary' %>
+        </div>
+    </div>
+<% end %>

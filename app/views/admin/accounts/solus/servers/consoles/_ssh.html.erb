@@ -1,0 +1,40 @@
+<div id="term"></div>
+
+<% content_for :javascript do %>
+    <script type='application/javascript'>
+        $(document).ready(function() {
+            function openTerminal(options) {
+                var client = new WSSHClient();
+                var term = new Terminal(80, 24, function(key) {
+                    client.send(key);
+                });
+                term.open();
+                $('.terminal').detach().appendTo('#term');
+                term.resize(80, 24);
+                term.write('Connecting...');
+                client.connect($.extend(options, {
+                    onError: function(error) {
+                        term.write('Error: ' + error + '\r\n');
+                    },
+                    onConnect: function() {
+                    },
+                    onClose: function() {
+                        term.write('Connection Reset By Peer');
+                    },
+                    onData: function(data) {
+                        term.write(data);
+                    }
+                }));
+            }
+
+            var options = {
+                username: '<%= escape_javascript(@console.username) %>',
+                password: '<%= escape_javascript(@console.password) %>',
+                uri: '<%= escape_javascript(Rails.application.config.console_server[:ssh_uri]) %>',
+                authentication_method: 'password'
+            };
+
+            openTerminal(options);
+        });
+    </script>
+<% end %>

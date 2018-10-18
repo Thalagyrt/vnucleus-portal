@@ -1,0 +1,26 @@
+<% content_for :title do %>New Pre-Payment<% end %>
+
+<% content_for :header do %>
+    New Pre-Payment
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Statements', [:users, @account, :statements] %></li>
+    <li><%= link_to 'New Pre-Payment', [:new, :users, @account, :payment] %></li>
+<% end %>
+
+<%= simple_form_for @payment_form, url: [:users, @account, :payments], html: { class: 'form-horizontal' } do |f| %>
+    <p class="col-md-offset-2">Your current account balance is <%= account.render_balance %>.</p>
+
+    <%= f.input :amount_dollars, wrapper: :medium_input do %>
+        <%= content_tag :span, class: 'input-group-addon' do %>
+            $
+        <% end %>
+        <%= f.input_field :amount_dollars, class: 'form-control' %>
+    <% end %>
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= f.button :submit, "Submit Payment", id: 'invite_submit', data: { disable_with: 'Submitting...', confirm: "Are you sure you want to submit this prepayment?", confirm_button: 'Submit Payment' }, class: 'btn btn-primary' %>
+        </div>
+    </div>
+<% end %>

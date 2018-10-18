@@ -1,0 +1,43 @@
+<% content_for :title do %>Confirm Server <%= server.to_s %><% end %>
+
+<% content_for :header do %>Confirm Server<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Servers', [:users, @account, :solus, :servers] %></li>
+    <li><%= link_to server.to_s, [:users, @account, :solus, @server] %></li>
+<% end %>
+
+<div class="well">
+    <% if account.active? %>
+        <p>Confirming this server will begin the process of billing your account and provisioning the server. Please review your server's details closely to make sure there are no errors.</p>
+        <p>We will automatically charge your credit card on your server's renewal date. If at any point you wish to end service, please use the terminate function on the server information page.</p>
+    <% elsif account.pending_billing_information? %>
+        <p>Your account doesn't have billing information on file. Please update your billing information before confirming your server.</p>
+    <% else %>
+        <p>Your account is pending manual approval. Please check back when you receive an approval email if you'd like to complete your order. We're sorry for the inconvenience.</p>
+    <% end %>
+
+    <div class="text-center">
+        <%= link_to "Cancel", [:users, @account, :solus, @server, :confirmations], method: :delete, class: 'btn btn-default', id: 'server_cancel' %>
+        <% if current_power.confirmable_account_solus_server?(@account, @server) %>
+            <%= link_to "Confirm", [:users, @account, :solus, @server, :confirmations], method: :post, class: 'btn btn-primary', id: 'server_confirm' %>
+        <% end %>
+    </div>
+</div>
+
+<div class="block">
+    <div class="block-title"><h2>System Info</h2></div>
+
+    <%= display_for server do |d| %>
+        <%= d.display :plan_name %>
+        <%= d.display :cluster_name %>
+        <%= d.display :template_name %>
+        <%= d.display :render_install_time %>
+        <%= d.display :render_prorated_amount, label: 'Estimated First Charge' do %>
+            <%= server.render_prorated_amount %> (Prorated To <%= server.next_due %>)
+        <% end %>
+        <%= d.display :render_amount do %>
+            <%= server.render_amount %> (Next Due <%= server.next_due %>)
+        <% end %>
+    <% end %>
+</div>

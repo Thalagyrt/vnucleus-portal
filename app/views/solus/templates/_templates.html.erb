@@ -1,0 +1,29 @@
+<div class="form-group">
+    <div class="col-md-2">
+        <p class="server-builder-hint hidden-sm hidden-xs" id="template-hint">
+            <small>
+                Choose An OS <i class="fa fa-arrow-right"></i>
+            </small>
+        </p>
+    </div>
+    <div class="col-md-10">
+        <table class="table plans">
+            <thead>
+            <tr>
+                <th class="col-md-3">Operating System</th>
+                <th class="hidden-xs"></th>
+                <th>Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% templates.each do |template| %>
+                <tr class="cursor-pointer" onclick="selectTemplate(<%= template.id %>);">
+                    <td><label class="radio"><input id="server_form_template_id_<%= template.id %>" name="server_form[template_id]" type="radio" data-amount="<%= template.amount %>" value="<%= template.id %>"> <%= template.name %></label></td>
+                    <td class="hidden-xs"><%= template.description %></td>
+                    <td><%= template.render_amount %></td>
+                </tr>
+            <% end %>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,172 @@
+
+<!DOCTYPE html>
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+
+    <title><% if content_for? :title %><%= yield :title %> - <% end %>vNucleus</title>
+
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0">
+    <meta name=”description” content="Managed Xen Virtual Private Server hosting with personalized support">
+    <meta name="keywords" content="managed vps hosting, premium managed vps hosting, premium managed windows hosting,
+        managed vps, premium vps hosting, premium managed vps, premium managed hosting, managed hosting">
+
+    <meta property="og:title" content="<% if content_for? :social_title %><%= yield :social_title %> - <% end %>vNucleus">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="<%= image_url 'og/logo.png' %>">
+    <meta property="og:description" content="<% if content_for? :social_description %><%= yield :social_description %><% else %>Serious Managed Hosting<% end %>">
+
+    <meta property="twitter:title" content="<% if content_for? :social_title %><%= yield :social_title %> - <% end %>vNucleus">
+    <meta property="twitter:description" content="<% if content_for? :social_description %><%= yield :social_description %><% else %>Serious Managed Hosting<% end %>">
+
+    <meta name="p:domain_verify" content="d2bd67bf802a7a769200759b6565962c"/>
+
+    <link rel="shortcut icon" href="<%= image_url "favicon.ico" %>">
+    <link rel="apple-touch-icon" href="<%= image_url "icon57.png" %>" sizes="57x57">
+    <link rel="apple-touch-icon" href="<%= image_url "icon72.png" %>" sizes="72x72">
+    <link rel="apple-touch-icon" href="<%= image_url "icon76.png" %>" sizes="76x76">
+    <link rel="apple-touch-icon" href="<%= image_url "icon114.png" %>" sizes="114x114">
+    <link rel="apple-touch-icon" href="<%= image_url "icon120.png" %>" sizes="120x120">
+    <link rel="apple-touch-icon" href="<%= image_url "icon144.png" %>" sizes="144x144">
+    <link rel="apple-touch-icon" href="<%= image_url "icon152.png" %>" sizes="152x152">
+
+    <link href="https://plus.google.com/102965816326573500824" rel="publisher" />
+
+    <%= stylesheet_link_tag 'application' %>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <%= javascript_include_tag 'vendor/modernizr-2.7.1-respond-1.4.2.min' %>
+
+    <% if content_for? :head %><%= yield :head %><% end %>
+
+    <%= csrf_meta_tags %>
+</head>
+
+
+<body class="landing-body layout-frontend">
+<header class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <ul class="nav header-nav pull-right visible-xs">
+            <li>
+                <a href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-menu-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <i class="fa fa-bars"></i>
+                </a>
+            </li>
+        </ul>
+
+        <div class="navbar-header">
+            <%= link_to [:root], class: 'navbar-brand' do %>
+                <span class="logo"></span>
+                v<strong>Nucleus</strong>
+            <% end %>
+        </div>
+
+        <div class="collapse navbar-collapse navbar-right navbar-menu-collapse">
+            <ul id="landing-menu-links" class="nav navbar-nav">
+                <li class="hidden-xs hidden-sm">
+                    <a>+1 (855) 667-2428</a>
+                </li>
+                <%= active_link_to "Home", [:root], wrap_tag: :li, active: [['pages'], ['index', 'our_clients', 'testimonials']] %>
+                <%= active_link_to "Pricing", [:pricing], wrap_tag: :li, active: :exclusive %>
+                <%= active_link_to "Features", [:managed_support_coverage], wrap_tag: :li, active: [['pages'], ['managed_support_coverage', 'our_portal']] %>
+                <%= active_link_to "Blog", [:blog, :posts], wrap_tag: :li %>
+                <%= render partial: 'user_widget', locals: { user: current_user.try(:decorate) } %>
+            </ul>
+        </div>
+    </div>
+</header>
+
+<% unless Rails.application.config.accept_orders %>
+    <div class="alert alert-header alert-warning">
+        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        <p>We are not accepting new orders at this time. Sorry for the inconvenience!</p>
+    </div>
+<% end %>
+
+<% @service_notices.each do |service_notice| %>
+    <div class="alert alert-header alert-info">
+        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        <p><%= service_notice.message %></p>
+    </div>
+<% end %>
+
+<% if flash[:notice] %>
+    <div class="alert alert-header alert-success">
+        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        <p><%= flash[:notice] %></p>
+    </div>
+<% end %>
+
+<% if flash[:alert] %>
+    <div class="alert alert-header alert-danger">
+        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        <p><%= flash[:alert] %></p>
+    </div>
+<% end %>
+
+<%= yield %>
+
+<div id="about" class="landing-section landing-section-dark">
+    <div class="container">
+        <div class="row gutter30">
+            <div class="col-sm-4">
+                <div class="copyright">
+                    &copy; <span id="year-copy"></span> vNucleus / betaforce networks, llc
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <h3 class="push">Resources</h3>
+                <ul class="fa-ul landing-links">
+                    <li><i class="fa fa-building fa-li"></i><%= link_to 'About Us', [:about] %></li>
+                    <li><i class="fa fa-pencil fa-li"></i><%= link_to 'Blog', [:blog, :posts] %></li>
+                    <li><i class="fa fa-book fa-li"></i><%= link_to 'Knowledge Base', [:knowledge_base, :articles] %></li>
+                    <li><i class="fa fa-globe fa-li"></i><%= link_to 'Network Status', 'http://status.vnucleus.com/', target: :blank %></li>
+                </ul>
+            </div>
+            <div class="col-sm-2">
+                <h3 class="push">Legal</h3>
+                <ul class="fa-ul landing-links">
+                    <li><i class="fa fa-legal fa-li"></i><%= link_to 'Terms of Service', [:tos] %></li>
+                    <li><i class="fa fa-legal fa-li"></i><%= link_to 'Acceptable Use Policy', [:aup] %></li>
+                    <li><i class="fa fa-lock fa-li"></i><%= link_to 'Privacy Policy', [:privacy] %></li>
+                </ul>
+            </div>
+            <div class="col-sm-2">
+                <h3 class="push">Get Social</h3>
+                <ul class="fa-ul landing-links">
+                    <li><i class="fa fa-facebook fa-li"></i><%= link_to 'vNucleus', 'https://facebook.com/vNucleus', target: :blank %></li>
+                    <li><i class="fa fa-twitter fa-li"></i><%= link_to '@vNucleus', 'https://twitter.com/vNucleus', target: :blank %></li>
+                    <li><i class="fa fa-google-plus fa-li"></i><%= link_to '+vNucleus', 'https://plus.google.com/+vNucleus', target: :blank %></li>
+                    <li><i class="fa fa-twitter fa-li"></i><%= link_to '@vNucleusStatus', 'https://twitter.com/vNucleusStatus', target: :blank %></li>
+                </ul>
+            </div>
+            <div class="col-sm-2">
+                <h3 class="push">Contact Us</h3>
+                <ul class="fa-ul landing-links">
+                    <li><i class="fa fa-phone fa-li"></i>+1 (855) 667-2428</li>
+                    <li><i class="fa fa-envelope fa-li"></i><a href="mailto:sales@vnucleus.com">sales@vnucleus.com</a></li>
+                    <li><i class="fa fa-exclamation-circle fa-li"></i><a href="mailto:abuse@vnucleus.com">abuse@vnucleus.com</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a href="javascript:void(0)" id="to-top"><i class="fa fa-angle-up"></i></a>
+
+<%= javascript_include_tag 'application' %>
+<%= javascript_include_tag "https://js.stripe.com/v2/" %>
+<script type="text/javascript">
+    $(function() {
+        Stripe.setPublishableKey("<%= Rails.configuration.stripe[:publishable_key] %>");
+    });
+</script>
+
+<% if content_for? :javascript %>
+    <%= yield :javascript %>
+<% end %>
+
+</body>
+
+</html>

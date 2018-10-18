@@ -1,0 +1,89 @@
+<% content_for :title do %>Edit Server <%= server.to_s %><% end %>
+
+<% content_for :header do %>Edit Server<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Servers', [:admin, @account, :solus, :servers] %></li>
+    <li><%= link_to server.to_s, [:admin, @account, :solus, @server] %></li>
+    <li><%= link_to 'Edit', [:edit, :admin, @account, :solus, @server] %></li>
+<% end %>
+
+<%= simple_form_for @server, url: [:admin, @account, :solus, @server], html: { class: 'form-horizontal form-box' } do |f| %>
+    <%= f.error_notification %>
+
+    <%= f.input :hostname, wrapper: :medium_input %>
+    <%= f.input :plan_amount, wrapper: :small_input do %>
+        <%= content_tag :span, class: 'input-group-addon' do %>
+            $
+        <% end %>
+        <%= f.input_field :plan_amount_dollars, class: 'form-control' %>
+    <% end %>
+    <%= f.input :template_amount, wrapper: :small_input do %>
+        <%= content_tag :span, class: 'input-group-addon' do %>
+            $
+        <% end %>
+        <%= f.input_field :template_amount_dollars, class: 'form-control' %>
+    <% end %>
+    <%= f.input :plan_id, wrapper: :small_input, input_html: { class: 'select-chosen' }, collection: @plans, include_blank: false %>
+    <%= f.input :template_id, wrapper: :medium_input, input_html: { class: 'select-chosen' }, collection: @templates, include_blank: false %>
+    <%= f.input :cluster_id, wrapper: :small_input, input_html: { class: 'select-chosen' }, collection: @clusters, include_blank: false %>
+    <%= f.input :vserver_id, wrapper: :tiny_input %>
+    <%= f.input :root_password, wrapper: :medium_input do %>
+        <%= f.text_field :root_password, class: 'form-control' %>
+    <% end %>
+    <%= f.input :next_due, wrapper: :small_input do %>
+        <%= content_tag :div, class: "input-group date input-datepicker", data: { date_format: 'yyyy-mm-dd', date: @server.next_due } do %>
+            <%= f.input_field :next_due, as: :string, class: 'form-control' %>
+            <%= content_tag :span, class: 'input-group-addon' do %>
+                <i class="fa fa-calendar"></i>
+            <% end %>
+        <% end %>
+    <% end %>
+    <%= f.input :suspend_on, wrapper: :small_input do %>
+        <%= content_tag :div, class: "input-group date input-datepicker", data: { date_format: 'yyyy-mm-dd', date: @server.suspend_on } do %>
+            <%= f.input_field :suspend_on, as: :string, class: 'form-control' %>
+            <%= content_tag :span, class: 'input-group-addon' do %>
+                <i class="fa fa-calendar"></i>
+            <% end %>
+        <% end %>
+    <% end %>
+    <%= f.input :terminate_on, wrapper: :datepicker do %>
+        <%= content_tag :div, class: "input-group date input-datepicker", data: { date_format: 'yyyy-mm-dd', date: @server.terminate_on } do %>
+            <%= f.input_field :terminate_on, as: :string, class: 'form-control' %>
+            <%= content_tag :span, class: 'input-group-addon' do %>
+                <i class="fa fa-calendar"></i>
+            <% end %>
+        <% end %>
+    <% end %>
+    <%= f.input :transfer, wrapper: :small_input do %>
+        <%= f.input_field :transfer_tb, class: 'form-control' %>
+        <%= content_tag :span, class: 'input-group-addon' do %>
+            TB
+        <% end %>
+    <% end %>
+    <%= f.input :backup_user_id, wrapper: :medium_input, collection: @backup_users, include_blank: true %>
+    <%= f.input :patch_at, wrapper: :small_input do %>
+        <%= content_tag :div, class: "input-group date input-datepicker", data: { date_format: 'yyyy-mm-dd', date: @server.patch_at } do %>
+            <%= f.input_field :patch_at, as: :string, class: 'form-control' %>
+            <%= content_tag :span, class: 'input-group-addon' do %>
+                <i class="fa fa-calendar"></i>
+            <% end %>
+        <% end %>
+    <% end %>
+    <%= f.input :patch_period, wrapper: :small_input do %>
+        <%= f.input_field :patch_period, class: 'form-control' %>
+        <%= content_tag :span, class: 'input-group-addon' do %>
+            <%= f.input_field :patch_period_unit %>
+        <% end %>
+    <% end %>
+    <%= f.input :patch_out_of_band, wrapper: :boolean %>
+    <%= f.input :enable_smtp, wrapper: :boolean %>
+    <%= f.input :bypass_firewall, wrapper: :boolean %>
+    <%= f.input :state, collection: @server.class.state_machine.states.map(&:name), input_html: { class: 'select-chosen' }, include_blank: false, wrapper: :small_input %>
+
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= f.button :submit, 'Save', data: { disable_with: 'Saving...' }, id: 'server_submit', class: 'btn btn-primary' %>
+        </div>
+    </div>
+<% end %>

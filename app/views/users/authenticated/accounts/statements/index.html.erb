@@ -1,0 +1,78 @@
+<% content_for :title do %>Billing Statements<% end %>
+
+<% content_for :header do %>My Billing Statements<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Billing Statements', [:users, @account, :statements] %></li>
+<% end %>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <%= link_to [:users, @account, :credit_cards] do %>
+                    <i class="fa fa-credit-card"></i> View Credit Card
+                <% end %>
+            </li>
+            <li>
+                <%= link_to [:edit, :users, @account, :credit_cards] do %>
+                    <i class="fa fa-pencil"></i> Update Credit Card
+                <% end %>
+            </li>
+            <% if current_power.account_payments?(@account) %>
+                <li>
+                    <%= link_to [:new, :users, @account, :payment] do %>
+                        <i class="fa fa-plus-circle"></i> New Pre-Payment
+                    <% end %>
+                </li>
+            <% end %>
+        </ul>
+    </div>
+</nav>
+
+<table id="statements" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Period</th>
+        <th class="hidden-xs">Total Debits</th>
+        <th>Total Credits</th>
+        <th class="hidden-xs">Starting Balance</th>
+        <th class="hidden-xs">Ending Balance</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% statements.each do |statement| %>
+        <tr>
+            <td><span data-raw="<%= statement.start_date %>"><%= link_to statement.to_s, [:users, @account, statement] %></span></td>
+            <td class="hidden-xs"><%= statement.render_total_debits %></td>
+            <td><%= statement.render_total_credits %></td>
+            <td class="hidden-xs"><%= statement.render_starting_balance %></td>
+            <td class="hidden-xs"><%= statement.render_ending_balance %></td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#statements').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[0, "desc"]],
+                "aLengthMenu": [[12, 24, 60, -1], [12, 24, 60, "All"]],
+                "aoColumns": [
+                    {"sType": "raw-string"},
+                    null,
+                    null,
+                    null,
+                    null,
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

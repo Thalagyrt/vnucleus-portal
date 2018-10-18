@@ -1,0 +1,55 @@
+<% content_for :title do %>About Us<% end %>
+
+<div class="landing-intro">
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="animation-pullDown">About Us</h1>
+        </div>
+    </div>
+</div>
+
+<%= render partial: 'about_tabs' %>
+
+<div class="landing-section">
+    <div class="container">
+        <div class="row gutter30 landing-features">
+            <div class="col-md-4">
+                <p class="features-icon"><i class="fa fa-building-o animation-fadeIn"></i></p>
+                <h3 class="features-title">Our Company</h3>
+                <p>We've been in business since 2012, after our principal partner and founder James grew tired of hosting companies that treated him like a number. We grouped up and took the initiative to provide the service we'd been searching for for the past decade. With a combined 40 years of professional experience in the information technology world amongst our four partners, you're in good hands with us.</p>
+            </div>
+            <div class="col-md-4">
+                <p class="features-icon"><i class="fa fa-hdd-o animation-fadeIn"></i></p>
+                <h3 class="features-title">Our Hardware</h3>
+                <p>Our platform is built entirely on Dell's enterprise line of servers. You won't find any desktop grade or otherwise cheap components here. We utilize the latest and greatest of the Xeon line, ECC Registered DDR3 RAM, and enterprise disk solutions built on top of dedicated caching RAID controllers. We take great pride in our hardware and know you'll enjoy it.</p>
+            </div>
+            <div class="col-md-4">
+                <p class="features-icon"><i class="fa fa-wrench animation-fadeIn"></i></p>
+                <h3 class="features-title">Managed Service</h3>
+                <p>All of our servers come with <%= link_to 'managed service', [:managed_support_coverage] %>. We'll do a full setup of your application stack and server, including but not limited to tightening security and performance tuning. We'll also take care of many other administrative tasks for you at your request.</p>
+                <p>We'll monitor your server 24/7, and proactively make sure your system is running at peak performance - just open a support ticket to hash out the details on what you want us to monitor for you.</p>
+            </div>
+        </div>
+
+        <div class="row gutter30 landing-features">
+            <div class="col-md-4">
+                <p class="features-icon"><i class="fa fa-terminal animation-fadeIn"></i></p>
+                <h3 class="features-title">Built for Developers, by Developers</h3>
+                <p>vNucleus was built by and is run by a team of operations engineers and developers who demand the best performance possible from their hardware. Absolutely no corners were cut in ensuring that our servers outperform the competition.</p>
+                <p>Our nodes are never oversold, and we take every measure possible to ensure that you get the performance you need.</p>
+            </div>
+            <div class="col-md-4">
+                <p class="features-icon"><i class="fa fa-flash animation-fadeIn"></i></p>
+                <h3 class="features-title">Tier-1 Multi-Homed Bandwidth</h3>
+                <p>We run a multi-homed BGP mix with bandwidth from Level3 and GTT, so there's plenty of bandwidth and great peering to keep your ping low across the globe.</p>
+                <p>Our network core is 100% Cisco - we didn't cheap out there, either. We believe there's no point in doing something if you're not going to do it right.</p>
+            </div>
+            <div class="col-md-4">
+                <p class="features-icon"><i class="fa fa-certificate animation-fadeIn"></i></p>
+                <h3 class="features-title">Our Guarantee</h3>
+                <p>Try us for 15 days. If you're not happy, we'll fix it. If you don't want us to fix it, or we can't fix it, we'll refund you. No questions asked. We're in it for happy customers, not money.</p>
+                <p>We also guarantee 99.99% network availability and 99.99% infrastructure availability. Don't just take our word for it - check out our Pingdom <%= link_to "status page", 'http://status.vnucleus.com/', target: :blank %>. See the Service Credits section of our <%= link_to 'Terms of Service', [:tos] %> for more information.</p>
+            </div>
+        </div>
+    </div>
+</div>

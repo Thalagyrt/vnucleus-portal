@@ -1,0 +1,10 @@
+Hi <%= @user.greeting %>,
+
+The credit card on file for account <%= @account.to_s %> expires on <%= @account.render_stripe_expiration_date %>. We want to make sure your servers stay online, so please update your information when you have a chance!
+
+You can update your billing information at <%= polymorphic_url [:edit, :users, @account, :credit_cards] %>
+
+Thanks,
+James, Taylor, and Kevin at vNucleus
+
+To help protect the security of your account, this mailbox is not monitored for replies. If you needz assistance, please open a support ticket in our client area.

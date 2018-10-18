@@ -1,0 +1,103 @@
+<% content_for :title do %>Affiliate Program<% end %>
+<% content_for :header do %>Affiliate Program<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Affiliate Program', [:users, @account, :affiliates] %></li>
+<% end %>
+
+<div class="row gutter30">
+    <div class="col-md-7">
+        <div class="block">
+            <div class="block-title">
+                <h2>Our Affiliate Program</h2>
+            </div>
+
+            <p>All new vNucleus customers who sign up through your affiliate link, with the exception of accounts created by members of your existing account, will contribute to your referral count.</p>
+            <p>On the first of every month you will receive a 5% commission from every account you've referred. In addition, if a referred account has active service three (3) months after its original sign-up date, you'll receive a one-time commission for the full monthly rate the referred account is paying.</p>
+            <p>Your credit can be used to pay for your own service or can be paid out to you, once monthly, at your request if your balance exceeds $100.</p>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="block">
+            <div class="block-title">
+                <h2>Your Stats</h2>
+            </div>
+            <%= display_for account do |d| %>
+                <%= d.display :referral_count %>
+                <%= d.display :render_referral_income %>
+            <% end %>
+        </div>
+
+        <div class="block full">
+            <div class="block-title">
+                <h2>Your Affiliate URL</h2>
+            </div>
+
+            <p>
+                <code class="code-wrap">
+                    <%= root_url(affiliate_id: account.long_id, utm_medium: 'affiliate', utm_source: 'link', utm_campaign: account.long_id) %>
+                </code>
+            </p>
+
+            <ul class="nav centered-tabs nav-tabs push" data-toggle="tabs">
+                <li class="active"><a href="#badge-light"><img src="https://s3-us-west-2.amazonaws.com/vnucleus/poweredby-badge.png" alt="Light Badge"></a></li>
+                <li><a href="#badge-dark"><img src="https://s3-us-west-2.amazonaws.com/vnucleus/poweredby-badge-dark.png" alt="Dark Badge"></a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="badge-light">
+                    <code class="code-wrap">
+                        &lt;a href="<%= root_url(affiliate_id: account.long_id, utm_medium: 'affiliate', utm_source: 'badge', utm_campaign: account.long_id) %>"&gt;&lt;img src="https://s3-us-west-2.amazonaws.com/vnucleus/poweredby-badge.png" alt="Managed VPS Hosting"&gt;&lt;/a&gt;
+                    </code>
+                </div>
+                <div class="tab-pane" id="badge-dark">
+                    <code class="code-wrap">
+                        &lt;a href="<%= root_url(affiliate_id: account.long_id, utm_medium: 'affiliate', utm_source: 'badge', utm_campaign: account.long_id) %>"&gt;&lt;img src="https://s3-us-west-2.amazonaws.com/vnucleus/poweredby-badge-dark.png" alt="Managed VPS Hosting"&gt;&lt;/a&gt;
+                    </code>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table id="transactions" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Amount</th>
+        <th>Description</th>
+        <th>Posted</th>
+        <th>Reference</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% transactions.each do |transaction| %>
+        <tr class="<%= transaction.tr_class %>">
+            <td><%= transaction.render_amount %></td>
+            <td><%= transaction.description %></td>
+            <td><%= transaction.render_created_at %></td>
+            <td><%= transaction.reference %></td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#transactions').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[2, "desc"]],
+                "aoColumns": [
+                    {"sType": "raw-numeric"},
+                    null,
+                    {"sType": "raw-numeric"},
+                    null,
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

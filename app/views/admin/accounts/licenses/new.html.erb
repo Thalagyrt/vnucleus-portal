@@ -1,0 +1,23 @@
+<% content_for :title do %>New License<% end %>
+
+<% content_for :header do %>New License<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Licenses', [:admin, @account, :licenses] %></li>
+    <li><%= link_to 'New', [:new, :admin, @account, :license] %></li>
+<% end %>
+
+<%= simple_form_for @license, url: [:admin, @account, @license], html: { class: 'form-horizontal form-box' } do |f| %>
+    <%= f.error_notification %>
+
+    <%= f.association :product, wrapper: :medium_input, input_html: { class: 'select-chosen' } %>
+    <%= f.input :note, wrapper: :medium_input %>
+    <%= f.input :count, wrapper: :small_input %>
+    <%= f.input :free, wrapper: :boolean %>
+
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= f.button :submit, 'Save', data: { disable_with: 'Saving...' }, id: 'server_submit', class: 'btn btn-primary' %>
+        </div>
+    </div>
+<% end %>

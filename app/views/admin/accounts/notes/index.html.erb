@@ -1,0 +1,32 @@
+<% content_for :title do %>Notes<% end %>
+<% content_for :header do %>Notes<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Notes', [:admin, @account, :notes] %></li>
+<% end %>
+
+<%= render partial: 'form', locals: { remote: false } %>
+
+<% if notes.present? %>
+    <hr>
+    <% notes.each do |note| %>
+        <div class="block" id="<%= note.anchor %>">
+            <div class="block-title clearfix">
+                <h2>
+                    <%= link_to "##{note.id}", [:admin, @account, :notes, anchor: note.anchor] %>
+                    <small>
+                        <%= note.user.render_full_name %>
+                        <span class="hidden-xs">at <%= note.render_created_at %></span>
+                    </small>
+                </h2>
+                <div class="pull-right block-options ticket-status">
+                    <%= link_to [:admin, @account, note], class: "btn btn-sm btn-danger", method: :delete, data: { confirm: "Are you sure you want to remove this note?" } do %>
+                        <i class="fa fa-times"></i>
+                    <% end %>
+                </div>
+            </div>
+
+            <%= note.render_body %>
+        </div>
+    <% end %>
+<% end %>

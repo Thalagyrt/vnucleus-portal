@@ -1,0 +1,52 @@
+<% content_for :title do %>Knowledge Base<% end %>
+
+<div class="landing-breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="active">Knowledge Base</li>
+        </ol>
+    </div>
+</div>
+
+<div class="landing-section">
+    <div class="container">
+        <table id="articles" class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th class="col-md-1">#</th>
+            <th>Title</th>
+            <th>Applies To</th>
+            <th class="hidden-xs">Last Updated</th>
+        </tr>
+        </thead>
+        </table>
+    </div>
+</div>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#articles').dataTable({
+                "sAjaxSource": "<%= escape_javascript url_for([:knowledge_base, :articles, { format: :json, tagged: params[:tagged] }.select { |k,v| v.present? }]) %>",
+                "bServerSide": true,
+                "bDestroy": true,
+                <% if params[:search].present? %>
+                "oSearch": {"sSearch": "<%= escape_javascript params[:search] %>"},
+                <% end %>
+                "aaSorting": [[3, "desc"]],
+                "aoColumns": [
+                    {"mDataProp": "id"},
+                    {"mDataProp": "title"},
+                    {"mDataProp": "tags_list", "bSortable": false},
+                    {"mDataProp": "updated_at"},
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+
+        });
+    </script>
+<% end %>

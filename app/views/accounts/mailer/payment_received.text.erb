@@ -1,0 +1,12 @@
+Hi <%= @user.greeting %>,
+
+Thank you for your payment of <%= @transaction.render_absolute_amount %> on account <%= @account.to_s %>. Your reference code for this payment is <%= @transaction.reference %>.
+
+Account Balance: <%= @account.render_balance_plaintext %>
+
+You can view your statements at <%= polymorphic_url [:users, @account, :statements] %>
+
+Thanks,
+James, Taylor, and Kevin at vNucleus
+
+To help protect the security of your account, this mailbox is not monitored for replies. If you need assistance, please open a support ticket in our client area.

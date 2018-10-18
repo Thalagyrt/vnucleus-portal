@@ -1,0 +1,57 @@
+<% content_for :title do %><%= article.title %><% end %>
+<% content_for :social_title do %><%= article.title %><% end %>
+<% content_for :social_description do %><%= article.summary %><% end %>
+
+<div class="landing-breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><%= link_to 'Knowledge Base', [:knowledge_base, :articles] %></li>
+            <li class="active"><%= article.to_s %></li>
+        </ol>
+    </div>
+</div>
+
+<div class="landing-section">
+    <div class="container">
+        <div class="kb-article">
+            <h1 class="page-header">
+                <%= article.link_to_s %>
+            </h1>
+            <div class="content">
+                <%= article.render_body %>
+            </div>
+            <div class="footer">
+                Last updated <%= article.render_updated_at %> | <%= article.render_tag_list %>
+            </div>
+            <div class="footer clearfix">
+                <div class="social-button">
+                    <div class="fb-like" data-href="<%= url_for [:knowledge_base, article] %>" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div>
+                </div>
+                <div class="social-button">
+                    <a href="https://twitter.com/share" class="twitter-share-button" data-url="<%= url_for [:knowledge_base, article] %>" data-lang="en">Tweet</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% content_for :javascript do %>
+    <script>
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '{your-app-id}',
+                xfbml      : true,
+                version    : 'v2.0'
+            });
+        };
+
+        (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<% end %>

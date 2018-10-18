@@ -1,0 +1,9 @@
+<div class="landing-tabs">
+    <div class="container">
+        <ul class="nav nav-tabs">
+            <%= active_link_to "Managed Support Coverage", [:managed_support_coverage], wrap_tag: :li, active: :exclusive %>
+            <%= active_link_to "Self-Managed Support Coverage", [:self_managed_support_coverage], wrap_tag: :li, active: :exclusive %>
+            <%= active_link_to "Our Portal", [:our_portal], wrap_tag: :li, active: :exclusive %>
+        </ul>
+    </div>
+</div>

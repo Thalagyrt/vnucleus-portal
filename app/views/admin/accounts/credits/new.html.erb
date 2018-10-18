@@ -1,0 +1,24 @@
+<% content_for :title do %>Credit Account<% end %>
+
+<% content_for :header do %>Credit Account<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Statements', [:admin, @account, :statements] %></li>
+    <li><%= link_to 'Credit Account', [:new, :admin, @account, :credits] %></li>
+<% end %>
+
+<%= simple_form_for @transaction_form, url: [:admin, @account, :credits], html: { class: 'form-horizontal' } do |f| %>
+    <%= f.input :amount, wrapper: :small_input do %>
+        <%= content_tag :span, class: 'input-group-addon' do %>
+            $
+        <% end %>
+        <%= f.input_field :amount_dollars, class: 'form-control' %>
+    <% end %>
+    <%= f.input :description, wrapper: :medium_input %>
+
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= f.button :submit, "Add Credit", id: 'transaction_form_submit', data: { confirm: 'Are you sure you want to add this credit?', disable_with: 'Saving...' }, class: 'btn btn-primary' %>
+        </div>
+    </div>
+<% end %>

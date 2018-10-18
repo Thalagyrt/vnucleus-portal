@@ -1,0 +1,124 @@
+<% content_for :title do %>Update Credit Card<% end %>
+
+<% content_for :header do %>Update My Credit Card<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Credit Card', [:users, @account, :credit_cards] %></li>
+    <li><%= link_to 'Update', [:edit, :users, @account, :credit_cards] %></li>
+<% end %>
+
+<%= simple_form_for @credit_card, :url => [:users, @account, :credit_cards], :html => { id: 'new_credit_card', :method => :put, class: 'form-horizontal' } do |f| %>
+    <%= f.error_notification %>
+    <div id="payment_errors" style="display: none" class="alert alert-danger"></div>
+
+    <%= f.input :name, wrapper: :medium_input %>
+    <%= f.input :number, wrapper: :small_input, required: true do %>
+        <input class="string required form-control" id="credit_card_number" name="credit_card[number]" size="20" type="text">
+    <% end %>
+    <%= f.input :cvc, wrapper: :tiny_input, required: true do %>
+        <input class="string required form-control" id="credit_card_cvc" name="credit_card[cvc]" size="6" type="text">
+    <% end %>
+    <%= f.input :expiration_date, required: true do %>
+        <div class="row">
+            <div class="col-xs-4 col-md-1"><input class="string required form-control" name="credit_card[expiration_month]" id="credit_card_expiration_month" size="2" type="text" placeholder="MM"></div>
+            <div class="col-xs-8 col-md-2"><input class="string required form-control" name="credit_card[expiration_year]" id="credit_card_expiration_year" size="4" type="text" placeholder="YYYY"></div>
+        </div>
+    <% end %>
+    <%= f.input :address_line1, wrapper: :medium_input %>
+    <%= f.input :address_line2, wrapper: :medium_input %>
+    <%= f.input :address_city, wrapper: :medium_input %>
+    <%= f.input :address_state, wrapper: :small_input %>
+    <%= f.input :address_zip, wrapper: :tiny_input %>
+    <%= f.input :address_country, wrapper: :medium_input, input_html: { class: 'select-chosen' } %>
+    <div class="form-group">
+        <div class="col-md-10 col-md-offset-2">
+            <p class="hidden-js lead">This form requires JavaScript to securely process your credit card.</p>
+            <%= f.button :submit, 'Save', data: { disable_with: 'Saving...' }, id: 'credit_card_submit', class: 'hidden-no-js btn btn-primary' %>
+        </div>
+    </div>
+<% end %>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        function stripeResponseHandler(status, response) {
+
+            if (response.error) {
+                $("#payment_errors").text(response.error.message);
+                $("#payment_errors").show();
+                $('#credit_card_submit').removeAttr('disable');
+                $('#credit_card_submit').val("Save");
+                $('#credit_card_number').attr('name', 'credit_card[number]');
+                $('#credit_card_cvc').attr('name', 'credit_card[cvc]');
+            }
+            else {
+                $('#credit_card_number').removeAttr('name');
+                $('#credit_card_cvc').removeAttr('name');
+
+                var form$ = $("#new_credit_card");
+                var token = response['id'];
+                form$.append("<input type='hidden' name='credit_card[token]' value='" + token + "'/>");
+                form$.get(0).submit();
+            }
+        }
+
+        $(document).ready(function() {
+            $('#new_credit_card').validate({
+                errorClass: 'help-block', // You can add help-inline instead of help-block if you like validation messages to the right of the inputs
+                errorElement: 'div',
+                errorPlacement: function(error, e) {
+                    e.parents('.form-group > div').append(error);
+                },
+                submitHandler: function(form) {
+                    $('#credit_card_submit').attr('disable','disable');
+                    $('#credit_card_submit').val("Saving...");
+
+                    Stripe.createToken({
+                        name: $('#credit_card_name').val(),
+                        number: $('#credit_card_number').val(),
+                        cvc: $('#credit_card_cvc').val(),
+                        exp_month: $('#credit_card_expiration_month').val(),
+                        exp_year: $('#credit_card_expiration_year').val(),
+                        address_line1: $('#credit_card_address_line1').val(),
+                        address_line2: $('#credit_card_address_line2').val(),
+                        address_city: $('#credit_card_address_city').val(),
+                        address_state: $('#credit_card_address_state').val(),
+                        address_zip: $('#credit_card_address_zip').val(),
+                        address_country: $('#credit_card_address_country').val(),
+                    }, stripeResponseHandler);
+
+                    // prevent the form from submitting with the default action
+                    return false;
+                },
+                highlight: function(e) {
+                    $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                    $(e).closest('.help-block').remove();
+                },
+                success: function(e) {
+                    // You can remove the .addClass('has-success') part if you don't want the inputs to get green after success!
+                    e.closest('.form-group').removeClass('has-success has-error').addClass('has-success');
+                    e.closest('.help-block').remove();
+                },
+                rules: {
+                    "credit_card[number]": {
+                        required: true,
+                        luhnCheck: true
+                    },
+                    "credit_card[cvc]": {
+                        required: true,
+                        number: true
+                    },
+                    "credit_card[expiration_month]": {
+                        required: true,
+                        number: true,
+                        range: [01, 12]
+                    },
+                    "credit_card[expiration_year]": {
+                        required: true,
+                        number: true,
+                        range: [new Date().getFullYear(), new Date().getFullYear() + 20]
+                    }
+                }
+            });
+        });
+    </script>
+<% end %>

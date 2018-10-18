@@ -1,0 +1,140 @@
+<% content_for :title do %>Dedicated Server <%= server.to_s %><% end %>
+
+<% content_for :header do %>
+    Dedicated Server Details
+
+    <div class="header-controls">
+        <span id="state"><%= server.render_state %></span>
+    </div>
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Dedicated', [:users, @account, :dedicated, :servers] %></li>
+    <li><%= link_to server.to_s, [:users, @account, :dedicated, @server] %></li>
+<% end %>
+
+<% if server.pending_suspension? %>
+    <div class="alert alert-danger">This server is past-due and will be suspended on <%= server.suspend_on %>.</div>
+<% end %>
+
+<% if server.pending_termination? %>
+    <div class="alert alert-danger">This server is past-due and will be terminated on <%= server.terminate_on %>.</div>
+<% end %>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <% if server.suspended? %>
+                <li>
+                    <%= link_to [:users, @account, :dedicated, @server, :unsuspensions], id: 'server_suspend' do %>
+                        <i class="fa fa-play"></i> Unsuspend
+                    <% end %>
+                </li>
+                <li>
+                    <%= link_to [:users, @account, :dedicated, @server, :terminations], id: 'server_terminate' do %>
+                        <i class="fa fa-times"></i> Terminate
+                    <% end %>
+                </li>
+            <% end %>
+        </ul>
+    </div>
+</nav>
+
+<% if server.provisioning? %>
+    <div class="progress active">
+        <div class="progress-bar" id="provision_progress"></div>
+    </div>
+    <p class="text-center">
+        <span id="provision_status">Loading...</span> <span id="provision_countdown"></span>
+    </p>
+<% end %>
+
+<div class="block">
+    <div class="block-title">
+        <h2>System Info</h2>
+    </div>
+
+    <%= display_for server do |d| %>
+        <%= d.display :hostname %>
+
+        <%= d.display :ip_address %>
+
+        <%= d.display :render_amount %>
+
+        <% if server.active? %>
+            <%= d.display :next_due %>
+        <% end %>
+
+        <%= d.display :render_managed %>
+
+        <% if server.active? %>
+            <%= d.display :render_root_username %>
+            <%= d.display :root_password do %>
+                <span id="root_password"><%= link_to "Show Password", [:users, @account, :dedicated, @server, :root_passwords], id: 'show_password', remote: true %></span>
+            <% end %>
+
+            <%= d.display :render_patch_at %>
+        <% end %>
+
+        <% if server.suspended? %>
+            <%= d.display :render_suspension_reason %>
+        <% end %>
+
+        <% if server.terminated? %>
+            <%= d.display :render_termination_reason %>
+        <% end %>
+    <% end %>
+</div>
+
+<div class="block">
+    <div class="block-title"><h2>Event Log</h2></div>
+
+    <table id="events" class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Category</th>
+            <th class="hidden-xs">User</th>
+            <th>Message</th>
+            <th class="hidden-xs">IP Address</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% server.events.each do |event| %>
+            <tr>
+                <td><%= event.to_param %></td>
+                <td><%= event.render_category %></td>
+                <td class="hidden-xs"><%= event.render_user_name %></td>
+                <td><%= event.render_message %></td>
+                <td class="hidden-xs"><%= event.render_ip_address %></td>
+                <td><%= event.render_created_at %></td>
+            </tr>
+        <% end %>
+        </tbody>
+    </table>
+</div>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#events').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[5, "desc"]],
+                "aoColumns": [
+                    null,
+                    null,
+                    {"sType": "raw-string"},
+                    null,
+                    {"sType": "ip-address"},
+                    {"sType": "raw-numeric"},
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

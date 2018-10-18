@@ -1,0 +1,87 @@
+<% content_for :title do %>Servers<% end %>
+
+<% content_for :header do %>My Servers<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Servers', [:users, @account, :solus, :servers] %></li>
+<% end %>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <% if current_power.creatable_account_solus_servers?(@account) %>
+                <li>
+                    <%= link_to [:new, :users, @account, :solus, :server] do %>
+                        <i class="fa fa-plus-circle"></i> New Server
+                    <% end %>
+                </li>
+            <% end %>
+            <li>
+                <% if params[:show_all].present? %>
+                    <%= link_to [:users, @account, :solus, :servers] do %>
+                        <i class="fa fa-eye-slash"></i> Hide Cancelled Servers
+                    <% end %>
+                <% else %>
+                    <%= link_to [:users, @account, :solus, :servers, show_all: true] do %>
+                        <i class="fa fa-eye"></i> Show Cancelled Servers
+                    <% end %>
+                <% end %>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<table id="servers" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th class="col-md-1">#</th>
+        <th>Hostname</th>
+        <th class="hidden-xs">IP Address</th>
+        <th class="hidden-xs">Plan</th>
+        <th class="hidden-xs">Operating System</th>
+        <th class="hidden-xs">Location</th>
+        <th>Price</th>
+        <th>State</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% servers.each do |server| %>
+        <tr>
+            <td class="col-md-1"><%= server.link_long_id :users %></td>
+            <td><%= server.link_hostname :users %></td>
+            <td class="hidden-xs"><%= server.ip_address %></td>
+            <td class="hidden-xs"><%= server.render_plan_name %></td>
+            <td class="hidden-xs"><%= server.template_name %></td>
+            <td class="hidden-xs"><%= server.cluster_name %> / <%= server.node_name || "N/A" %></td>
+            <td><%= server.render_amount %></td>
+            <th><%= server.render_state %></th>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#servers').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[1, "asc"]],
+                "aoColumns": [
+                    {"sType": "raw-string"},
+                    {"sType": "raw-string"},
+                    {"sType": "ip-address"},
+                    {"sType": "raw-numeric"},
+                    null,
+                    null,
+                    {"sType": "raw-numeric"},
+                    null,
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

@@ -1,0 +1,63 @@
+<% content_for :title do %>Blog<% end %>
+
+<% content_for :header do %>Blog<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Blog', [:admin, :blog, :posts] %></li>
+<% end %>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <%= link_to [:new, :admin, :blog, :post] do %>
+                    <i class="fa fa-plus-circle"></i> New Post
+                <% end %>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<table id="posts" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th class="col-md-3">Title</th>
+        <th>Applies To</th>
+        <th class="hidden-xs">Created</th>
+        <th class="hidden-xs">Last Updated</th>
+        <th class="hidden-xs">Published At</th>
+        <th class="hidden-xs">Author</th>
+        <th>State</th>
+    </tr>
+    </thead>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#posts').dataTable({
+                "sAjaxSource": "<%= escape_javascript url_for([:admin, :blog, :posts, { format: :json, tagged: params[:tagged] }.select { |k,v| v.present? }]) %>",
+                "bServerSide": true,
+                "bDestroy": true,
+                <% if params[:search].present? %>
+                "oSearch": {"sSearch": "<%= escape_javascript params[:search] %>"},
+                <% end %>
+                "aaSorting": [[4, "desc"]],
+                "aoColumns": [
+                    {"mDataProp": "title"},
+                    {"mDataProp": "tags_list", "bSortable": false},
+                    {"mDataProp": "created_at"},
+                    {"mDataProp": "updated_at"},
+                    {"mDataProp": "published_at"},
+                    {"mDataProp": "user", "bSortable": false},
+                    {"mDataProp": "status"},
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

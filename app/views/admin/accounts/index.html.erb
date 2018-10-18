@@ -1,0 +1,65 @@
+<% content_for :title do %>Accounts<% end %>
+
+<% content_for :header do %>Accounts<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Accounts', [:admin, :accounts] %></li>
+<% end %>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <% if params[:show_all].present? %>
+                    <%= link_to [:admin, :accounts] do %>
+                        <i class="fa fa-eye-slash"></i> Hide Closed Accounts
+                    <% end %>
+                <% else %>
+                    <%= link_to [:admin, :accounts, show_all: true] do %>
+                        <i class="fa fa-eye"></i> Show Closed Accounts
+                    <% end %>
+                <% end %>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+<table id="accounts" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th class="col-md-1">#</th>
+        <th>Name</th>
+        <th>Balance</th>
+        <th>Monthly Rate</th>
+        <th>Server Count</th>
+        <th class="col-md-1">State</th>
+    </tr>
+    </thead>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#accounts').dataTable({
+                "sAjaxSource": "<%= escape_javascript url_for([:admin, :accounts, { format: :json, show_all: params[:show_all] }.select { |k,v| v.present? }]) %>",
+                "bServerSide": true,
+                "bDestroy": true,
+                "aaSorting": [[1, "asc"]],
+                "aoColumns": [
+                    {"mDataProp": "long_id"},
+                    {"mDataProp": "name"},
+                    {"mDataProp": "balance"},
+                    {"mDataProp": "monthly_rate"},
+                    {"mDataProp": "server_count"},
+                    {"mDataProp": "state"},
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

@@ -1,0 +1,5 @@
+vNucleus Monitoring has detected a change in one of your services at <%= @check.last_run_at %>.
+
+<%= @check.status_message %><% if @check.notify_staff? %>
+
+vNucleus has been notified and will be looking into this issue shortly.<% end %>

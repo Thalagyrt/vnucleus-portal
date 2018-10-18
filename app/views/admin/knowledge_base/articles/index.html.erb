@@ -1,0 +1,61 @@
+<% content_for :title do %>Knowledge Base<% end %>
+
+<% content_for :header do %>Knowledge Base<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Knowledge Base', [:admin, :knowledge_base, :articles] %></li>
+<% end %>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <%= link_to [:new, :admin, :knowledge_base, :article] do %>
+                    <i class="fa fa-plus-circle"></i> New Article
+                <% end %>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<table id="articles" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th class="col-md-1">#</th>
+        <th>Title</th>
+        <th>Applies To</th>
+        <th class="hidden-xs">Created</th>
+        <th class="hidden-xs">Last Updated</th>
+        <th>State</th>
+    </tr>
+    </thead>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#articles').dataTable({
+                "sAjaxSource": "<%= escape_javascript url_for([:admin, :knowledge_base, :articles, { format: :json, tagged: params[:tagged] }.select { |k,v| v.present? }]) %>",
+                "bServerSide": true,
+                "bDestroy": true,
+                <% if params[:search].present? %>
+                "oSearch": {"sSearch": "<%= escape_javascript params[:search] %>"},
+                <% end %>
+                "aaSorting": [[0, "asc"]],
+                "aoColumns": [
+                    {"mDataProp": "id"},
+                    {"mDataProp": "title"},
+                    {"mDataProp": "tags_list", "bSortable": false},
+                    {"mDataProp": "created_at"},
+                    {"mDataProp": "updated_at"},
+                    {"mDataProp": "status"},
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

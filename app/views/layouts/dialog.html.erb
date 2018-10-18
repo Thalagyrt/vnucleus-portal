@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+
+    <title>vNucleus</title>
+
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0">
+
+    <%= stylesheet_link_tag 'application' %>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <%= javascript_include_tag 'vendor/modernizr-2.7.1-respond-1.4.2.min' %>
+
+    <link rel="shortcut icon" href="<%= image_url "favicon.ico" %>">
+    <link rel="apple-touch-icon" href="<%= image_url "icon57.png" %>" sizes="57x57">
+    <link rel="apple-touch-icon" href="<%= image_url "icon72.png" %>" sizes="72x72">
+    <link rel="apple-touch-icon" href="<%= image_url "icon76.png" %>" sizes="76x76">
+    <link rel="apple-touch-icon" href="<%= image_url "icon114.png" %>" sizes="114x114">
+    <link rel="apple-touch-icon" href="<%= image_url "icon120.png" %>" sizes="120x120">
+    <link rel="apple-touch-icon" href="<%= image_url "icon144.png" %>" sizes="144x144">
+    <link rel="apple-touch-icon" href="<%= image_url "icon152.png" %>" sizes="152x152">
+
+    <%= csrf_meta_tags %>
+</head>
+
+<body>
+<header class="navbar navbar-default navbar-fixed-top">
+    <%= link_to [:root], class: 'navbar-brand' do %>
+        <span class="logo"></span>
+        v<strong>Nucleus</strong>
+    <% end %>
+</header>
+
+<div id="login-container">
+    <div id="page-content" class="block remove-margin">
+        <%= yield %>
+    </div>
+</div>
+
+<%= javascript_include_tag 'application' %>
+
+<%= render partial: 'olark' %>
+
+</body>
+</html>

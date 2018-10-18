@@ -1,0 +1,65 @@
+<% content_for :title do %>Announcements<% end %>
+
+<% content_for :header do %>Announcements<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Announcements', [:admin, :communications, :announcements] %></li>
+<% end %>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <%= link_to [:new, :admin, :communications, :announcement] do %>
+                    <i class="fa fa-plus-circle"></i> New Announcement
+                <% end %>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<table id="announcements" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th class="col-md-1">#</th>
+        <th class="col-md-1">Type</th>
+        <th>Subject</th>
+        <th class="hidden-xs">Sent At</th>
+        <th class="hidden-xs">Sent By</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% announcements.each do |announcement| %>
+        <tr>
+            <td class="col-md-1"><%= announcement.link_id :admin %></td>
+            <td><%= announcement.render_announcement_type %></td>
+            <td><%= announcement.link_subject :admin %></td>
+            <td class="hidden-xs"><%= announcement.render_sent_at %></td>
+            <td class="hidden-xs"><%= announcement.render_sent_by %></td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#announcements').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[3, "desc"]],
+                "aoColumns": [
+                    {"sType": "raw-numeric"},
+                    {"sType": "raw-string"},
+                    {"sType": "raw-string"},
+                    {"sType": "raw-numeric"},
+                    null,
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

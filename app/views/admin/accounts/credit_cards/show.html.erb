@@ -1,0 +1,54 @@
+<% content_for :title do %>Credit Card<% end %>
+
+<% content_for :header do %>Credit Card<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Credit Card', [:admin, @account, :credit_cards] %></li>
+<% end %>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <%= link_to [:edit, :admin, @account, :credit_cards] do %>
+                    <i class="fa fa-pencil"></i> Update Credit Card
+                <% end %>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<table class="table table-condensed">
+    <tr>
+        <th class="col-md-3">Card Type</th>
+        <td class="col-md-3"><%= credit_card.type %></td>
+        <th class="col-md-3">Expiration Date</th>
+        <td class="col-md-3"><%= credit_card.render_expiration_date %></td>
+    </tr>
+    <tr>
+        <th class="col-md-3">Name On Card</th>
+        <td class="col-md-3"><%= credit_card.name %></td>
+        <th class="col-md-3">Card Number</th>
+        <td class="col-md-3"><%= credit_card.masked_number %></td>
+    </tr>
+    <tr>
+        <th>Address Line 1</th>
+        <td colspan="3"><%= credit_card.address_line1 %></td>
+    </tr>
+    <tr>
+        <th>Address Line 2</th>
+        <td colspan="3"><%= credit_card.address_line2 %></td>
+    </tr>
+    <tr>
+        <th>City</th>
+        <td><%= credit_card.address_city %></td>
+        <th>State</th>
+        <td><%= credit_card.address_state %></td>
+    </tr>
+    <tr>
+        <th>Postal Code</th>
+        <td><%= credit_card.address_zip %></td>
+        <th>Country</th>
+        <td><%= credit_card.address_country %></td>
+    </tr>
+</table>

@@ -1,0 +1,27 @@
+<% if @console_requested_by.present? %>
+clearTimeout(Lock.relinquish_timer);
+Lock.relinquish_timer = setTimeout(relinquish, 30000);
+
+bootbox.hideAll();
+
+bootbox.dialog({
+    message: "<%= escape_javascript(console_requested_by.render_full_name) %> is requesting console access. If you do not respond within 30 seconds, your session will be ended.",
+    title: "Console Access Requested",
+    buttons: {
+        keep: {
+            label: "Keep Console",
+            className: "btn-success",
+            callback: function() {
+                clearTimeout(Lock.relinquish_timer);
+            }
+        },
+        relinquish: {
+            label: "Relinquish Console",
+            className: "btn-danger",
+            callback: function() {
+                relinquish();
+            }
+        }
+    }
+});
+<% end %>

@@ -1,0 +1,78 @@
+<% content_for :title do %>Billing Statement for <%= statement.to_s %><% end %>
+
+<% content_for :header do %>
+    <%= statement.to_s %>
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Billing Statements', [:users, @account, :statements] %></li>
+    <li><%= link_to statement.to_s, [:users, @account, @statement] %></li>
+<% end %>
+
+<div class="row gutter30">
+    <div class="col-md-4 statement-table">
+        <%= display_for statement do |d| %>
+            <%= d.display :render_starting_balance %>
+            <%= d.display :render_ending_balance %>
+            <%= d.display :render_net_change, class: statement.net_change_class %>
+        <% end %>
+    </div>
+    <div class="col-md-4 statement-table">
+        <%= display_for statement do |d| %>
+            <%= d.display :render_debits %>
+            <%= d.display :render_refunds %>
+            <%= d.display :render_total_debits, class: 'danger' %>
+        <% end %>
+    </div>
+    <div class="col-md-4 statement-table">
+        <%= display_for statement do |d| %>
+            <%= d.display :render_payments %>
+            <%= d.display :render_credits %>
+            <%= d.display :render_referrals %>
+            <%= d.display :render_total_credits, class: 'success' %>
+        <% end %>
+    </div>
+</div>
+
+<table id="transactions" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Amount</th>
+        <th>Posted</th>
+        <th class="hidden-xs">Description</th>
+        <th class="hidden-xs">Reference</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% statement.transactions.each do |transaction| %>
+        <tr class="<%= transaction.tr_class %>">
+            <td><%= transaction.render_amount %></td>
+            <td><%= transaction.render_created_at %></td>
+            <td class="hidden-xs"><%= transaction.description %></td>
+            <td class="hidden-xs"><%= transaction.reference %></td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#transactions').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[1, "desc"]],
+                "aoColumns": [
+                    {"sType": "raw-numeric"},
+                    {"sType": "raw-numeric"},
+                    null,
+                    null,
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

@@ -1,0 +1,158 @@
+<% content_for :title do %>Reinstall Server <%= server.to_s %><% end %>
+
+<% content_for :header do %>Reinstall Server<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Servers', [:users, @account, :solus, :servers] %></li>
+    <li><%= link_to server.to_s, [:users, @account, :solus, @server] %></li>
+    <li><%= link_to 'Reinstall', [:new, :users, @account, :solus, @server, :reinstalls] %></li>
+<% end %>
+
+<%= simple_form_for @reinstall_form, url: [:users, @account, :solus, @server, :reinstalls], method: :post, html: { class: 'form-horizontal block', id: 'reinstall_server' } do |f| %>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <p>Reinstalling this server will completely erase your data and give you a fresh install of your operating system.</p>
+            <p>Please note that your server may receive a new set of IP addresses during this process.</p>
+            <p>If the new operating system has a different price from the operating system you currently have, your account will be debited the difference at a prorated rate.</p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-2">
+            <p class="server-builder-hint hidden-sm hidden-xs" id="template-hint">
+                <small>
+                    Choose An OS <i class="fa fa-arrow-right"></i>
+                </small>
+            </p>
+        </div>
+        <div class="col-md-10">
+            <table class="table plans">
+                <thead>
+                <tr>
+                    <th class="col-md-3">Operating System</th>
+                    <th class="hidden-xs"></th>
+                    <th>Price</th>
+                    <th>Due Now</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% @reinstall_form.templates.each do |template| %>
+                    <tr class="cursor-pointer" onclick="selectTemplate(<%= template.id %>);">
+                        <td><label class="radio"><input id="reinstall_form_template_id_<%= template.id %>" name="reinstall_form[template_id]" type="radio" value="<%= template.id %>" <% if template.id == server.template.id %>checked="checked"<% end %>> <%= template.name %></label></td>
+                        <td class="hidden-xs"><%= template.description %></td>
+                        <td><%= template.decorate.render_amount %></td>
+                        <td><%= server.render_prorated_template_difference(template) %></td>
+                    </tr>
+                <% end %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= link_to "Cancel", [:users, @account, :solus, @server], class: 'btn btn-default', id: 'server_keep' %>
+            <%= f.button :submit, "Reinstall", method: :post, class: 'btn btn-primary', id: 'server_reinstall', data: { confirm: "Are you sure you want to reinstall server #{@server.to_s}? This will erase all of your data.", confirm_button: 'Reinstall' } %>
+        </div>
+    </div>
+<% end %>
+
+<div class="row gutter30">
+    <div class="col-md-8">
+        <div class="block">
+            <div class="block-title"><h2>System Info</h2></div>
+
+            <%= display_for server do |d| %>
+                <%= d.display :hostname %>
+
+                <%= d.display :plan_name %>
+
+                <%= d.display :render_amount %>
+                <%= d.display :next_due %>
+
+                <%= d.display :cluster_name %>
+                <%= d.display :render_node_name %>
+                <%= d.display :template_name %>
+
+                <% if server.active? %>
+                    <%= d.display :render_root_username %>
+                    <%= d.display :root_password do %>
+                        <span id="root_password"><%= link_to "Show Password", [:users, @account, :solus, @server, :root_passwords], id: 'show_password', remote: true %></span>
+                    <% end %>
+                <% end %>
+            <% end %>
+        </div>
+
+        <div class="block full">
+            <div class="block-title"><h2>Transfer</h2></div>
+
+            <div class="text-center transfer-graph">
+                <%= image_tag url_for([:users, @account, :solus, server, :transfer_graphs]), onerror: 'this.style.display = "none"' %>
+            </div>
+
+            <div class="progress progress-striped">
+                <div class="progress-bar <%= server.transfer_class %>" style="width: <%= server.used_transfer_percentage %>%"></div>
+            </div>
+            <div class="text-center">
+                <%= server.render_used_transfer %> / <%= server.render_transfer %>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="block full">
+            <div class="block-title"><h2>IP Addresses</h2></div>
+            <div id="ip_addresses">
+                <div class="text-center"><i class="fa fa-gear fa-spin fa-4x"></i></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        function selectTemplate(id) {
+            $("#reinstall_form_template_id_"+id)[0].checked = true;
+        }
+
+        $(function() {
+            $('#reinstall_server').validate({
+                errorClass: 'help-block', // You can add help-inline instead of help-block if you like validation messages to the right of the inputs
+                errorElement: 'div',
+                errorPlacement: function(error, e) {
+                    e.parents('.form-group > div').append(error);
+                },
+                highlight: function(e) {
+                    $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                    $(e).closest('.help-block').remove();
+                },
+                success: function(e) {
+                    // You can remove the .addClass('has-success') part if you don't want the inputs to get green after success!
+                    e.closest('.form-group').removeClass('has-success has-error').addClass('has-success');
+                    e.closest('.help-block').remove();
+                },
+                rules: {
+                    "reinstall_form[template_id]": {
+                        required: true,
+                    }
+                },
+                messages: {
+                    "reinstall_form[template_id]": {
+                        required: "Please select an operating system"
+                    }
+                }
+            });
+        });
+    </script>
+
+    <% if server.active? %>
+        <script type="text/javascript">
+            $(function() {
+                $.ajax({
+                    type: "GET",
+                    url: "<%= url_for [:users, @account, :solus, @server, :statuses] %>"
+                });
+            });
+        </script>
+    <% end %>
+<% end %>

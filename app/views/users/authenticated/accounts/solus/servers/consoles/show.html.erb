@@ -1,0 +1,28 @@
+<% content_for :title do %>Console Access for Server <%= server.to_s %><% end %>
+
+<%= render partial: @console.type.to_s %>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        var Lock = {};
+
+        function relinquish() {
+            window.close();
+        }
+
+        $(document).ready(function() {
+            function consoleHeartbeat() {
+                $.ajax({
+                    url: "<%= url_for [:users, @account, :solus, @server, :consoles, lock_id: @server.console_lock_id] %>",
+                    cache: false,
+                    method: 'PUT',
+                    error: function() {
+                        window.close();
+                    }
+                });
+            }
+
+            setInterval(consoleHeartbeat, <%= Rails.application.config.console_locks[:heartbeat] * 1000 %>);
+        });
+    </script>
+<% end %>

@@ -1,0 +1,9 @@
+<div class="text-center">
+    <h1>
+        <i class="fa fa-lock"></i> Enabled
+    </h1>
+
+    <p>Two factor authentication is enabled on your profile. Anyone logging in with your credentials will be required to enter a one time password provided by the Google Authenticator app on your mobile device.</p>
+
+    <p><%= link_to "Disable Two Factor", [:new, :users, :one_time_passwords, :disables], class: 'btn btn-danger btn-lg' %></p>
+</div>

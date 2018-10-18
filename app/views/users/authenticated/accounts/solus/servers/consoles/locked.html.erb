@@ -1,0 +1,42 @@
+<% content_for :title do %>Console for server <%= server.to_s %><% end %>
+
+<div id="login-container">
+    <div id="page-content" class="block remove-margin">
+        <div class="block-header">
+            <div class="header-section">
+                <h1 class="text-center">Console In Use</h1>
+            </div>
+        </div>
+        <p>This console is in use by <%= server.render_console_locked_by %>.<br/>
+            We'll automatically connect you once it's available!</p>
+        <p id="evictbutton"><%= link_to "Request Console", [:users, @account, :solus, @server, :consoles], class: 'btn btn-danger', method: :delete, remote: true %></p>
+        <p id="evictmessage">Your request has been sent. If the user does not respond within 30 seconds, you will receive the console.</p>
+    </div>
+</div>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        function showEvictButton() {
+            $("#evictmessage").hide();
+            $("#evictbutton").show();
+        }
+
+        function showEvictMessage() {
+            $("#evictbutton").hide();
+            $("#evictmessage").show();
+        }
+
+        $(document).ready(function() {
+            showEvictButton();
+
+            function pollForConsole() {
+                $.ajax({
+                    url: "<%= url_for [:admin, @account, :solus, @server, :consoles] %>",
+                    cache: false
+                });
+            }
+
+            setInterval(pollForConsole, 2000);
+        });
+    </script>
+<% end %>

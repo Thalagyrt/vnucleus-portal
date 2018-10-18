@@ -1,0 +1,102 @@
+<% content_for :title do %>Self-Managed VPS Support Coverage<% end %>
+
+<div class="landing-intro">
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="animation-pullDown">Self-Managed Support Coverage</h1>
+            <p class="animation-fadeIn"><span class="jumbotron-background">Make use of our years of experience so you can relax and enjoy your server</span></p>
+            <%= link_to 'Get Started', [:new, :users, :sign_up], class: 'btn btn-primary btn-lg' %>
+        </div>
+    </div>
+</div>
+
+<%= render partial: 'feature_tabs' %>
+
+<div class="landing-section">
+    <div class="container">
+        <h3 class="page-header">Support Availability</h3>
+
+        <div class="row">
+            <div class="col-md-6">
+                <p>Ticket support is available 24 hours per day, 7 days per week, 365 days per year.</p>
+                <p>Anything not listed in the detailed support coverage below will be supported on a best-effort basis.</p>
+                <p>Please <%= link_to "log in", [:new, :users, :sessions, :session] %> to our support portal to open a ticket.</p>
+            </div>
+            <div class="col-md-6">
+                <p>Tickets have two priorities, each with their own SLA. Typically our response is much faster than the advertised SLA! We trust our clients to make correct use of ticket priorities. Logging a billing inquiry as critical for example is inappropriate use of ticket priority.</p>
+                <ul>
+                    <li>Critical: 30 minutes</li>
+                    <li>Normal: 24 hours</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3 class="page-header">Support In Detail</h3>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h4 class="text-center">Linux</h4>
+                <ul class="support-headers">
+                    <li>
+                        <div class="header">Operating System</div>
+                        <ul>
+                            <li>Initial firewall configuration and hardening</li>
+                            <li>Initial performance tuning</li>
+                            <li>Kernel upgrades</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="header">Web Services</div>
+                        <ul>
+                            <li>Installation of Apache2 HTTPD</li>
+                            <li>Installation of nginx HTTPD</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="header">MySQL / MariaDB</div>
+                        <ul>
+                            <li>Installation</li>
+                            <li>PHPMyAdmin installation and hardening</li>
+                            <li>Troubleshoot startup or connectivity issues</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="header">PostgreSQL</div>
+                        <ul>
+                            <li>Installation</li>
+                            <li>Troubleshoot startup or connectivity issues</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h4 class="text-center">Windows</h4>
+                <ul class="support-headers">
+                    <li>
+                        <div class="header">Operating System</div>
+                        <ul>
+                            <li>Initial firewall configuration and hardening</li>
+                            <li>Initial performance tuning</li>
+                            <li>Microsoft licensing</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="header">Web Services</div>
+                        <ul>
+                            <li>Installation of IIS</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="header">Microsoft SQL Server 2008 R2, 2012, and 2014</div>
+                        <ul>
+                            <li>Installation of SQL Server</li>
+                            <li>Microsoft licensing</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%= render partial: 'footer_call' %>

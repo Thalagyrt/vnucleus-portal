@@ -1,0 +1,58 @@
+<% content_for :title do %>Clusters<% end %>
+
+<% content_for :header do %>
+    Clusters
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Clusters', [:admin, :solus, :clusters] %></li>
+<% end %>
+
+<table id="clusters" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th class="col-md-1">#</th>
+        <th>Name</th>
+        <th class="hidden-xs">Hostname</th>
+        <th class="hidden-xs">Available RAM</th>
+        <th class="hidden-xs">Available Disk</th>
+        <th class="hidden-xs">Last Synchronization</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% clusters.each do |cluster| %>
+        <tr>
+            <td class="col-md-1"><%= cluster.link_id :admin %></td>
+            <td><%= cluster.link_name :admin %></td>
+            <td class="hidden-xs"><%= cluster.render_hostname %></td>
+            <td class="hidden-xs"><%= cluster.render_available_ram %></td>
+            <td class="hidden-xs"><%= cluster.render_available_disk %></td>
+            <td class="hidden-xs"><%= cluster.render_synchronized_at %></td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#clusters').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[0, "asc"]],
+                "aoColumns": [
+                    {"sType": "raw-numeric"},
+                    {"sType": "raw-string"},
+                    null,
+                    {"sType": "raw-numeric"},
+                    {"sType": "raw-numeric"},
+                    {"sType": "raw-numeric"},
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

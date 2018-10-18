@@ -1,0 +1,105 @@
+<% content_for :title do %>What Our Clients Are Saying<% end %>
+
+<div class="landing-intro">
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="animation-pullDown">Testimonials</h1>
+            <p class="animation-fadeIn"><span class="jumbotron-background">People are saying good things about our service</span></p>
+            <%= link_to 'Get Started', [:new, :users, :sign_up], class: 'btn btn-primary btn-lg' %>
+        </div>
+    </div>
+</div>
+
+<div class="landing-section">
+    <div class="container">
+        <div class="clients">
+            <div class="client">
+                <h3 class="page-header"><%= link_to 'Boca Raton Tribune', 'http://www.bocaratontribune.com/', target: 'blank' %></h3>
+
+                <blockquote>
+                    <p>We had previously used shared hosting and we had nothing but bad support and crashes. James and his team have helped us with migrating the site over and deciding which plan was best for us. The extra money per month is worth every penny! As a newspaper, our site must be up 24/7 as news happens constantly. With our previous provider I always worried, and when the site went down I stayed on the phone for hours to get it back up. Since making the switch I have been able to sleep well knowing James and his team have my back.</p>
+                    <small>Douglas Heizer, Publisher</small>
+                </blockquote>
+
+                <p>The Boca Raton Tribune is a community newspaper that has been proudly serving the city of Boca Raton and its residents for over 5 years.</p>
+
+                <ul class="contact">
+                    <li><i class="fa fa-phone"></i> 561-910-4336</li>
+                    <li><i class="fa fa-envelope"></i> <%= link_to 'frontdesk@bocaratontribune.com', 'mailto:frontdesk@bocaratontribune.com' %></li>
+                </ul>
+            </div>
+
+            <div class="client">
+                <h3 class="page-header"><%= link_to 'Pharus Group', 'http://www.pharusgroup.com/', target: 'blank' %></h3>
+
+                <blockquote>
+                    <p>We have been using vNucleus to host our internal applications and platforms for the past year. Speed, service, and reliability have been stellar, and support is a pleasure to work with.</p>
+                    <small>Kevin Clark, Operations Coordinator</small>
+                </blockquote>
+
+                <p>Pharus Group is a specialized business management advisory firm providing out-sourced business management services for small to mid-sized organizations and professionals. We provide seasoned management expertise and support services to guide day-to-day operations, growth and profitability.</p>
+
+                <ul class="contact">
+                    <li><i class="fa fa-phone"></i> 772-223-3344</li>
+                    <li><i class="fa fa-envelope"></i> <%= link_to 'info@pharusgroup.com', 'mailto:info@pharusgroup.com' %></li>
+                </ul>
+            </div>
+
+            <div class="client">
+                <h3 class="page-header"><%= link_to 'Verisurf', 'http://www.verisurf.com/', target: 'blank' %></h3>
+
+                <blockquote>
+                    <p>We rely on vNucleus for rock solid VPS performance and excellent customer service.  Leveraging our VPS we were able to save thousands of dollars yearly compared to our old cloud hosting.</p>
+                    <small>Matt Becker, Senior Architect</small>
+                </blockquote>
+
+                <p>Verisurf Software, Inc. is a metrology software development company committed to delivering premier, field-proven computer-aided inspection and manufacturing solutions. Headquartered in Anaheim, California, we offer the most powerful, efficient and competitively priced Model Based Definition (MBD) software suite available today, bringing measurement metrology to the paperless factory.</p>
+
+                <ul class="contact">
+                    <li><i class="fa fa-phone"></i> 888-713-7201</li>
+                    <li><i class="fa fa-envelope"></i> <%= link_to 'info@verisurf.com', 'mailto:info@verisurf.com' %></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="landing-section">
+    <div class="container">
+        <blockquote>
+            <p>At the moment I am running two of the VPS 400 packages and I could not be more satisfied. I'm a developer but servers and hardware aren't my strong suit. I have come to rely on the vNucleus team to save me from myself and prevent me from making poor decisions. They have been with me every step of the way to get the servers set up the way that I need (even after I changed my mind a few times and needed their help time after time after time after time after time).</p>
+            <p>With the business close to launch, everything is set up and running perfectly. All the stress tests have gone on without a single issue and I am completely confident I can launch knowing that this part of the set up is rock solid, and if something goes wrong, there's a rock solid staff behind it.</p>
+            <p>Every interaction with every member of the team has been informational, extremely pleasant and professional. I've never felt intimidated even though I've had to contact support several times for help (above and beyond what they should be expected to do) and the response has always been more than I expected.</p>
+            <small>Dan J, client since 2013</small>
+        </blockquote>
+    </div>
+</div>
+
+<div class="landing-section">
+    <div class="container">
+        <div class="row">
+            <div class="row">
+                <div class="col-md-4">
+                    <blockquote>
+                        <p>James has been helping me for the past few hours with just about anything I've asked him, and not only has stuff gotten done, but I've learned quite a bit along the way.</p>
+                        <small>Brian C, client since 2012</small>
+                    </blockquote>
+                </div>
+                <div class="col-md-4">
+                    <blockquote>
+                        <p>Had a few things set up through the ticket system (web server, mumble, minecraft) and the response was quick and super helpful. You guys are really fast.</p>
+                        <small>Matthew S, client since 2012</small>
+                    </blockquote>
+                </div>
+                <div class="col-md-4">
+                    <blockquote>
+                        <p>I went from shared hosting from someone else to a vNucleus instance, and that extra $ is worth it. Instead of a hobbled shell, I get full root access and lightning-fast support.</p>
+                        <small>Justin C, client since 2012</small>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%= render partial: 'footer_call' %>

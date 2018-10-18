@@ -1,0 +1,53 @@
+<% content_for :title do %>Users<% end %>
+
+<% content_for :header do %>Users<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Users', [:admin, :users] %></li>
+<% end %>
+
+<table id="users" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th class="col-md-1">#</th>
+        <th>Name</th>
+        <th class="hidden-xs">Email</th>
+        <th class="hidden-xs">Last Activity</th>
+        <th class="hidden-xs">State</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% users.each do |user| %>
+        <tr>
+            <td class="col-md-1"><%= user.link_id :admin %></td>
+            <td><%= user.link_full_name :admin %></td>
+            <td class="hidden-xs"><%= user.email %></td>
+            <td class="hidden-xs"><%= user.render_active_at %></td>
+            <td class="hidden-xs"><%= user.render_state %></td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#users').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[1, "asc"]],
+                "aoColumns": [
+                    {"sType": "raw-numeric"},
+                    {"sType": "raw-string"},
+                    null,
+                    {"sType": "raw-numeric"},
+                    null,
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

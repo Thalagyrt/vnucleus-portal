@@ -1,0 +1,33 @@
+<% content_for :title do %>Service Notices<% end %>
+<% content_for :header do %>Service Notices<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Service Notices', [:admin, :service, :notices] %></li>
+<% end %>
+
+<%= render partial: 'form', locals: { remote: false } %>
+
+<% if notices.present? %>
+    <hr>
+
+    <table id="notices" class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>Message</th>
+            <th class="col-md-1"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% notices.each do |notice| %>
+            <tr>
+                <td><%= notice.message %></td>
+                <td>
+                    <%= button_to [:admin, :service, notice], method: :delete, class: 'btn btn-xs btn-danger', data: { confirm: 'Are you sure you want to delete this notice?' } do %>
+                        <i class="fa fa-times"></i>
+                    <% end %>
+                </td>
+            </tr>
+        <% end %>
+        </tbody>
+    </table>
+<% end %>

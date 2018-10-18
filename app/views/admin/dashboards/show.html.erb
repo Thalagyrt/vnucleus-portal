@@ -1,0 +1,357 @@
+<% content_for :header do %>Dashboard<% end %>
+
+<div class="row gutter30">
+    <div class="col-md-6">
+        <div class="block" id="financials">
+            <div class="block-title"><h2>Financials</h2></div>
+
+            <%= display_for dashboard do |d| %>
+                <%= d.display :render_income_this_year %>
+                <%= d.display :render_fees_this_year %>
+                <%= d.display :render_monthly_rate %>
+            <% end %>
+        </div>
+
+        <div class="block">
+            <div class="block-title"><h2>Account Statistics</h2></div>
+
+            <%= display_for dashboard do |d| %>
+                <%= d.display :current_solus_servers %>
+                <%= d.display :current_dedicated_servers %>
+            <% end %>
+        </div>
+    </div>
+    <% if dashboard.solus_clusters? %>
+        <div class="col-md-6">
+            <div class="block" id="node_health">
+                <div class="block-title">
+                    <h2>Node Health</h2>
+
+                    <div class="block-options pull-right">
+                        <%= link_to "Clusters", [:admin, :solus, :clusters], class: 'btn btn-sm btn-primary' %>
+                    </div>
+                </div>
+
+                <%= display_for dashboard do |d| %>
+                    <%= d.display :available_ram do %>
+                        <%= dashboard.render_available_ram %> <small>/</small> <%= dashboard.render_ram_limit %>
+                    <% end %>
+                    <%= d.display :ram_utilization do %>
+                        <div class="progress remove-margin" id="ram_utilization">
+                            <div class="progress-bar" style="width: <%= dashboard.ram_utilization %>%"><%= dashboard.ram_utilization %>%</div>
+                        </div>
+                    <% end %>
+                    <%= d.display :available_disk do %>
+                        <%= dashboard.render_available_disk %> <small>/</small> <%= dashboard.render_disk_limit %>
+                    <% end %>
+                    <%= d.display :disk_utilization do %>
+                        <div class="progress remove-margin" id="disk_utilization">
+                            <div class="progress-bar" style="width: <%= dashboard.disk_utilization %>%"><%= dashboard.disk_utilization %>%</div>
+                        </div>
+                    <% end %>
+                <% end %>
+            </div>
+        </div>
+    <% end %>
+</div>
+
+<% if dashboard.open_tickets? %>
+    <div class="block">
+        <div class="block-title"><h2>Open Tickets</h2></div>
+
+        <table id="open_tickets" class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th class="col-md-1">#</th>
+                <th>Subject</th>
+                <th class="hidden-xs">Account</th>
+                <th class="hidden-xs">Last Update</th>
+                <th class="hidden-xs">Updated By</th>
+                <th>Priority</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% dashboard.open_tickets.each do |ticket| %>
+                <tr>
+                    <td class="col-md-1"><%= ticket.link_long_id :admin %></td>
+                    <td><%= ticket.link_subject :admin %></td>
+                    <td class="hidden-xs"><%= ticket.account.link_to_s :admin %></td>
+                    <td class="hidden-xs"><%= ticket.render_updated_at %></td>
+                    <td class="hidden-xs"><%= ticket.link_updated_by :admin %></td>
+                    <td><%= ticket.render_priority %></td>
+                    <td><%= ticket.render_status %></td>
+                </tr>
+            <% end %>
+            </tbody>
+        </table>
+    </div>
+<% end %>
+
+<% if dashboard.accounts_pending_activation? %>
+    <div class="block">
+        <div class="block-title"><h2>Accounts Pending Activation</h2></div>
+
+        <table id="accounts_pending_activation" class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th class="col-md-1">#</th>
+                <th>Display Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% dashboard.accounts_pending_activation.each do |account| %>
+                <tr>
+                    <td class="col-md-1"><%= account.link_long_id :admin %></td>
+                    <td><%= account.link_name :admin %></td>
+                </tr>
+            <% end %>
+            </tbody>
+        </table>
+    </div>
+<% end %>
+
+<% if dashboard.dedicated_servers_pending_action? %>
+    <div class="block">
+        <div class="block-title"><h2>Dedicated Servers Pending Action</h2></div>
+
+        <table id="dedicated_servers_pending_action" class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th class="col-md-1">#</th>
+                <th>Hostname</th>
+                <th>Account</th>
+                <th>State</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% dashboard.dedicated_servers_pending_action.each do |server| %>
+                <tr>
+                    <td class="col-md-1"><%= server.link_long_id :admin %></td>
+                    <td><%= server.link_hostname :admin %></td>
+                    <td><%= server.account.link_to_s :admin %></td>
+                    <td><%= server.render_state %></td>
+                </tr>
+            <% end %>
+            </tbody>
+        </table>
+    </div>
+<% end %>
+
+<% if dashboard.accounts_pending_welcome? %>
+    <div class="block">
+        <div class="block-title"><h2>Accounts Pending Welcome</h2></div>
+
+        <table id="accounts_pending_welcome" class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th class="col-md-1">#</th>
+                <th>Display Name</th>
+                <th>Created At</th>
+                <th>State</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% dashboard.accounts_pending_welcome.each do |account| %>
+                <tr>
+                    <td class="col-md-1"><%= account.link_long_id :admin %></td>
+                    <td><%= account.link_name :admin %></td>
+                    <td><%= account.render_created_at %></td>
+                    <td><%= account.render_state %></td>
+                </tr>
+            <% end %>
+            </tbody>
+        </table>
+    </div>
+<% end %>
+
+<% if dashboard.accounts_with_balance_owed? %>
+    <div class="block">
+        <div class="block-title"><h2>Accounts With Balance Owed</h2></div>
+
+        <table id="accounts_with_balance_owed" class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th class="col-md-1">#</th>
+                <th>Display Name</th>
+                <th>Balance</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% dashboard.accounts_with_balance_owed.each do |account| %>
+                <tr>
+                    <td class="col-md-1"><%= account.link_long_id :admin %></td>
+                    <td><%= account.link_name :admin %></td>
+                    <td><%= account.render_balance %></td>
+                </tr>
+            <% end %>
+            </tbody>
+        </table>
+    </div>
+<% end %>
+
+<% if dashboard.servers_pending_patches? %>
+    <div class="block">
+        <div class="block-title"><h2>Servers Pending Patches</h2></div>
+
+        <table id="servers_pending_patches" class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th class="col-md-1">#</th>
+                <th>Hostname</th>
+                <th>Account</th>
+                <th class="hidden-xs">IP Address</th>
+                <th class="hidden-xs">Operating System</th>
+                <th>Patches Due</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% dashboard.servers_pending_patches.each do |server| %>
+                <tr>
+                    <td class="col-md-1"><%= server.link_long_id :admin %></td>
+                    <td><%= server.link_hostname :admin %></td>
+                    <td><%= server.account.link_to_s :admin %></td>
+                    <td class="hidden-xs"><%= server.ip_address %></td>
+                    <td class="hidden-xs"><%= server.template_name %></td>
+                    <td><%= server.render_patch_at %></td>
+                </tr>
+            <% end %>
+            </tbody>
+        </table>
+    </div>
+<% end %>
+
+<div class="block full">
+    <div class="block-title"><h2>Online Users</h2></div>
+    <table id="online_users" class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th class="col-md-1">#</th>
+            <th>Name</th>
+            <th class="hidden-xs">Email</th>
+            <th class="hidden-xs">Last Activity</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% dashboard.online_users.each do |user| %>
+            <tr>
+                <td class="col-md-1"><%= user.link_id :admin %></td>
+                <td><%= user.link_full_name :admin %></td>
+                <td class="hidden-xs"><%= user.email %></td>
+                <td class="hidden-xs"><%= user.render_active_at %></td>
+            </tr>
+        <% end %>
+        </tbody>
+    </table>
+</div>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#open_tickets').dataTable({
+                "bDestroy": true,
+                "bFilter": false,
+                "iDisplayLength": 50,
+                "aaSorting": [[5, "desc"], [3, "desc"]],
+                "aoColumns": [
+                    {"sType": "raw-numeric"},
+                    null,
+                    null,
+                    {"sType": "raw-numeric"},
+                    null,
+                    {"sType": "raw-numeric"},
+                    null,
+                ]
+            });
+
+            $('#accounts_pending_activation').dataTable({
+                "bDestroy": true,
+                "bFilter": false,
+                "aaSorting": [[1, "asc"]],
+                "aoColumns": [
+                    {"sType": "raw-string"},
+                    {"sType": "raw-anti-the"},
+                ]
+            });
+
+            $('#email_mailboxes_pending_action').dataTable({
+                "bDestroy": true,
+                "bFilter": false,
+                "aaSorting": [[1, "asc"]],
+                "aoColumns": [
+                    {"sType": "raw-string"},
+                    {"sType": "raw-string"},
+                    null,
+                    null,
+                    null,
+                ]
+            });
+
+            $('#dedicated_servers_pending_action').dataTable({
+                "bDestroy": true,
+                "bFilter": false,
+                "aaSorting": [[1, "asc"]],
+                "aoColumns": [
+                    {"sType": "raw-string"},
+                    {"sType": "raw-string"},
+                    null,
+                    null,
+                ]
+            });
+
+            $('#accounts_pending_welcome').dataTable({
+                "bDestroy": true,
+                "bFilter": false,
+                "aaSorting": [[2, "asc"]],
+                "aoColumns": [
+                    {"sType": "raw-string"},
+                    {"sType": "raw-anti-the"},
+                    {"sType": "raw-numeric"},
+                    null,
+                ]
+            });
+
+            $('#accounts_with_balance_owed').dataTable({
+                "bDestroy": true,
+                "bFilter": false,
+                "aaSorting": [[1, "asc"]],
+                "aoColumns": [
+                    {"sType": "raw-string"},
+                    {"sType": "raw-anti-the"},
+                    {"sType": "raw-numeric"},
+                ]
+            });
+
+            $('#online_users').dataTable({
+                "bDestroy": true,
+                "bFilter": false,
+                "aaSorting": [[3, "desc"]],
+                "aoColumns": [
+                    {"sType": "raw-numeric"},
+                    {"sType": "raw-string"},
+                    null,
+                    {"sType": "raw-numeric"},
+                ]
+            });
+
+            $('#servers_pending_patches').dataTable({
+                "bDestroy": true,
+                "bFilter": false,
+                "aaSorting": [[5, "asc"]],
+                "aoColumns": [
+                    {"sType": "raw-string"},
+                    {"sType": "raw-string"},
+                    {"sType": "raw-string"},
+                    {"sType": "ip-address"},
+                    null,
+                    {"sType": "raw-numeric"},
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

@@ -1,0 +1,76 @@
+<% content_for :title do %>Dedicated<% end %>
+
+<% content_for :header do%>
+    Dedicated
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Dedicated', [:admin, @account, :dedicated, :servers] %></li>
+<% end %>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <% if params[:show_all].present? %>
+                    <%= link_to [:admin, @account, :dedicated, :servers] do %>
+                        <i class="fa fa-eye-slash"></i> Hide Cancelled Servers
+                    <% end %>
+                <% else %>
+                    <%= link_to [:admin, @account, :dedicated, :servers, show_all: true] do %>
+                        <i class="fa fa-eye"></i> Show Cancelled Servers
+                    <% end %>
+                <% end %>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<table id="servers" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th class="col-md-1">#</th>
+        <th>Hostname</th>
+        <th class="hidden-xs">IP Address</th>
+        <th>Price</th>
+        <th class="col-md-1">Managed</th>
+        <th>State</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% servers.each do |server| %>
+        <tr>
+            <td class="col-md-1"><%= server.link_long_id :admin %></td>
+            <td><%= server.link_hostname :admin %></td>
+            <td class="hidden-xs"><%= server.ip_address %></td>
+            <td><%= server.render_amount %></td>
+            <td><%= server.render_managed %></td>
+            <td><%= server.render_state %></td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#servers').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[1, "asc"]],
+                "aoColumns": [
+                    {"sType": "raw-string"},
+                    null,
+                    {"sType": "ip-address"},
+                    {"sType": "raw-numeric"},
+                    null,
+                    null,
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

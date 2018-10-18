@@ -1,0 +1,64 @@
+<% content_for :title do %>New Check<% end %>
+
+<% content_for :header do %>
+    New Check
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Servers', [:admin, @account, :solus, :servers] %></li>
+    <li><%= link_to server.to_s, [:admin, @account, :solus, @server] %></li>
+    <li><%= link_to 'New Check', [:new, :admin, @account, :solus, @server, :check] %></li>
+<% end %>
+
+
+<%= simple_form_for @check, url: [:admin, @account, :solus, @server, :checks], html: { class: 'form-horizontal form-box' } do |f| %>
+    <%= f.input :check_type, wrapper: :medium_input %>
+    <%= f.input :check_data, wrapper: :medium_input %>
+    <%= f.input :notify_after_failures, wrapper: :tiny_input %>
+    <%= f.input :notify_staff, wrapper: :boolean %>
+    <%= f.input :notify_account, wrapper: :boolean %>
+
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= f.button :submit, 'Create Check', data: { disable_with: 'Creating...' }, id: 'check_submit', class: 'btn btn-primary' %>
+        </div>
+    </div>
+<% end %>
+
+<%= content_for :javascript do %>
+    <script type="text/javascript">
+        function updateCheckType() {
+            switch($("#check_check_type").val()) {
+                case 'icmp':
+                    $(".check_check_data").hide();
+                    $("label[for=check_check_data").html("<%= t("monitoring.check.check_data_name.icmp") %>'");
+                    break;
+                case 'http':
+                    $(".check_check_data").show();
+                    $("label[for=check_check_data").html("<%= t("monitoring.check.check_data_name.http") %>");
+                    break;
+                case 'tcp':
+                    $(".check_check_data").show();
+                    $("label[for=check_check_data").html("<%= t("monitoring.check.check_data_name.tcp") %>");
+                    break;
+                case 'ssl_validity':
+                    $(".check_check_data").show();
+                    $("label[for=check_check_data").html("<%= t("monitoring.check.check_data_name.ssl_validity") %>");
+                    break;
+                case 'nrpe':
+                    $(".check_check_data").show();
+                    $("label[for=check_check_data").html("<%= t("monitoring.check.check_data_name.nrpe") %>");
+                    break;
+                default:
+                    $(".check_check_data").hide();
+                    $("label[for=check_check_data").html("");
+                    break;
+            }
+        }
+
+        $(function() {
+            updateCheckType();
+            $("#check_check_type").change(updateCheckType);
+        });
+    </script>
+<% end %>

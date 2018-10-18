@@ -1,0 +1,77 @@
+<% content_for :title do %>Account Memberships<% end %>
+
+<% content_for :header do %>
+    Account Memberships
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Memberships', [:users, @account, :memberships] %></li>
+<% end %>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <%= link_to [:new, :users, @account, :invite] do %>
+                    <i class="fa fa-plus-circle"></i> Invite User
+                <% end %>
+            </li>
+            <li>
+                <%= link_to [:users, @account, :invites] do %>
+                    <i class="fa fa-eye"></i> View Invitations
+                <% end %>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<table id="memberships" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>User</th>
+        <th class="hidden-xs">Roles</th>
+        <th class="text-center"><i class="icon-bolt"></i> Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% memberships.each do |membership| %>
+        <tr>
+            <td><%= membership.render_user_name %></td>
+            <td class="hidden-xs"><%= membership.render_roles %></td>
+            <td class="text-center">
+                <% if current_power.updatable_account_membership?(@account, membership) %>
+                    <div class="btn-group">
+                        <%= link_to [:edit, :users, @account, membership], id: "edit_membership_#{membership.id}", class: 'btn btn-sm btn-primary' do %>
+                            <i class="fa fa-pencil"></i>
+                        <% end %>
+                        <%= link_to [:users, @account, membership], id: "destroy_membership_#{membership.id}", class: 'btn btn-sm btn-danger', method: :delete, data: { confirm: "Are you sure you want to remove #{membership.user.full_name}'s membership?", confirm_button: 'Remove' } do %>
+                            <i class="fa fa-times"></i>
+                        <% end %>
+                    </div>
+                <% end %>
+            </td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#memberships').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[0, "desc"]],
+                "aoColumns": [
+                    null,
+                    null,
+                    { "bSortable": false },
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

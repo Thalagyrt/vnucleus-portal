@@ -1,0 +1,49 @@
+<% content_for :title do %>License Usage Report <%= usage_report.to_s %><% end %>
+
+<% content_for :header do %>License Usage Report <%= usage_report.to_s %><% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Licenses', [:admin, :licenses, :licenses] %></li>
+    <li><%= link_to 'Usage Reports', [:admin, :licenses, :usage_reports] %></li>
+    <li><%= usage_report.to_s %></li>
+<% end %>
+
+<table id="usage_report" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Description</th>
+        <th>Product Code</th>
+        <th>Count</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% usage_report.products.each do |product| %>
+        <tr>
+            <td><%= product.description %></td>
+            <td><%= product.product_code %></td>
+            <td><%= product.usage_count %></td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#usage_report').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[0, "desc"]],
+                "aoColumns": [
+                    null,
+                    null,
+                    {"sType": "numeric"},
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

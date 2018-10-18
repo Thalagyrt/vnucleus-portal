@@ -1,0 +1,66 @@
+<li>
+    <%= link_to [:edit, :admin, @account, :solus, @server] do %>
+        <i class="fa fa-pencil"></i> Edit
+    <% end %>
+</li>
+<% if server_status.online? %>
+    <li>
+        <%= link_to [:admin, @account, :solus, @server, :consoles], id: 'server_console', data: { popup: true, popup_width: server.console_popup_dimensions[:width], popup_height: server.console_popup_dimensions[:height] } do %>
+            <i class="fa fa-terminal"></i> Console
+        <% end %>
+    </li>
+<% end %>
+<% if server.patches_due? %>
+    <li>
+        <%= link_to [:admin, @account, :solus, @server, :patches], id: 'server_patch' do %>
+            <i class="fa fa-arrow-up"></i> Patch
+        <% end %>
+    </li>
+<% end %>
+<% if server_status.online? %>
+    <li>
+        <%= link_to [:admin, @account, :solus, @server, :shutdowns], method: :post, id: 'server_shutdown', data: { confirm: "Are you sure you want to shut down server #{@server.to_s}?", confirm_button: 'Shut Down' } do %>
+            <i class="fa fa-stop"></i> Shut Down
+        <% end %>
+    </li>
+    <li>
+        <%= link_to [:admin, @account, :solus, @server, :reboots], method: :post, id: 'server_reboot', data: { confirm: "Are you sure you want to reboot server #{@server.to_s}?", confirm_button: 'Reboot' } do %>
+            <i class="fa fa-refresh"></i> Reboot
+        <% end %>
+    </li>
+<% elsif server_status.offline? %>
+    <li>
+        <%= link_to [:admin, @account, :solus, @server, :boots], method: :post, id: 'server_boot', data: { confirm: "Are you sure you want to boot server #{@server.to_s}?", confirm_button: 'Boot' } do %>
+            <i class="fa fa-play"></i> Boot
+        <% end %>
+    </li>
+<% end %>
+<li>
+    <%= link_to [:admin, @account, :solus, @server, :suspensions], id: 'server_suspend' do %>
+        <i class="fa fa-pause"></i> Suspend
+    <% end %>
+</li>
+<li>
+    <%= link_to [:admin, @account, :solus, @server, :ip_addresses], id: 'dropdown-ip-addresses-link', remote: true, class: "dropdown-toggle", data: { target: "#ip-addresses-modal", toggle: "modal" } do %>
+        <i class="fa fa-sitemap"></i> Reverse DNS
+    <% end %>
+</li>
+<li>
+    <%= link_to [:new, :admin, @account, :solus, @server, :check], id: 'new_check' do %>
+        <i class="fa fa-check"></i> New Check
+    <% end %>
+</li>
+<% if @server.has_checks? %>
+    <li>
+        <%= link_to [:new, :admin, @account, :solus, @server, :muzzles], id: 'dropdown-muzzle-link', remote: true, class: "dropdown-toggle", data: { target: "#muzzle-modal", toggle: "modal" } do %>
+            <i class="fa fa-volume-off"></i> Muzzle
+        <% end %>
+    </li>
+<% end %>
+
+<script type="text/javascript">
+    $('a[data-popup]').click(function(e) {
+        window.open($(this).attr('href'), "console_<%= server.long_id %>", "toolbar=no, scrollbars=yes, resizable=yes, width="+$(this).data('popup-width')+", height="+$(this).data('popup-height'));
+        e.preventDefault();
+    });
+</script>

@@ -1,0 +1,7 @@
+#!/bin/bash
+HOME=/opt/betaforce
+source ~/.rvm/scripts/rvm
+source ~/shared/environment
+export DJ_WORKER=true
+cd ~/current
+exec bundle exec ruby bin/delayed_job run --identifier $1

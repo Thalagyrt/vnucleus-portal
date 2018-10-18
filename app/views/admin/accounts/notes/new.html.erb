@@ -1,0 +1,9 @@
+<% content_for :title do %>New Note<% end %>
+<% content_for :header do %>New Note<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Notes', [:admin, @account, :notes] %></li>
+    <li><%= link_to 'New', [:new, :admin, @account, :note] %></li>
+<% end %>
+
+<%= render partial: 'form', locals: { remote: false } %>

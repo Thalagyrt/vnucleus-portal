@@ -1,0 +1,47 @@
+<% content_for :title do %>Email Log<% end %>
+
+<% content_for :header do %>Email Log<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Email Log', [:admin, :email_log_entries] %></li>
+<% end %>
+
+<table id="email_log_entries" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th class="col-md-1">#</th>
+        <th class="col-md-2">User</th>
+        <th class="col-md-2 hidden-xs">To</th>
+        <th class="col-md-4">Subject</th>
+        <th class="col-md-3">Sent At</th>
+    </tr>
+    </thead>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#email_log_entries').dataTable({
+                "sAjaxSource": "<%= escape_javascript url_for([:admin, :email_log_entries, format: :json]) %>",
+                "bDestroy": true,
+                "bServerSide": true,
+                "aaSorting": [[4, "desc"]],
+                "aoColumns": [
+                    {"mDataProp": "id", "bSortable": false},
+                    {"mDataProp": "user", "bSortable": false},
+                    {"mDataProp": "to", "bSortable": false, "sClass": "hidden-xs"},
+                    {"mDataProp": "subject", "bSortable" : false},
+                    {"mDataProp": "created_at"},
+                ],
+                "fnDrawCallback": function() {
+                    $('[data-toggle="popover"], .enable-popover').popover({container: 'body', animation: false});
+                }
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

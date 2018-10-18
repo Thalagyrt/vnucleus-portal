@@ -1,0 +1,21 @@
+<% content_for :title do %>Sign Up<% end %>
+
+<div class="block-header">
+    <div class="header-section">
+        <h1 class="text-center">Welcome to vNucleus<br><small>Create your account.</small></h1>
+    </div>
+</div>
+
+<%= simple_form_for @user_form, url: [:users, :registrations], html: { id: 'login-form', class: 'form-horizontal' } do |f| %>
+    <%= f.input :email, wrapper: :no_label, autofocus: true, placeholder: 'email' %>
+    <%= f.input :password, wrapper: :no_label, placeholder: 'password' %>
+
+    <div class="form-group clearfix">
+        <div class="pull-right">
+            <button class="btn btn-sm btn-primary" id="user_form_submit" data-disable="Please Wait..."><i class="fa fa-sign-in"></i> Sign Up</button>
+        </div>
+    </div>
+    <div class="form-group">
+        <p class="text-center remove-margin"><small>Already have an account? <%= link_to 'Sign In', [:new, :users, :sessions, :session], id: 'new_session' %>.</small></p>
+    </div>
+<% end %>

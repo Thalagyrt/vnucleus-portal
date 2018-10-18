@@ -1,0 +1,9 @@
+Server <%= @server.to_s %> on account <%= @account.to_s %> has been confirmed for provision.
+
+Hostname: <%= @server.hostname %>
+Location: <%= @server.cluster_name %>
+Plan: <%= @server.plan_name %>
+Price: <%= @server.render_amount_plaintext %>/mo
+Operating System: <%= @server.template_name %>
+
+You can view this server at <%= admin_account_solus_server_url(@server.account, @server) %>

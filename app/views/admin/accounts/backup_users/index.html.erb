@@ -1,0 +1,69 @@
+<% content_for :title do %>Backup Users<% end %>
+
+<% content_for :header do %>Backup Users<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Backup Users', [:admin, @account, :backup_users] %></li>
+<% end %>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <%= link_to [:new, :admin, account, :backup_user] do %>
+                    <i class="fa fa-plus-circle"></i> New Backup User
+                <% end %>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<table id="backup_users" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Hostname</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% backup_users.each do |backup_user| %>
+        <tr>
+            <td><%= backup_user.username %></td>
+            <td><%= backup_user.password %></td>
+            <td><%= backup_user.hostname %></td>
+            <td class="text-center">
+                <%= link_to [:edit, :admin, @account, backup_user], class: 'btn btn-xs btn-primary' do %>
+                    <i class="fa fa-pencil"></i>
+                <% end %>
+                <%= link_to [:admin, @account, backup_user], method: :delete, class: 'btn btn-xs btn-danger', data: { confirm: 'Are you sure you want to delete this backup user?' } do %>
+                    <i class="fa fa-times"></i>
+                <% end %>
+            </td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#backup_users').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[0, "desc"]],
+                "aoColumns": [
+                    null,
+                    null,
+                    null,
+                    null,
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

@@ -1,0 +1,38 @@
+<% content_for :title do %>My Profile<% end %>
+
+<% content_for :header do %>
+    <h1>My Profile</h1>
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'My Profile', [:edit, :users, :profile] %></li>
+<% end %>
+
+<%= simple_form_for @user, url: [:users, :profile], html: { method: :put, class: 'form-horizontal', id: 'edit_user' } do |f| %>
+    <%= f.error_notification %>
+
+    <h4 class="sub-header">Profile</h4>
+
+    <%= f.input :first_name, wrapper: :small_input, label: 'First Name', required: true %>
+    <%= f.input :last_name, wrapper: :small_input, label: 'Last Name', required: true %>
+    <%= f.input :phone, wrapper: :small_input, label: 'Phone Number', required: true %>
+    <%= f.input :email, wrapper: :medium_input, required: true, label: 'E-mail' %>
+    <%= f.input :security_question, label: 'Security Question' %>
+    <%= f.input :security_answer, label: 'Security Answer' %>
+    <%= f.input :enhanced_security, wrapper: :boolean, label: 'Enhanced Security', :hint => "This will send you an email with an authorization code when you access your account from a browser that you haven't accessed it from recently." %>
+    <%= f.input :receive_security_bulletins, wrapper: :boolean, label: 'Receive Security Bulletins', :hint => "Check this if you'd like to be notified of important security updates and other related matters via email." %>
+    <%= f.input :receive_product_announcements, wrapper: :boolean, label: 'Receive Product Announcements', :hint => "Check this if you'd like to be notified of new products, discounts, and other happenings at vNucleus." %>
+
+    <h4 class="sub-header">Change Password</h4>
+    <%= f.input :password, wrapper: :medium_input, autocomplete: "off", :hint => "Leave this blank if you don't want to change your password.", required: false %>
+    <%= f.input :password_confirmation, wrapper: :medium_input, required: false %>
+
+    <h4 class="sub-header">Verify Password</h4>
+    <%= f.input :current_password, wrapper: :medium_input, hint: "We need to confirm your password before you make changes", required: true %>
+
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= f.button :submit, 'Save', data: { disable_with: 'Saving...' }, id: 'user_submit', class: 'btn btn-primary' %>
+        </div>
+    </div>
+<% end %>

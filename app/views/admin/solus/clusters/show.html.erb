@@ -1,0 +1,102 @@
+<% content_for :title do %><%= cluster.name %><% end %>
+
+<% content_for :header do %>Cluster Statistics<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Clusters', [:admin, :solus, :clusters] %></li>
+    <li><%= link_to cluster.name, [:admin, :solus, cluster] %></li>
+<% end %>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <%= link_to [:admin, :solus, cluster, :synchronizations], method: :post do %>
+                    <i class="fa fa-refresh"></i> Synchronize
+                <% end %>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="row">
+    <div class="col-md-6">
+        <%= display_for cluster do |d| %>
+            <%= d.display :render_hostname %>
+            <%= d.display :render_available_ram %>
+            <%= d.display :render_ram_limit %>
+            <%= d.display :render_ram_utilization do %>
+                <div class="progress remove-margin">
+                    <div class="progress-bar" style="width: <%= cluster.ram_utilization %>%"><%= cluster.ram_utilization %>%</div>
+                </div>
+            <% end %>
+        <% end %>
+    </div>
+    <div class="col-md-6">
+        <%= display_for cluster do |d| %>
+            <%= d.display :render_synchronized_at %>
+            <%= d.display :render_available_disk %>
+            <%= d.display :render_disk_limit %>
+            <%= d.display :disk_utilization do %>
+                <div class="progress remove-margin">
+                    <div class="progress-bar" style="width: <%= cluster.disk_utilization %>%"><%= cluster.disk_utilization %>%</div>
+                </div>
+            <% end %>
+        <% end %>
+    </div>
+</div>
+
+<table id="nodes" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Node Group</th>
+        <th>Available RAM</th>
+        <th>Available Disk</th>
+        <th>Available IPv4</th>
+        <th>Available IPv6</th>
+        <th>Locked</th>
+        <th>Last Synchronized</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% cluster.nodes.each do |node| %>
+        <tr>
+            <td><%= node.name %></td>
+            <td><%= node.node_group %></td>
+            <td><%= node.render_available_ram %></td>
+            <td><%= node.render_available_disk %></td>
+            <td><%= node.render_available_ipv4 %></td>
+            <td><%= node.render_available_ipv6 %></td>
+            <td><%= node.render_locked %></td>
+            <td><%= node.render_synchronized_at %></td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#nodes').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[0, "asc"]],
+                "aoColumns": [
+                    null,
+                    null,
+                    {"sType": "raw-numeric"},
+                    {"sType": "raw-numeric"},
+                    {"sType": "raw-numeric"},
+                    {"sType": "raw-numeric"},
+                    null,
+                    {"sType": "raw-numeric"},
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

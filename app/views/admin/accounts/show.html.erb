@@ -1,0 +1,128 @@
+<% content_for :title do %>Account <%= account.to_s %><% end %>
+
+<% content_for :header do %>
+    Account <%= account.to_s %>
+
+    <div class="header-controls">
+        <%= account.render_state %>
+    </div>
+<% end %>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <%= link_to [:edit, :admin, account] do %>
+                    <i class="fa fa-pencil"></i> Update Account Information
+                <% end %>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<% if account.pending_activation? %>
+    <div class="block">
+        <div class="block-title">
+            <h2>Pending Activation</h2>
+            <div class="block-options pull-right">
+                <%= link_to "Activate", [:admin, account, :activations], method: :post, class: 'btn btn-primary btn-sm' %>
+                <%= link_to "Reject", [:admin, account, :activations], method: :delete, class: 'btn btn-danger btn-sm' %>
+            </div>
+        </div>
+
+        <p><%= account.render_maxmind_response %></p>
+    </div>
+<% end %>
+
+<div class="row clearfix">
+    <div class="col-md-4">
+        <div class="block block-dashboard">
+            <div class="block-title">
+                <h2>Servers</h2>
+
+                <div class="block-options pull-right">
+                    <% if current_power.creatable_admin_account_solus_servers?(account) %>
+                        <%= link_to [:new, :admin, account, :solus, :server], class: 'btn btn-primary btn-sm' do %>
+                            New Server
+                        <% end %>
+                    <% end %>
+                    <%= link_to [:admin, account, :solus, :servers], class: 'btn btn-primary btn-sm' do %>
+                        Servers
+                    <% end %>
+                </div>
+            </div>
+
+            <%= display_for account do |d| %>
+                <%= d.display :server_count %>
+                <%= d.display :render_total_ram %>
+                <%= d.display :render_total_disk %>
+            <% end %>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="block block-dashboard">
+            <div class="block-title">
+                <h2>Tickets</h2>
+
+                <div class="block-options pull-right">
+                    <% if current_power.creatable_admin_account_tickets?(account) %>
+                        <%= link_to [:new, :admin, account, :ticket], class: 'btn btn-primary btn-sm' do %>
+                            New Ticket
+                        <% end %>
+                    <% end %>
+                    <%= link_to [:admin, account, :tickets], class: 'btn btn-primary btn-sm' do %>
+                        Tickets
+                    <% end %>
+                </div>
+            </div>
+
+            <%= display_for account do |d| %>
+                <%= d.display :open_tickets_count %>
+                <%= d.display :tickets_awaiting_staff_action_count, label: 'Tickets Pending Action' %>
+            <% end %>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="block block-dashboard">
+            <div class="block-title">
+                <h2>Billing</h2>
+
+                <div class="block-options pull-right">
+                    <%= link_to [:admin, account, :statements], class: 'btn btn-primary btn-sm' do %>
+                        Statements
+                    <% end %>
+                    <% if current_power.admin_account_credit_card?(account) %>
+                        <%= link_to [:admin, account, :credit_cards], class: 'btn btn-primary btn-sm' do %>
+                            Credit Card
+                        <% end %>
+                    <% end %>
+                </div>
+            </div>
+
+            <%= display_for account do |d| %>
+                <%= d.display :render_monthly_rate %>
+                <%= d.display :render_balance %>
+                <%= d.display :render_total_income %>
+                <% if account.referrer.present? %>
+                    <%= d.display :render_referrer %>
+                <% end %>
+            <% end %>
+        </div>
+    </div>
+</div>
+
+<% if account.visit.present? %>
+    <div class="block">
+        <div class="block-title"><h2>Analytics</h2></div>
+
+        <%= display_for account.visit do |d| %>
+            <%= d.display :landing_page %>
+            <%= d.display :referrer %>
+            <%= d.display :referring_domain %>
+            <%= d.display :search_keyword %>
+            <%= d.display :utm_medium %>
+            <%= d.display :utm_campaign %>
+            <%= d.display :utm_source %>
+        <% end %>
+    </div>
+<% end %>

@@ -1,0 +1,47 @@
+<%= simple_form_for @update, url: [:users, @account, @ticket, @update], remote: true, html: { class: 'form-horizontal' } do |f| %>
+    <%= f.input :body, as: :text, hint: 'markdown supported, optional if re-opening or closing ticket', input_html: { rows: 10 } %>
+    <%= f.input :secure_body, as: :text, hint: 'will not be sent via email, please use for passwords and other sensitive data', input_html: { rows: 2 } %>
+
+    <div id="preview_container"></div>
+
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2 clearfix">
+            <div class="pull-left">
+              <div id="open_ticket_buttons">
+                  <%= button_tag(type: 'submit', data: { disable_with: "Replying..."}, class: 'btn btn-primary', id: 'update_submit', name: 'update[status]', value: 'client_reply') do %>
+                      Reply
+                  <% end %>
+                  <%= button_tag(type: 'submit', data: { disable_with: "Closing..."}, class: 'btn btn-danger', id: 'update_close', name: 'update[status]', value: 'closed') do %>
+                      Close Ticket
+                  <% end %>
+              </div>
+              <div id="closed_ticket_buttons">
+                  <%= button_tag(type: 'submit', data: { disable_with: "Re-opening..."}, class: 'btn btn-success', id: 'update_reopen', name: 'update[status]', value: 'open') do %>
+                      Re-Open Ticket
+                  <% end %>
+                  <%= button_tag(type: 'submit', data: { disable_with: "Replying..."}, class: 'btn btn-primary', id: 'update_leave_closed', name: 'update[status]', value: 'closed') do %>
+                      Reply & Leave Closed
+                  <% end %>
+              </div>
+            </div>
+            <div class="pull-right">
+              <%= button_tag(type: 'submit', data: { disable_with: "Previewing..."}, class: 'btn btn-primary', id: 'preview', name: 'preview', value: 'true') do %>
+                  Preview
+              <% end %>
+            </div>
+        </div>
+    </div>
+<% end %>
+
+<script type="text/javascript">
+    <% if ticket.open? %>
+    $('#open_ticket_buttons').show();
+    $('#closed_ticket_buttons').hide();
+    <% else %>
+    $('#open_ticket_buttons').hide();
+    $('#closed_ticket_buttons').show();
+    <% end %>
+
+    $('.select-chosen').chosen();
+    $('[data-toggle="popover"], .enable-popover').popover({container: 'body', animation: false});
+</script>

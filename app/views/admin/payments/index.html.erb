@@ -1,0 +1,79 @@
+<% content_for :title do %>Payments<% end %>
+
+<% content_for :header do %>
+    Payments
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Payments', [:admin, :payments] %></li>
+<% end %>
+
+<div class="block full">
+    <div class="block-title"><h2>Payments By Month</h2></div>
+
+    <div id="payments-by-month" class="chart"></div>
+</div>
+
+<table id="transactions" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Amount</th>
+        <th>Fees</th>
+        <th>Account</th>
+        <th>Posted</th>
+        <th>Description</th>
+        <th>Reference</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#transactions').dataTable({
+                "sAjaxSource": "<%= escape_javascript url_for([:admin, :payments, format: :json]) %>",
+                "bServerSide": true,
+                "bDestroy": true,
+                "aaSorting": [[3, "desc"]],
+                "aoColumns": [
+                    {"mDataProp": "amount"},
+                    {"mDataProp": "fee"},
+                    {"mDataProp": "account_id", "bSortable": false},
+                    {"mDataProp": "created_at"},
+                    {"mDataProp": "description", "bSortable": false},
+                    {"mDataProp": "reference"},
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+
+            var paymentChart = $('#payments-by-month');
+            var paymentData = [
+                <% @payments_by_month.each do |v| %>
+                [<%= v[0].to_time.to_i * 1000 %>, <%= v[1] / 100.0 %>],
+                <% end %>
+            ];
+
+            $.plot(paymentChart,
+                    [
+                        {
+                            data: paymentData,
+                            bars: {show: true, align: 'center', fill: true, barWidth: 28 * 24 * 60 * 60 * 1000},
+                        },
+                    ],
+                    {
+                        colors: ['#f39c12'],
+                        legend: {show: false},
+                        grid: {borderWidth: 0, hoverable: true, clickable: true},
+                        yaxis: {show: true},
+                        xaxis: {show: true, mode: 'time', timeformat: '%Y-%m', minTickSize: [1, 'month']}
+                    }
+            );
+        });
+    </script>
+<% end %>

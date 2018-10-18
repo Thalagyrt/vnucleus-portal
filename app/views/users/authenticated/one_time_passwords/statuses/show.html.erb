@@ -1,0 +1,11 @@
+<% content_for :title do %>Two Factor Authentication<% end %>
+
+<% content_for :header do %>
+    <h1>Two Factor Authentication</h1>
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Two Factor Authentication', [:users, :one_time_passwords, :statuses] %></li>
+<% end %>
+
+<%= render @status.otp_state %>

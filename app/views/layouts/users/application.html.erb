@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <script>(function(d) { d.className = d.className.replace(/\bno-js/, ''); })(document.documentElement);</script>
+    <meta charset="utf-8">
+
+    <title><% if content_for? :title %><%= yield :title %> - <% end %>vNucleus</title>
+
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0">
+
+    <%= stylesheet_link_tag 'application' %>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <%= javascript_include_tag 'vendor/modernizr-2.7.1-respond-1.4.2.min' %>
+
+    <link rel="shortcut icon" href="<%= image_url "favicon.ico" %>">
+    <link rel="apple-touch-icon" href="<%= image_url "icon57.png" %>" sizes="57x57">
+    <link rel="apple-touch-icon" href="<%= image_url "icon72.png" %>" sizes="72x72">
+    <link rel="apple-touch-icon" href="<%= image_url "icon76.png" %>" sizes="76x76">
+    <link rel="apple-touch-icon" href="<%= image_url "icon114.png" %>" sizes="114x114">
+    <link rel="apple-touch-icon" href="<%= image_url "icon120.png" %>" sizes="120x120">
+    <link rel="apple-touch-icon" href="<%= image_url "icon144.png" %>" sizes="144x144">
+    <link rel="apple-touch-icon" href="<%= image_url "icon152.png" %>" sizes="152x152">
+
+    <%= csrf_meta_tags %>
+</head>
+
+<body class="header-fixed-top sidebar-left-pinned layout-users">
+<div id="sidebar-left">
+    <div class="sidebar-content">
+        <div class="sidebar-left-scroll">
+            <ul class="sidebar-nav">
+                <li class="visible-xs">
+                    <div class="text-center">
+                        <%= link_to [:root] do %>
+                            v<strong>Nucleus</strong>
+                        <% end %>
+                    </div>
+                </li>
+                <li>
+                    <h2 class="sidebar-header"><%= current_user.full_name %></h2>
+                </li>
+                <li>
+                    <%= active_link_to [:users, :accounts] do %>
+                        <i class="fa fa-dashboard"></i>My Accounts
+                    <% end %>
+                </li>
+                <li>
+                    <%= active_link_to [:edit, :users, :profile] do %>
+                        <i class="fa fa-user"></i>My Profile
+                    <% end %>
+                </li>
+                <% if current_user.enhanced_security? %>
+                    <li>
+                        <%= active_link_to [:users, :enhanced_security_tokens] do %>
+                            <i class="fa fa-shield"></i>Enhanced Security
+                        <% end %>
+                    </li>
+                <% end %>
+                <li>
+                    <%= active_link_to [:users, :email_log_entries] do %>
+                        <i class="fa fa-envelope"></i>Email Log
+                    <% end %>
+                </li>
+                <li>
+                    <%= active_link_to [:users, :one_time_passwords, :statuses], active: [['users/authenticated/one_time_passwords/statuses', 'users/authenticated/one_time_passwords/enables', 'users/authenticated/one_time_passwords/disables'], []] do %>
+                        <i class="fa fa-lock"></i>Two Factor
+                    <% end %>
+                </li>
+                <li>
+                    <%= link_to [:knowledge_base, :articles], target: :blank do %>
+                        <i class="fa fa-book"></i>Knowledge Base
+                    <% end %>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="page-container">
+    <header class="navbar navbar-default navbar-fixed-top">
+        <ul class="nav header-nav pull-right">
+            <%= render partial: 'user_widget', locals: { user: current_user.try(:decorate) } %>
+        </ul>
+
+        <ul class="nav header-nav pull-left">
+            <li>
+                <a href="javascript:void(0)" id="sidebar-left-toggle">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </li>
+        </ul>
+
+        <%= link_to [:root], class: 'navbar-brand hidden-xs' do %>
+            <span class="logo"></span>
+            v<strong>Nucleus</strong>
+        <% end %>
+    </header>
+
+    <div id="fx-container" class="fx-opacity">
+        <div class="hidden-js alert alert-application alert-danger">
+            Our portal requires JavaScript to work correctly. Please enable JavaScript or add an exception for www.vnucleus.com in order to use this system.
+        </div>
+
+        <% unless Rails.application.config.accept_orders %>
+            <div class="alert alert-application alert-warning">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <p>We are not accepting new orders at this time. Sorry for any inconvenience!</p>
+            </div>
+        <% end %>
+
+        <% @service_notices.each do |service_notice| %>
+            <div class="alert alert-application alert-info">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <p><%= service_notice.message %></p>
+            </div>
+        <% end %>
+
+        <% if flash[:notice] %>
+            <div class="alert alert-application alert-success">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <p><%= flash[:notice] %></p>
+            </div>
+        <% end %>
+
+        <% if flash[:alert] %>
+            <div class="alert alert-application alert-danger">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <p><%= flash[:alert] %></p>
+            </div>
+        <% end %>
+
+        <% if current_user.email_confirmed? %>
+            <% if current_user.legal_accepted? %>
+                <% unless current_user.profile_complete? %>
+                    <div class="alert alert-application alert-info">
+                        <h4>Step 2 of 4: Your Profile</h4>
+                        <p>Now we need you to tell us a bit more about yourself.</p>
+                        <p>
+                            <%= link_to 'Update Profile', [:edit, :users, :profile, return_to: request.fullpath], class: 'btn btn-primary' %>
+                        </p>
+                    </div>
+                <% end %>
+            <% else %>
+                <div class="alert alert-application alert-info">
+                    <h4>Step 1 of 4: Legal Terms</h4>
+                    <p>Before you can order any services from us, we need you to read and accept our <%= link_to 'Terms of Service', [:tos], target: 'blank', class: 'underline' %> and <%= link_to 'Acceptible Use Policy', [:aup], target: 'blank', class: 'underline' %>.</p>
+                    <p>
+                        <%= link_to 'I Accept', [:users, :legal_acceptances], method: :post, class: 'btn btn-primary' %>
+                    </p>
+                </div>
+            <% end %>
+        <% else %>
+            <div class="alert alert-application alert-info">
+                <h4>Confirm Your Email</h4>
+                <p>Please check your email for a confirmation code. We need to verify that you own the email address you have on file.</p>
+                <p>Once you've confirmed your email you'll be able to access our support system and ask our staff any questions you may have.</p>
+                <p>
+                    <%= link_to 'Re-send Code', [:users, :emails, :tokens], method: :post, class: 'btn btn-primary' %>
+                </p>
+            </div>
+        <% end %>
+
+        <div id="page-content" class="block">
+            <div class="block-header">
+                <div class="header-section">
+                    <%= yield :header %>
+                </div>
+            </div>
+
+            <ul class="breadcrumb breadcrumb-top">
+                <%= yield :breadcrumbs %>
+            </ul>
+
+            <%= yield %>
+        </div>
+
+        <footer class="clearfix">
+            <div class="pull-left">
+                &copy; <span id="year-copy"></span> vNucleus / betaforce networks, llc
+            </div>
+            <div class="pull-right">
+                +1 (855) 667-2428 &middot;
+                <%= link_to 'terms of service', [:tos] %> &middot;
+                <%= link_to 'acceptable use policy', [:aup] %> &middot;
+                <%= link_to 'privacy policy', [:privacy] %>
+            </div>
+        </footer>
+
+    </div>
+</div>
+
+<a href="javascript:void(0)" id="to-top"><i class="fa fa-angle-up"></i></a>
+
+<%= javascript_include_tag 'application' %>
+<%= javascript_include_tag "https://js.stripe.com/v2/" %>
+<script type="text/javascript">
+    $(function() {
+        Stripe.setPublishableKey("<%= Rails.configuration.stripe[:publishable_key] %>");
+    });
+</script>
+
+<% if content_for? :javascript %>
+    <%= yield :javascript %>
+<% end %>
+
+<%= render partial: 'olark' %>
+
+</body>
+</html>

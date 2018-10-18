@@ -1,0 +1,59 @@
+<% content_for :title do %>Licenses<% end %>
+
+<% content_for :header do %>My Licenses<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Licenses', [:users, @account, :licenses] %></li>
+<% end %>
+
+<table id="licenses" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Product Code</th>
+        <th>Description</th>
+        <th>Note</th>
+        <th>Amount</th>
+        <th>Count</th>
+        <th>Total</th>
+        <th>Next Due</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% licenses.each do |license| %>
+        <tr>
+            <td><%= license.product_code %></td>
+            <td><%= license.description %></td>
+            <td><%= license.render_note %></td>
+            <td><%= license.render_amount %></td>
+            <td><%= license.count %></td>
+            <td><%= license.render_total_amount %></td>
+            <td><%= license.render_next_due %></td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#licenses').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[0, "desc"]],
+                "aoColumns": [
+                    null,
+                    null,
+                    null,
+                    {"sType": "raw-numeric"},
+                    {"sType": "numeric"},
+                    {"sType": "raw-numeric"},
+                    {"sType": "raw-numeric"},
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

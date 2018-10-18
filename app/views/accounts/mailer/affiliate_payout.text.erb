@@ -1,0 +1,15 @@
+Hi <%= @user.greeting %>,
+
+Thank you for referring business to us! Below is a summary of recent commissions.
+
+<% @transactions.each do |t| %><%= t.render_absolute_amount %>: <%= t.description %>
+<% end %>
+
+Account Balance: <%= @account.render_balance %>
+
+You can view your statements at <%= polymorphic_url [:users, @account, :statements] %>
+
+Thanks,
+James, Taylor, and Kevin at vNucleus
+
+To help protect the security of your account, this mailbox is not monitored for replies. If you need assistance, please open a support ticket in our client area.

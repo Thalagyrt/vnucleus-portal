@@ -1,0 +1,23 @@
+<% content_for :title do %>Email to <%= email_log_entry.to %><% end %>
+
+<% content_for :header do %>
+    <h1>View Email</h1>
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Email Log', [:users, :email_log_entries] %></li>
+    <li><%= link_to "Email ##{email_log_entry.to_param}", [:users, email_log_entry] %></li>
+<% end %>
+
+<div class="block">
+    <div class="block-title">
+        <h2>
+            <%= email_log_entry.subject %>
+            <small>
+                To <%= link_to email_log_entry.to, "mailto:#{email_log_entry.to}" %> at <%= email_log_entry.render_created_at %>
+            </small>
+        </h2>
+    </div>
+
+    <%= email_log_entry.render_body %>
+</div>

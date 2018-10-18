@@ -1,0 +1,24 @@
+<form action="<%= url_for [:blog, :posts] %>" class="form form-horizontal">
+    <input type="text" class="form-control" name="search" placeholder="Search" value="<%= params[:search] %>" <%= "autofocus" if params[:search].present? %>>
+</form>
+
+<h4 class="page-header">
+    Ready For Better Hosting?
+</h4>
+
+<p>We're a premium <%= link_to 'Managed VPS Hosting', [:root] %> provider that's nothing like the rest. You'll get to work one on one with one of <%= link_to 'our senior engineers', [:our_team] %> who will get to know your business and your environment and will help you build out the hosting solution that's right for you.</p>
+<p>We don't hoist a control panel on you or make you work with low-skill techs who read from a script. Instead, all of your contact will be with our senior engineers, and we'll set you up with a lightweight, tightly locked down server with only the software you need to make your application rock and nothing more.</p>
+<p class="text-center">
+    <%= link_to "Learn More", [:root], class: 'btn btn-sm btn-primary' %>
+</p>
+
+<h4 class="page-header">
+    Recent Posts
+</h4>
+<p>
+    <ul class="list-unstyled">
+        <% recent_posts.each do |post| %>
+            <li><%= post.link_title %></li>
+        <% end %>
+    </ul>
+</p>

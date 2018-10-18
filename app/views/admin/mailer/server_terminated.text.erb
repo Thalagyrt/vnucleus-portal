@@ -1,0 +1,10 @@
+Server <%= @server.to_s %> on account <%= @account.to_s %> has been terminated.
+
+Termination reason: <%= @server.render_termination_reason %>
+Hostname: <%= @server.hostname %>
+Location: <%= @server.cluster_name %>
+Plan: <%= @server.plan_name %>
+Operating System: <%= @server.template_name %>
+Monthly Price: <%= @server.render_amount_plaintext %>/mo
+
+You can view this server at <%= admin_account_solus_server_url(@server.account, @server) %>

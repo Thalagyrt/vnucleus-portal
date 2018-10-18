@@ -1,0 +1,70 @@
+<% content_for :title do %>My Authorized Devices<% end %>
+
+<% content_for :header do %>
+    <h1>My Authorized Devices</h1>
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'My Authorized Devices', [:users, :enhanced_security_tokens] %></li>
+<% end %>
+
+<table id="enhanced_security_tokens" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Last Seen IP Address</th>
+        <th>User Agent</th>
+        <th>First Seen</th>
+        <th>Last Seen</th>
+        <th>Expires At</th>
+        <th>Authorized</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% enhanced_security_tokens.each do |enhanced_security_token| %>
+        <tr>
+            <td><%= enhanced_security_token.last_seen_ip_address %></td>
+            <td><%= truncate_popover(enhanced_security_token.user_agent) %></td>
+            <td><%= enhanced_security_token.render_created_at %></td>
+            <td><%= enhanced_security_token.render_last_seen_at %></td>
+            <td><%= enhanced_security_token.render_expires_at %></td>
+            <td><%= enhanced_security_token.render_authorized %></td>
+            <td class="text-center">
+                <% if enhanced_security_token.token == cookies.signed[:enhanced_security_token] %>
+                    <div class="btn btn-xs btn-danger disabled"><i class="fa fa-times"></i></div>
+                <% else %>
+
+                    <%= link_to [:users, enhanced_security_token], method: :delete, class: 'btn btn-xs btn-danger', data: { confirm: 'Are you sure you want to remove this authorization?' } do %>
+                        <i class="fa fa-times"></i>
+                    <% end %>
+                <% end %>
+            </td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#enhanced_security_tokens').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[3, "desc"]],
+                "aoColumns": [
+                    {"sType": "string"},
+                    {"sType": "string"},
+                    {"sType": "raw-numeric"},
+                    {"sType": "raw-numeric"},
+                    {"sType": "raw-numeric"},
+                    null,
+                    {"bSortable": false},
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

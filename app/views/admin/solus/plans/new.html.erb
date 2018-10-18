@@ -1,0 +1,61 @@
+<% content_for :title do %>New Plan<% end %>
+
+<% content_for :header do %>
+    New Plan
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Plans', [:admin, :solus, :plans] %></li>
+    <li><%= link_to 'New', [:new, :admin, :solus, :plan] %></li>
+<% end %>
+
+<%= simple_form_for @plan, url: [:admin, :solus, @plan], html: { class: 'form-horizontal' } do |f| %>
+    <%= f.input :name, wrapper: :medium_input %>
+    <%= f.input :amount, wrapper: :small_input do %>
+        <%= content_tag :span, class: 'input-group-addon' do %>
+            $
+        <% end %>
+        <%= f.input_field :amount_dollars, class: 'form-control' %>
+    <% end %>
+    <%= f.input :managed, wrapper: :boolean %>
+    <%= f.input :ram, wrapper: :small_input do %>
+        <%= f.input_field :ram_mb, class: 'form-control' %>
+        <%= content_tag :span, class: 'input-group-addon' do %>
+            MB
+        <% end %>
+    <% end %>
+    <%= f.input :disk, wrapper: :small_input do %>
+        <%= f.input_field :disk_gb, class: 'form-control' %>
+        <%= content_tag :span, class: 'input-group-addon' do %>
+            GB
+        <% end %>
+    <% end %>
+    <%= f.input :disk_type, wrapper: :tiny_input %>
+    <%= f.input :transfer, wrapper: :small_input do %>
+        <%= f.input_field :transfer_tb, class: 'form-control' %>
+        <%= content_tag :span, class: 'input-group-addon' do %>
+            TB
+        <% end %>
+    <% end %>
+    <%= f.input :network_out, wrapper: :small_input do %>
+        <%= f.input_field :network_out, class: 'form-control' %>
+        <%= content_tag :span, class: 'input-group-addon' do %>
+            Mbit/sec
+        <% end %>
+    <% end %>
+    <%= f.input :ip_addresses, wrapper: :tiny_input %>
+    <%= f.input :ipv6_addresses, wrapper: :tiny_input %>
+    <%= f.input :vcpus, wrapper: :tiny_input %>
+    <%= f.input :plan_part, wrapper: :tiny_input %>
+    <%= f.input :node_group, wrapper: :tiny_input %>
+    <%= f.association :templates, input_html: { class: 'select-chosen' }, label_method: :detailed_to_s %>
+    <%= f.association :clusters, input_html: { class: 'select-chosen' } %>
+    <%= f.input :status, include_blank: false, wrapper: :small_input, input_html: { class: 'select-chosen' } %>
+    <%= f.input :feature_status, include_blank: false, wrapper: :small_input,  input_html: { class: 'select-chosen' } %>
+
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= f.button :submit, 'Create Plan', data: { disable_with: 'Creating...' }, id: 'plan_submit', class: 'btn btn-primary' %>
+        </div>
+    </div>
+<% end %>

@@ -1,0 +1,43 @@
+<% content_for :title do %>License Usage Reports<% end %>
+
+<% content_for :header do %>License Usage Reports<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Licenses', [:admin, :licenses, :licenses] %></li>
+    <li><%= link_to 'Usage Reports', [:admin, :licenses, :usage_reports] %></li>
+<% end %>
+
+<table id="usage_reports" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Period</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% usage_reports.each do |usage_report| %>
+        <tr>
+            <td><span data-raw="<%= usage_report.start_date %>"><%= link_to usage_report.to_s, [:admin, :licenses, usage_report] %></span></td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#usage_reports').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[0, "desc"]],
+                "aLengthMenu": [[12, 24, 60, -1], [12, 24, 60, "All"]],
+                "aoColumns": [
+                    {"sType": "raw-string"},
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

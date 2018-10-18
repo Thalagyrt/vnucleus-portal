@@ -1,0 +1,10 @@
+<div class="well">
+
+    <p>This account is pending manual approval as it has tipped off fraud prevention. Information as to why is displayed below.</p>
+
+    <%= account.render_maxmind_response %>
+
+    <div class="text-center">
+        <%= link_to "Confirm Account", [:admin, @account, :activations], method: :post, class: 'btn btn-danger', id: 'account_approve' %>
+    </div>
+</div>

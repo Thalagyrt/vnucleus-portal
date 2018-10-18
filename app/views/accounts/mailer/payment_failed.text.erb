@@ -1,0 +1,12 @@
+Hi <%= @user.greeting %>,
+
+We want to make sure your service stays online, however our recent attempt to charge <%= @amount %> to the on-file credit card on account <%= @account.to_s %> has failed.
+
+You can view and update your billing information at <%= polymorphic_url [:users, @account, :credit_cards] %>
+
+Please be aware that your service will be suspended at 7 days past-due and terminated at 21 days past-due.
+
+Thanks,
+James, Taylor, and Kevin at vNucleus
+
+To help protect the security of your account, this mailbox is not monitored for replies. If you need assistance, please open a support ticket in our client area.

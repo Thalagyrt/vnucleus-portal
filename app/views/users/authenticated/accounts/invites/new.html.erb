@@ -1,0 +1,21 @@
+<% content_for :title do %>Invite User<% end %>
+
+<% content_for :header do %>
+    Invite User
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Invitations', [:users, @account, :invites] %></li>
+    <li><%= link_to 'Invite User', [:new, :users, @account, :invite] %></li>
+<% end %>
+
+<%= simple_form_for @invite, url: [:users, @account, @invite], html: { class: 'form-horizontal' } do |f| %>
+    <%= f.input :email, wrapper: :medium_input %>
+    <%= f.input :roles, wrapper: :radio_and_checkboxes, collection: @invite.class.valid_roles, as: :check_boxes, checked: @invite.roles, label_method: proc { |l| l.to_s.titleize } %>
+
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= f.button :submit, "Send Invitation", id: 'invite_submit', data: { disable_with: 'Sending...' }, class: 'btn btn-primary' %>
+        </div>
+    </div>
+<% end %>

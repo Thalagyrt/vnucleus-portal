@@ -1,0 +1,32 @@
+<table class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th class="col-md-5">IP Address</th>
+        <th class="col-md-6">RDNS Name</th>
+        <th class="col-md-1"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% if ip_addresses.each do |ip_address| %>
+        <tr>
+            <td><%= ip_address.address %></td>
+            <td id="ip-address-<%= ip_address.anchor_name %>"><%= ip_address.ptr_value %></td>
+            <td>
+                <% if ip_address.ptr_settable? %>
+                    <%= link_to [:edit, :users, @account, :solus, @server, ip_address], remote: true do %>
+                    <div class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></div>
+                    <% end %>
+                <% end %>
+            </td>
+        </tr>
+    <% end.empty? %>
+        <tr>
+            <td colspan="3">None of this server's RDNS records can be automatically updated.</td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<p>
+    Please allow up to 10 minutes for changes to take effect.
+</p>

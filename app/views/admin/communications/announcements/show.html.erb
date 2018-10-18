@@ -1,0 +1,57 @@
+<% content_for :title do %><%= announcement.to_s %><% end %>
+
+<% content_for :header do %>
+    View Announcement
+
+    <div class="header-controls">
+        <%= announcement.render_announcement_type %>
+        <%= announcement.render_status %>
+    </div>
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Announcements', [:admin, :communications, :announcements] %></li>
+    <li><%= link_to announcement.to_s, [:admin, :communications, announcement] %></li>
+<% end %>
+
+<div class="container">
+    <% if current_power.updatable_admin_communications_announcement?(announcement) %>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <%= link_to [:edit, :admin, :communications, announcement] do %>
+                            <i class="fa fa-pencil"></i> Edit Announcement
+                        <% end %>
+                    </li>
+                    <li>
+                        <%= link_to [:admin, :communications, announcement], method: :delete, data: { confirm: 'Are you sure you want to delete this announcement?' } do %>
+                            <i class="fa fa-times"></i> Delete Announcement
+                        <% end %>
+                    </li>
+                    <li>
+                        <%= link_to [:admin, :communications, announcement, :sends], method: :post, data: { confirm: 'Are you sure you want to send this announcement?' } do %>
+                            <i class="fa fa-envelope"></i> Send Announcement (<%= announcement.target_users.count %> will receive)
+                        <% end %>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    <% end %>
+
+    <div class="product-announcement">
+        <h1 class="page-header">
+            <%= announcement.email_subject %>
+        </h1>
+        <div class="content">
+            <p>Hi <%= current_user.greeting %>,</p>
+
+            <%= announcement.render_body %>
+
+            <p>
+                Cheers,<br>
+                James, Taylor, Kevin, and Steve at vNucleus
+            </p>
+        </div>
+    </div>
+</div>

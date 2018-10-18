@@ -1,0 +1,4 @@
+$("#power_state").html("<%= escape_javascript(server_status.render_power_state) %>");
+$("#ip_addresses").html("<%= escape_javascript(server_status.render_ip_addresses) %>");
+$("#power_controls").html("<%= escape_javascript(render partial: "power_controls") %>");
+$("#power_controls a").tooltip();

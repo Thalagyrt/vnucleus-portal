@@ -1,0 +1,22 @@
+<% content_for :title do %>Sign In<% end %>
+
+<div class="block-header">
+    <div class="header-section">
+        <h1 class="text-center">Welcome to vNucleus<br><small>We've detected a change in your access patterns. For your security, we've sent you an email with an authorization code to grant access from this device. Please enter your authorization code below.</small></h1>
+    </div>
+</div>
+
+<%= simple_form_for @enhanced_security_token_form, url: [:users, :sessions, :enhanced_security_tokens], html: { id: 'login-form', class: 'form-horizontal' } do |f| %>
+    <%= f.input :authorization_code, wrapper: :no_label, autofocus: true, placeholder: 'authorization code', input_html: { autocomplete: 'off' } %>
+    <div class="form-group clearfix">
+        <div class="pull-right">
+            <%= link_to [:users, :sessions, :session], method: :delete, class: "btn btn-sm btn-info", data: { toggle: "tooltip"}, title: "Sign Out" do %>
+                <i class="fa fa-sign-out"></i>
+            <% end %>
+            <%= link_to [:users, :sessions, :enhanced_security_tokens], method: :delete, class: "btn btn-sm btn-info" do %>
+                <i class="fa fa-envelope"></i> Re-Send Code
+            <% end %>
+            <button class="btn btn-sm btn-primary" id="enhanced_security_token_form_submit" data-disable="Please Wait..."><i class="fa fa-sign-in"></i> Authorize</button>
+        </div>
+    </div>
+<% end %>

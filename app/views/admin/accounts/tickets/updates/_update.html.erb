@@ -1,0 +1,36 @@
+<div class="row">
+    <div class="col-md-10 <% if update.user == current_user %>col-md-offset-2<% end %>">
+        <div class="block <% unless update.body.present? %>block-ticket-empty<% end %>" id="<%= update.anchor %>">
+            <div class="block-title clearfix">
+                <% if update.persisted? %>
+                    <h2>
+                        <%= link_to "##{update.sequence}", [:admin, @account, ticket, anchor: update.anchor] %>
+                        <small>
+                            by <%= update.user.render_full_name %>
+                            <span class="hidden-xs">at <%= update.render_created_at %></span>
+                        </small>
+                    </h2>
+                    <div class="pull-right block-options ticket-status">
+                        <%= update.render_priority %>
+                        <%= update.render_status %>
+                    </div>
+                <% else %>
+                    <h2>PREVIEW</h2>
+                <% end %>
+            </div>
+
+            <%= update.render_body %>
+
+            <% if update.secure_body.present? %>
+                <div class="ticket-sensitive">
+                    <h4 class="page-header"><i class="fa fa-lock"></i> Sensitive Data</h4>
+                    <%= update.render_secure_body %>
+                </div>
+            <% end %>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#<%= update.anchor %>").highlight();
+</script>

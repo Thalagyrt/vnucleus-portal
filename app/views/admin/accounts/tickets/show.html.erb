@@ -1,0 +1,73 @@
+<% content_for :title do %>Ticket <%= ticket.to_s %><% end %>
+
+<% content_for :header do %>
+    <%= ticket.subject %>
+
+    <div class="header-controls">
+        <span id="ticket_priority"><%= ticket.render_priority %></span>
+        <span id="ticket_status"><%= ticket.render_status %></span>
+    </div>
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Tickets', [:admin, @account, :tickets] %></li>
+    <li><%= link_to ticket.to_s, [:admin, @account, @ticket] %></li>
+<% end %>
+
+<div id="updates_container">
+    <div class="ajax-spinner"><i class="fa fa-gear fa-spin fa-4x"></i></div>
+</div>
+
+<div id="latest"></div>
+
+<% if current_power.updatable_admin_account_tickets?(account) %>
+    <div id="update_form_container">
+        <div class="ajax-spinner"><i class="fa fa-gear fa-spin fa-4x"></i></div>
+    </div>
+<% end %>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        var Ticket = {};
+
+        Ticket.minimumSequence = 0;
+        Ticket.updating = false;
+
+        function fetchUpdates() {
+            if(Ticket.updating) return;
+            Ticket.updating = true;
+
+            $.ajax({
+                url: "<%= url_for [:admin, @account, @ticket, :updates] %>?minimum_sequence=" + Ticket.minimumSequence,
+                cache: false,
+                success: function() {
+                    Ticket.updating = false;
+                    handleHash();
+                }
+            });
+        }
+
+        function handleHash() {
+            if(Ticket.hashHandled) return;
+            Ticket.hashHandled = true;
+
+            if(window.location.hash) {
+                $('html, body').animate({
+                    scrollTop: $(window.location.hash).offset().top - 60
+                }, 200);
+            }
+        }
+
+
+        fetchUpdates();
+
+        setInterval(fetchUpdates, 5000);
+
+        <% if current_power.updatable_admin_account_tickets?(account) %>
+            $.ajax({
+                url: "<%= url_for [:new, :admin, @account, @ticket, :update] %>",
+                cache: false,
+            });
+        <% end %>
+    </script>
+<% end %>

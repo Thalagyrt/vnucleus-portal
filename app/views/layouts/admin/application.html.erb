@@ -1,0 +1,245 @@
+
+<!DOCTYPE html>
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+
+    <title><% if content_for? :title %><%= yield :title %> - <% end %>vNucleus</title>
+
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0">
+
+    <%= stylesheet_link_tag 'application' %>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <%= javascript_include_tag 'vendor/modernizr-2.7.1-respond-1.4.2.min' %>
+
+    <link rel="shortcut icon" href="<%= image_url "favicon.ico" %>">
+    <link rel="apple-touch-icon" href="<%= image_url "icon57.png" %>" sizes="57x57">
+    <link rel="apple-touch-icon" href="<%= image_url "icon72.png" %>" sizes="72x72">
+    <link rel="apple-touch-icon" href="<%= image_url "icon76.png" %>" sizes="76x76">
+    <link rel="apple-touch-icon" href="<%= image_url "icon114.png" %>" sizes="114x114">
+    <link rel="apple-touch-icon" href="<%= image_url "icon120.png" %>" sizes="120x120">
+    <link rel="apple-touch-icon" href="<%= image_url "icon144.png" %>" sizes="144x144">
+    <link rel="apple-touch-icon" href="<%= image_url "icon152.png" %>" sizes="152x152">
+
+    <%= csrf_meta_tags %>
+</head>
+
+<body class="header-fixed-top sidebar-left-pinned layout-admin">
+<div id="sidebar-left">
+    <div class="sidebar-content">
+        <div class="sidebar-left-scroll">
+            <ul class="sidebar-nav">
+                <li class="visible-xs">
+                    <div class="text-center">
+                        <%= link_to [:root] do %>
+                            v<strong>Nucleus</strong>
+                        <% end %>
+                    </div>
+                </li>
+                <li class="sidebar-header">
+                    Administration
+                </li>
+                <li>
+                    <%= active_link_to [:admin, :dashboard], active: :exclusive do %>
+                        <i class="fa fa-dashboard"></i> Dashboard
+                    <% end %>
+                </li>
+                <li>
+                    <%= active_link_to [:admin, :analytics], active: [['admin/analytics', 'admin/visits'], []] do %>
+                        <i class="fa fa-bar-chart-o"></i> Analytics
+                    <% end %>
+                </li>
+                <li>
+                    <%= active_link_to [:admin, :solus, :clusters] do %>
+                        <i class="fa fa-cloud"></i> Clusters
+                    <% end %>
+                </li>
+                <li>
+                    <%= active_link_to [:admin, :payments] do %>
+                        <i class="fa fa-dollar"></i> Payments
+                    <% end %>
+                </li>
+                <li class="sidebar-header">
+                    Clients
+                </li>
+                <li>
+                    <%= active_link_to [:admin, :accounts], active: :inclusive do %>
+                        <i class="fa fa-fire"></i> Accounts
+                    <% end %>
+                </li>
+                <li>
+                    <%= active_link_to [:admin, :tickets] do %>
+                        <i class="fa fa-question-circle"></i> Tickets (<%= @tickets_awaiting_staff_action.count %>)
+                    <% end %>
+                </li>
+                <li>
+                    <%= active_link_to [:admin, :solus, :servers] do %>
+                        <i class="fa fa-hdd-o"></i> Servers
+                    <% end %>
+                </li>
+                <li>
+                    <%= active_link_to [:admin, :dedicated, :servers] do %>
+                        <i class="fa fa-server"></i> Dedicated
+                    <% end %>
+                </li>
+                <li>
+                    <%= active_link_to [:admin, :monitoring, :checks] do %>
+                        <i class="fa fa-check"></i> Monitoring
+                    <% end %>
+                </li>
+                <li>
+                    <%= active_link_to [:admin, :solus, :out_of_band_patches] do %>
+                        <i class="fa fa-shield"></i> OOB Patching
+                    <% end %>
+                </li>
+                <li>
+                    <%= active_link_to [:admin, :licenses, :licenses], active: [['admin/licenses/licenses', 'admin/licenses/usage_reports'], []] do %>
+                        <i class="fa fa-certificate"></i> Licenses
+                    <% end %>
+                </li>
+                <li>
+                    <%= active_link_to [:admin, :users] do %>
+                        <i class="fa fa-group"></i> Users
+                    <% end %>
+                </li>
+                <li class="sidebar-header">
+                    Communication
+                </li>
+                <li>
+                    <%= active_link_to [:admin, :communications, :announcements] do %>
+                        <i class="fa fa-bullhorn"></i> Announcements
+                    <% end %>
+                </li>
+                <li>
+                    <%= active_link_to [:admin, :service, :notices] do %>
+                        <i class="fa fa-info"></i> Service Notices
+                    <% end %>
+                </li>
+                <li>
+                    <%= active_link_to [:admin, :email_log_entries] do %>
+                        <i class="fa fa-envelope"></i> Email Log
+                    <% end %>
+                </li>
+                <li class="sidebar-header">
+                    Configuration
+                </li>
+                <li>
+                    <%= active_link_to [:admin, :solus, :plans] do %>
+                        <i class="fa fa-tasks"></i> Plans
+                    <% end %>
+                </li>
+                <li>
+                    <%= active_link_to [:admin, :solus, :templates], active: [['admin/solus/templates', 'admin/solus/usage_reports'], []] do %>
+                        <i class="fa fa-archive"></i> Templates
+                    <% end %>
+                </li>
+                <li>
+                    <%= active_link_to [:admin, :knowledge_base, :articles] do %>
+                        <i class="fa fa-book"></i> Knowledge Base
+                    <% end %>
+                </li>
+                <li>
+                    <%= active_link_to [:admin, :blog, :posts] do %>
+                        <i class="fa fa-pencil"></i> Blog
+                    <% end %>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="page-container">
+    <header class="navbar navbar-default navbar-fixed-top">
+        <ul class="nav header-nav pull-right">
+            <%= render partial: 'user_widget', locals: { user: current_user.try(:decorate) } %>
+        </ul>
+
+        <ul class="nav header-nav pull-left">
+            <li>
+                <a href="javascript:void(0)" id="sidebar-left-toggle">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </li>
+        </ul>
+
+        <%= link_to [:root], class: 'navbar-brand hidden-xs' do %>
+            <span class="logo"></span>
+            v<strong>Nucleus</strong>
+        <% end %>
+    </header>
+
+    <div id="fx-container" class="fx-opacity">
+        <div class="hidden-js alert alert-application alert-danger">
+            Our portal requires JavaScript to work correctly. Please enable JavaScript or add an exception for www.vnucleus.com in order to use this system.
+        </div>
+
+        <% @service_notices.each do |service_notice| %>
+            <div class="alert alert-application alert-info">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <p><%= service_notice.message %></p>
+            </div>
+        <% end %>
+
+        <% if flash[:notice] %>
+            <div class="alert alert-application alert-success">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <p><%= flash[:notice] %></p>
+            </div>
+        <% end %>
+
+        <% if flash[:alert] %>
+            <div class="alert alert-application alert-danger">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <p><%= flash[:alert] %></p>
+            </div>
+        <% end %>
+
+        <div id="page-content" class="block">
+            <div class="block-header">
+                <div class="header-section clearfix">
+                    <h1>
+                        <%= yield :header %>
+                    </h1>
+                </div>
+            </div>
+
+            <ul class="breadcrumb breadcrumb-top">
+                <li><%= link_to 'Dashboard', [:admin, :dashboard] %></li>
+                <%= yield :breadcrumbs %>
+            </ul>
+
+            <%= yield %>
+        </div>
+
+        <footer class="clearfix">
+            <div class="pull-left">
+                &copy; <span id="year-copy"></span> vNucleus / betaforce networks, llc
+            </div>
+            <div class="pull-right">
+                +1 (855) 667-2428 &middot;
+                <%= link_to 'terms of service', [:tos] %> &middot;
+                <%= link_to 'acceptable use policy', [:aup] %> &middot;
+                <%= link_to 'privacy policy', [:privacy] %>
+            </div>
+        </footer>
+
+    </div>
+</div>
+
+<a href="javascript:void(0)" id="to-top"><i class="fa fa-angle-up"></i></a>
+
+<%= javascript_include_tag 'application' %>
+<%= javascript_include_tag "https://js.stripe.com/v2/" %>
+<script type="text/javascript">
+    $(function() {
+        Stripe.setPublishableKey("<%= Rails.configuration.stripe[:publishable_key] %>");
+    });
+</script>
+
+<% if content_for? :javascript %>
+    <%= yield :javascript %>
+<% end %>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+<% content_for :title do %>My Account<% end %>
+
+<% content_for :header do %>My Account<% end %>
+
+<% if current_power.account_full_access?(account) %>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                <li>
+                    <%= link_to [:edit, :users, account] do %>
+                        <i class="fa fa-pencil"></i> Update Account Information
+                    <% end %>
+                </li>
+            </ul>
+        </div>
+    </nav>
+<% end %>
+
+<div class="row clearfix">
+    <% if current_power.account_server_access?(account) %>
+        <div class="col-md-4">
+            <div class="block block-dashboard">
+                <div class="block-title">
+                    <h2>Servers</h2>
+
+                    <div class="block-options pull-right">
+                        <% if current_power.creatable_account_solus_servers?(account) %>
+                            <%= link_to "New Server", [:new, :users, account, :solus, :server], class: 'btn btn-primary btn-sm' %>
+                        <% end %>
+                        <%= link_to "Servers", [:users, account, :solus, :servers], class: 'btn btn-primary btn-sm' %>
+                        <% if account.dedicated_server_count > 0 %>
+                            <%= link_to "Dedicated", [:users, account, :dedicated, :servers], class: 'btn btn-primary btn-sm' %>
+                        <% end %>
+                    </div>
+                </div>
+
+                <%= display_for account do |d| %>
+                    <%= d.display :server_count %>
+                    <%= d.display :render_total_ram %>
+                    <%= d.display :render_total_disk %>
+                <% end %>
+            </div>
+        </div>
+    <% end %>
+    <div class="col-md-4">
+        <div class="block block-dashboard">
+            <div class="block-title">
+                <h2>Tickets</h2>
+
+                <div class="block-options pull-right">
+                    <% if current_power.creatable_account_tickets?(account) %>
+                        <%= link_to "New Ticket", [:new, :users, account, :ticket], class: 'btn btn-primary btn-sm' %>
+                    <% end %>
+                    <%= link_to "Tickets", [:users, account, :tickets], class: 'btn btn-primary btn-sm' %>
+                </div>
+            </div>
+
+            <%= display_for account do |d| %>
+                <%= d.display :open_tickets_count %>
+                <%= d.display :tickets_awaiting_client_action_count %>
+            <% end %>
+        </div>
+    </div>
+    <% if current_power.account_billing_access?(account) %>
+        <div class="col-md-4">
+            <div class="block block-dashboard">
+                <div class="block-title">
+                    <h2>Billing</h2>
+
+                    <div class="block-options pull-right">
+                        <%= link_to "Statements", [:users, account, :statements], class: 'btn btn-primary btn-sm' %>
+                        <% if current_power.account_credit_card?(account) %>
+                            <%= link_to "Credit Card", [:users, account, :credit_cards], class: 'btn btn-primary btn-sm' %>
+                        <% end %>
+                    </div>
+                </div>
+
+                <%= display_for account do |d| %>
+                    <%= d.display :render_monthly_rate %>
+                    <%= d.display :render_balance %>
+                <% end %>
+            </div>
+        </div>
+    <% end %>
+</div>

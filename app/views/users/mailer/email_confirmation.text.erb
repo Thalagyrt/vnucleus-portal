@@ -1,0 +1,12 @@
+Hi <%= @user.greeting %>,
+
+Recently someone set this email address as the contact address for their vNucleus account. If this was you, please confirm your email by clicking the link below.
+
+<%= users_emails_confirmations_url(token: @user.email_token) %>
+
+Please note, this URL is only valid for <%= Rails.application.config.user_token_duration / 1.minute %> minutes.
+
+Thanks,
+James, Taylor, Kevin, and Steve at vNucleus
+
+To help protect the security of your account, this mailbox is not monitored for replies. If you need assistance, please open a support ticket in our client area.

@@ -1,0 +1,6 @@
+#!/bin/bash
+HOME=/opt/betaforce
+source ~/.rvm/scripts/rvm
+source ~/shared/environment
+cd ~/current
+exec bundle exec scheduler_daemon run -- --pid_dir=/opt/betaforce/shared/pids

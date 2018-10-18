@@ -1,0 +1,146 @@
+<% content_for :title do %><%= user.full_name %><% end %>
+
+<% content_for :header do %>
+    View User
+
+    <div class="header-controls">
+        <%= user.render_state %>
+    </div>
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Users', [:admin, :users] %></li>
+    <li><%= link_to user.full_name, [:admin, user] %></li>
+<% end %>
+
+<div class="row gutter30">
+    <div class="col-md-6">
+        <div class="block">
+            <div class="block-title">
+                <h2>User Info</h2>
+            </div>
+
+            <%= display_for user do |d| %>
+                <%= d.display :render_full_name %>
+                <%= d.display :email do %>
+                    <%= link_to user.email, "mailto:#{user.email}" %>
+                <% end %>
+                <%= d.display :render_email_confirmed %>
+                <%= d.display :render_legal_accepted %>
+                <%= d.display :render_profile_complete %>
+                <%= d.display :phone %>
+                <%= d.display :security_question %>
+                <%= d.display :security_answer %>
+                <%= d.display :active_at %>
+                <%= d.display :render_is_staff %>
+            <% end %>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="block">
+            <div class="block-title"><h2>Accounts</h2></div>
+
+            <table class="table table-condensed">
+                <tr>
+                    <th>Account</th>
+                    <th>Roles</th>
+                </tr>
+                <% user.account_memberships.each do |account_membership| %>
+                    <tr>
+                        <td><%= account_membership.account.link_to_s :admin %></td>
+                        <td><%= account_membership.render_roles %></td>
+                    </tr>
+                <% end %>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="block">
+    <div class="block-title"><h2>Visits</h2></div>
+
+    <table id="visits" class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th class="col-md-1">#</th>
+            <th class="col-md-1 hidden-xs">IP</th>
+            <th class="col-md-2 hidden-xs">Landing Page</th>
+            <th class="col-md-2 hidden-xs">Referrer</th>
+            <th class="col-md-2 hidden-xs">UTM Data</th>
+            <th class="col-md-2">Time</th>
+        </tr>
+        </thead>
+    </table>
+
+    <% content_for :javascript do %>
+        <script type="text/javascript">
+            $(function() {
+                webApp.datatables();
+
+                $('#visits').dataTable({
+                    "sAjaxSource": "<%= escape_javascript url_for([:admin, @user, :visits, format: :json]) %>",
+                    "bDestroy": true,
+                    "bServerSide": true,
+                    "aaSorting": [[6, "desc"]],
+                    "aoColumns": [
+                        {"mDataProp": "id"},
+                        {"mDataProp": "ip", "bSortable" : false, "sClass": "hidden-xs"},
+                        {"mDataProp": "landing_page", "bSortable": false, "sClass": "hidden-xs"},
+                        {"mDataProp": "referrer", "bSortable": false, "sClass": "hidden-xs"},
+                        {"mDataProp": "utm_data", "bSortable": false, "sClass": "hidden-xs"},
+                        {"mDataProp": "created_at"},
+                    ],
+                    "fnDrawCallback": function() {
+                        $('[data-toggle="popover"], .enable-popover').popover({container: 'body', animation: false});
+                    }
+                });
+
+                $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+                $('.dataTables_length select').addClass('form-control');
+            });
+        </script>
+    <% end %>
+</div>
+
+<div class="block">
+    <div class="block-title"><h2>Email Log</h2></div>
+
+    <table id="email_log_entries" class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th class="col-md-1">#</th>
+            <th class="col-md-2 hidden-xs">To</th>
+            <th class="col-md-6 hidden-xs">Subject</th>
+            <th class="col-md-3">Sent At</th>
+        </tr>
+        </thead>
+    </table>
+
+    <% content_for :javascript do %>
+        <script type="text/javascript">
+            $(function() {
+                webApp.datatables();
+
+                $('#email_log_entries').dataTable({
+                    "sAjaxSource": "<%= escape_javascript url_for([:admin, @user, :email_log_entries, format: :json]) %>",
+                    "bDestroy": true,
+                    "bServerSide": true,
+                    "aaSorting": [[3, "desc"]],
+                    "aoColumns": [
+                        {"mDataProp": "id", "bSortable": false},
+                        {"mDataProp": "to", "bSortable": false, "sClass": "hidden-xs"},
+                        {"mDataProp": "subject", "bSortable" : false},
+                        {"mDataProp": "created_at"},
+                    ],
+                    "fnDrawCallback": function() {
+                        $('[data-toggle="popover"], .enable-popover').popover({container: 'body', animation: false});
+                    }
+                });
+
+                $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+                $('.dataTables_length select').addClass('form-control');
+            });
+        </script>
+    <% end %>
+</div>

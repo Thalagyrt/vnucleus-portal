@@ -1,0 +1,160 @@
+<% content_for :title do %>Analytics<% end %>
+
+<% content_for :header do %>Analytics<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Analytics', [:admin, :analytics] %></li>
+<% end %>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <%= link_to [:admin, :visits] do %>
+                    <i class="fa fa-user"></i> Visits
+                <% end %>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<h3 class="page-header">Conversions By Source</h3>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="block">
+            <div class="block-title"><h2>Past 6 Months</h2></div>
+
+            <table table-definitions class="table table-definitions table-condensed">
+                <%= analytics.render_conversions_by_source_since 6.months.ago %>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="block">
+            <div class="block-title"><h2>Past 30 Days</h2></div>
+
+            <table table-definitions class="table table-definitions table-condensed">
+                <%= analytics.render_conversions_by_source_since 30.days.ago %>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="block">
+            <div class="block-title"><h2>Past 24 Hours</h2></div>
+
+            <table table-definitions class="table table-definitions table-condensed">
+                <%= analytics.render_conversions_by_source_since 24.hours.ago %>
+            </table>
+        </div>
+    </div>
+</div>
+
+<h3 class="page-header">Visits By Day</h3>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="block">
+            <div class="block-title"><h2>Past 6 Months</h2></div>
+
+            <div id="visits-by-day-6-months" class="chart"></div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="block">
+            <div class="block-title"><h2>Past 30 Days</h2></div>
+
+            <div id="visits-by-day-30-days" class="chart"></div>
+        </div>
+    </div>
+</div>
+
+<h3 class="page-header">Visits By Source</h3>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="block">
+            <div class="block-title"><h2>Past 6 Months</h2></div>
+
+            <table table-definitions class="table table-definitions table-condensed">
+                <%= analytics.render_visits_by_source_since 6.months.ago %>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="block">
+            <div class="block-title"><h2>Past 30 Days</h2></div>
+
+            <table table-definitions class="table table-definitions table-condensed">
+                <%= analytics.render_visits_by_source_since 30.days.ago %>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="block">
+            <div class="block-title"><h2>Past 24 Hours</h2></div>
+
+            <table table-definitions class="table table-definitions table-condensed">
+                <%= analytics.render_visits_by_source_since 24.hours.ago %>
+            </table>
+        </div>
+    </div>
+</div>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            var visitsByDay30 = $('#visits-by-day-30-days');
+            var dataVisitsByDay30 = [
+                    <% analytics.visits_by_day_since(30.days.ago).each do |v| %>
+                        [<%= v[0].to_time.to_i * 1000 %>, <%= v[1] %>],
+                    <% end %>
+            ];
+
+            var visitsByDay6mo = $('#visits-by-day-6-months');
+            var dataVisitsByDay6mo = [
+                <% analytics.visits_by_day_since(6.months.ago).each do |v| %>
+                [<%= v[0].to_time.to_i * 1000 %>, <%= v[1] %>],
+                <% end %>
+            ];
+
+            $.plot(visitsByDay30,
+                    [
+                        {
+                            data: dataVisitsByDay30,
+                            lines: {show: true},
+                        },
+                    ],
+                    {
+                        colors: ['#f39c12'],
+                        legend: {show: false},
+                        grid: {borderWidth: 0, hoverable: true, clickable: true},
+                        yaxis: {show: true},
+                        xaxis: {show: true, mode: 'time'}
+                    }
+            );
+
+            $.plot(visitsByDay6mo,
+                    [
+                        {
+                            data: dataVisitsByDay6mo,
+                            lines: {show: true},
+                        },
+                    ],
+                    {
+                        colors: ['#f39c12'],
+                        legend: {show: false},
+                        grid: {borderWidth: 0, hoverable: true, clickable: true},
+                        yaxis: {show: true},
+                        xaxis: {show: true, mode: 'time'}
+                    }
+            );
+
+        });
+    </script>
+<% end %>

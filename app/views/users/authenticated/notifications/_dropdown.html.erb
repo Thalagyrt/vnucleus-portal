@@ -1,0 +1,17 @@
+<ul class="list">
+    <% if notifications.each do |notification| %>
+        <li class="notification" id="notification_<%= notification.id %>">
+            <div class="header">
+                <%= render partial: 'header', locals: { notification: notification } %>
+            </div>
+            <div class="message"><%= notification.render_message %></div>
+        </li>
+    <% end.empty? %>
+        <li>You have no notifications.</li>
+    <% end %>
+</ul>
+<% if @notifications.unread_count > 0 %>
+    <div class="footer">
+        <%= link_to 'Mark All Read', [:users, :notifications, mark_all_read: true], remote: true %>
+    </div>
+<% end %>

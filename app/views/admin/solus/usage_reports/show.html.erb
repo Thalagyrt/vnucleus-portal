@@ -1,0 +1,65 @@
+<% content_for :title do %>Template Usage Report <%= usage_report.to_s %><% end %>
+
+<% content_for :header do %>Template Usage Report <%= usage_report.to_s %><% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Templates', [:admin, :solus, :templates] %></li>
+    <li><%= link_to 'Usage Reports', [:admin, :solus, :usage_reports] %></li>
+    <li><%= usage_report.to_s %></li>
+<% end %>
+
+<h3 class="page-header">Templates by Node</h3>
+
+<div class="row gutter30">
+    <% @usage_report.templates_by_node.sort_by { |node, _| node.name }.each do |node, templates| %>
+        <div class="col-md-6">
+            <div class="block block-dashboard">
+                <div class="block-title"><h2><%= node.name %></h2></div>
+                <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th class="col-md-9">Template</th>
+                        <th class="col-md-3">#</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% templates.sort_by { |data| data[:template].name }.each do |data| %>
+                        <tr>
+                            <td><%= data[:template].name %></td>
+                            <td><%= data[:count] %></td>
+                        </tr>
+                    <% end %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    <% end %>
+</div>
+
+<h3 class="page-header">Nodes by Template</h3>
+
+<div class="row gutter30">
+    <% @usage_report.nodes_by_template.sort_by { |template, _| template.name }.each do |template, nodes| %>
+        <div class="col-md-6">
+            <div class="block block-dashboard">
+                <div class="block-title"><h2><%= template.name %></h2></div>
+                <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th class="col-md-9">Node</th>
+                        <th class="col-md-3">#</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% nodes.sort_by { |data| data[:node].name }.each do |data| %>
+                        <tr>
+                            <td><%= data[:node].name %></td>
+                            <td><%= data[:count] %></td>
+                        </tr>
+                    <% end %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    <% end %>
+</div>

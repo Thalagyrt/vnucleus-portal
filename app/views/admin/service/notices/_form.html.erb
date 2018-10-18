@@ -1,0 +1,32 @@
+<%= simple_form_for @notice, url: [:admin, :service, @notice], remote: remote, html: { id: 'new_notice', class: 'form-horizontal' } do |f| %>
+    <%= f.input :message %>
+
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= f.button :submit, "Add Notice", id: 'notice_submit', data: { disable_with: 'Saving...' }, class: 'btn btn-primary' %>
+        </div>
+    </div>
+<% end %>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            $('#new_notice').validate({
+                errorClass: 'help-block', // You can add help-inline instead of help-block if you like validation messages to the right of the inputs
+                errorElement: 'div',
+                errorPlacement: function(error, e) {
+                    e.parents('.form-group > div').append(error);
+                },
+                highlight: function(e) {
+                    $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                    $(e).closest('.help-block').remove();
+                },
+                success: function(e) {
+                    // You can remove the .addClass('has-success') part if you don't want the inputs to get green after success!
+                    e.closest('.form-group').removeClass('has-success has-error').addClass('has-success');
+                    e.closest('.help-block').remove();
+                },
+            });
+        });
+    </script>
+<% end %>

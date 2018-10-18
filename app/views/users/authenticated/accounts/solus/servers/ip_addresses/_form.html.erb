@@ -1,0 +1,8 @@
+<%= simple_form_for ip_address, url: [:users, @account, :solus, @server, ip_address], remote: true do |f| %>
+    <%= f.input :ptr_value, wrapper: :no_label do %>
+        <%= f.input_field :ptr_value, class: 'form-control' %>
+        <%= content_tag :span, class: 'input-group-btn' do %>
+            <%= f.submit 'Save', class: 'btn btn-primary' %>
+        <% end %>
+    <% end %>
+<% end %>

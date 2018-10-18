@@ -1,0 +1,74 @@
+<% content_for :title do %>Servers<% end %>
+
+<% content_for :header do %>Servers<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Servers', [:admin, :solus, :servers] %></li>
+<% end %>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <% if params[:show_all].present? %>
+                    <%= link_to [:admin, :solus, :servers] do %>
+                        <i class="fa fa-eye-slash"></i> Hide Cancelled Servers
+                    <% end %>
+                <% else %>
+                    <%= link_to [:admin, :solus, :servers, show_all: true] do %>
+                        <i class="fa fa-eye"></i> Show Cancelled Servers
+                    <% end %>
+                <% end %>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<table id="servers" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th class="col-md-1">#</th>
+        <th>Hostname</th>
+        <th class="hidden-xs col-md-1">IP Address</th>
+        <th class="hidden-xs">Account</th>
+        <th class="hidden-xs col-md-1">Plan</th>
+        <th class="hidden-xs">Operating System</th>
+        <th class="hidden-xs col-md-1">Location</th>
+        <th class="col-md-1">Price</th>
+        <th class="col-md-1">Managed</th>
+        <th class="hidden-xs">Patch At</th>
+        <th>State</th>
+    </tr>
+    </thead>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#servers').dataTable({
+                "sAjaxSource": "<%= escape_javascript url_for([:admin, :solus, :servers, { format: :json, show_all: params[:show_all] }.select { |k,v| v.present? }]) %>",
+                "bDestroy": true,
+                "bServerSide": true,
+                "aaSorting": [[1, "asc"]],
+                "aoColumns": [
+                    {"mDataProp": "id"},
+                    {"mDataProp": "hostname"},
+                    {"mDataProp": "ip_address", "bSortable": false, "sClass": "hidden-xs"},
+                    {"mDataProp": "account", "bSortable": false, "sClass": "hidden-xs"},
+                    {"mDataProp": "plan", "sClass": "hidden-xs"},
+                    {"mDataProp": "template", "bSortable": false, "sClass": "hidden-xs"},
+                    {"mDataProp": "location", "bSortable": false, "sClass": "hidden-xs"},
+                    {"mDataProp": "amount"},
+                    {"mDataProp": "managed", "bSortable": false},
+                    {"mDataProp": "patch_at", "sClass": "hidden-xs"},
+                    {"mDataProp": "state", "bSortable": false},
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

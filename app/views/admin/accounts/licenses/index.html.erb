@@ -1,0 +1,81 @@
+<% content_for :title do %>Licenses<% end %>
+
+<% content_for :header do %>Licenses<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Licenses', [:admin, @account, :licenses] %></li>
+<% end %>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <%= link_to [:new, :admin, account, :license] do %>
+                    <i class="fa fa-plus-circle"></i> New License
+            <% end %>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<table id="licenses" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Product Code</th>
+        <th>Description</th>
+        <th>Note</th>
+        <th>Amount</th>
+        <th>Count</th>
+        <th>Total</th>
+        <th>Next Due</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% licenses.each do |license| %>
+        <tr>
+            <td><%= license.product_code %></td>
+            <td><%= license.description %></td>
+            <td><%= license.render_note %></td>
+            <td><%= license.render_amount %></td>
+            <td><span data-raw="<%= license.count %>"><%= license.count %></span> (<%= license.max_count %>)</td>
+            <td><%= license.render_total_amount %></td>
+            <td><%= license.render_next_due %></td>
+            <td class="text-center">
+                <%= link_to [:edit, :admin, @account, license], class: 'btn btn-xs btn-primary' do %>
+                    <i class="fa fa-pencil"></i>
+                <% end %>
+                <%= link_to [:admin, @account, license], method: :delete, disabled: (license.count == 0), class: 'btn btn-xs btn-danger', data: { confirm: 'Are you sure you want to zero this license?' } do %>
+                    <i class="fa fa-times"></i>
+                <% end %>
+            </td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#licenses').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[0, "desc"]],
+                "aoColumns": [
+                    null,
+                    null,
+                    null,
+                    {"sType": "raw-numeric"},
+                    {"sType": "raw-numeric"},
+                    {"sType": "raw-numeric"},
+                    {"sType": "raw-numeric"},
+                    {"bSortable": false},
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

@@ -1,0 +1,13 @@
+$("#notifications-count").html("<%= unread_count.unread_count %>");
+$("#notifications-color").removeClass('text-success text-warning text-danger').addClass("<%= unread_count.css_class %>");
+$("#notifications-count").data('sequence', <%= unread_count.max_sequence %>);
+
+<% unread_count.new_notifications.each do |notification| %>
+    <% if notification.linkable? %>
+        $.growl({
+            message: "<%= escape_javascript(notification.render_message_plaintext) %>",
+            url: '<%= escape_javascript(url_for([:users, notification])) %>' });
+    <% else %>
+        $.growl("<%= escape_javascript(notification.render_message_plaintext) %>");
+    <% end %>
+<% end %>

@@ -1,0 +1,59 @@
+<% content_for :title do %>Our Team Of Senior Systems Administrators<% end %>
+
+<div class="landing-intro">
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="animation-pullDown">Our Team</h1>
+        </div>
+    </div>
+</div>
+
+<%= render partial: 'about_tabs' %>
+
+<div class="landing-section">
+    <div class="container">
+        <div class="row gutter30 landing-features">
+            <div class="col-md-4">
+                <h3 class="features-title">James Riley</h3>
+                <p>As a longtime software developer, I bring a wealth of knowledge about Ruby, Python, PHP, MySQL, PostgreSQL and other stack components to vNucleus, along with an extensive Linux systems administration career.</p>
+                <p>Having worked as a systems administrator for a company with 80,000 devices on its network and over 2000 servers, I started doing small scale virtualization back in 2005, and by 2010 had taken a role in a virtualization deployment that took approximately 800 physical servers and consolidated them onto fewer than 20 hosts. After that role I moved on to take a DevOps role at a leading human resources management software development company, where I helped manage an OpenStack cloud with over 8TB of RAM.</p>
+                <p>My experience in secure, high performance virtualization environments allows me to fine tune our servers to meet the performance demands and security expectations of every client.</p>
+                <p class="text-center">
+                    <%= link_to [:blog, :posts, author: 'jriley'], class: 'btn btn-xs btn-primary' do %>
+                        <i class="fa fa-book"></i> Blog Posts
+                    <% end %>
+                    <%= link_to 'mailto:jriley@vnucleus.com', class: 'btn btn-xs btn-primary' do %>
+                        <i class="fa fa-envelope"></i>
+                    <% end %>
+                </p>
+            </div>
+            <div class="col-md-4">
+                <h3 class="features-title">Taylor Burnham</h3>
+                <p>My first adventure in systems administration was hosting a dedicated Counter Strike 1.6 server when I was in high school that was funded purely from donations. This was only the beginning of my interest in server and network administration.</p>
+                <p>My work experience includes a 24/7/365 department of a telecommunications vendor with government mandated uptime requirements, being the sole engineering escalation point for a life sciences software company, and nowadays maintaining mission critical clinical applications for one of the largest contract research organizations in the world.</p>
+                <p>In my spare time I enjoy playing video games, hiking, and listening to a lot of <a href="http://www.last.fm/user/TunedDownGuitar">music</a>.</p>
+                <p class="text-center">
+                    <%= link_to [:blog, :posts, author: 'tburnham'], class: 'btn btn-xs btn-primary' do %>
+                        <i class="fa fa-book"></i> Blog Posts
+                    <% end %>
+                    <%= link_to 'mailto:tburnham@vnucleus.com', class: 'btn btn-xs btn-primary' do %>
+                        <i class="fa fa-envelope"></i>
+                    <% end %>
+                </p>
+            </div>
+            <div class="col-md-4">
+                <h3 class="features-title">Kevin Clark</h3>
+                <p>As an accomplished Operations Coordinator, my core focus is strategic planning and implementation for vNucleus. My extensive education and innate business knowledge allows me to streamline sales support and business operations using proven methods and technology. Identifying key issues, solving problems, and presenting solid alternatives for improvement are my areas of expertise.</p>
+                <p>My concurrent employment with a multi-disciplined business management firm creates a synergy with vNucleus clients, giving them an option to pursue if they're seeking to enhance their enterprise value as well as assistance with exit strategy planning and implementation. My diverse experience and unsurpassed work ethic allows me to help vNucleus and its clients alike.</p>
+                <p class="text-center">
+                    <%= link_to [:blog, :posts, author: 'kevin'], class: 'btn btn-xs btn-primary' do %>
+                        <i class="fa fa-book"></i> Blog Posts
+                    <% end %>
+                    <%= link_to 'mailto:kevin@vnucleus.com', class: 'btn btn-xs btn-primary' do %>
+                        <i class="fa fa-envelope"></i>
+                    <% end %>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

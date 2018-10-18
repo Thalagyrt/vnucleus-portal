@@ -1,0 +1,44 @@
+<% content_for :title do %>Memberships<% end %>
+
+<% content_for :header do %>Memberships<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Memberships', [:admin, @account, :memberships] %></li>
+<% end %>
+
+<table id="memberships" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>User</th>
+        <th>Roles</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% memberships.each do |membership| %>
+        <tr>
+            <td><%= membership.link_user_name :admin %></td>
+            <td><%= membership.render_roles %></td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#memberships').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[0, "desc"]],
+                "aoColumns": [
+                    null,
+                    null,
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

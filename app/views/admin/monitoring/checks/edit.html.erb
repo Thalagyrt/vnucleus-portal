@@ -1,0 +1,24 @@
+<% content_for :title do %>Edit Check<% end %>
+
+<% content_for :header do %>
+    Edit Check
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Monitoring', [:admin, :monitoring, :checks] %></li>
+    <li><%= link_to @check.to_s, [:admin, :monitoring, @check] %></li>
+    <li><%= link_to 'Edit', [:edit, :admin, :monitoring, @check] %></li>
+<% end %>
+
+<%= simple_form_for @check, url: [:admin, :monitoring, @check], html: { class: 'form-horizontal form-box' } do |f| %>
+    <%= f.input :check_data, wrapper: :medium_input, label: t("monitoring.check.check_data_name.#{@check.check_type}") %>
+    <%= f.input :notify_after_failures, wrapper: :tiny_input %>
+    <%= f.input :notify_staff, wrapper: :boolean %>
+    <%= f.input :notify_account, wrapper: :boolean %>
+
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= f.button :submit, 'Save', data: { disable_with: 'Saving...' }, id: 'check_submit', class: 'btn btn-primary' %>
+        </div>
+    </div>
+<% end %>

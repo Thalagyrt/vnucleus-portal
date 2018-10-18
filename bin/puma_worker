@@ -1,0 +1,6 @@
+#!/bin/bash
+HOME=/opt/betaforce
+source ~/.rvm/scripts/rvm
+source ~/shared/environment
+cd ~/current
+exec bundle exec puma --workers $PUMA_WORKERS --threads $MIN_THREADS:$MAX_THREADS --pidfile /opt/betaforce/shared/pids/puma.pid --port 8080 --prune-bundler

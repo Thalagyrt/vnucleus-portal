@@ -1,0 +1,208 @@
+<% content_for :title do %>New Server<% end %>
+
+<% content_for :header do %>
+    New Server
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Servers', [:admin, @account, :solus, :servers] %></li>
+    <li><%= link_to 'New', [:new, :admin, @account, :solus, :server] %></li>
+<% end %>
+
+<%= simple_form_for @server_form, url: [:admin, @account, :solus, :servers], html: { id: 'new_server', class: 'form-horizontal' } do |f| %>
+    <%= f.input :hostname, wrapper: :medium_input, autofocus: true %>
+    <div class="form-group<% if @server_form.errors[:cluster_id].present? %> has-error<% end %>">
+        <div class="col-md-2">
+            <p class="server-builder-hint hidden-sm hidden-xs" id="datacenter-hint">
+                <small>
+                    Choose A Datacenter <i class="fa fa-arrow-right"></i>
+                </small>
+            </p>
+        </div>
+        <div class="col-md-10">
+            <table class="table plans">
+                <thead>
+                <tr>
+                    <th class="col-md-3">Datacenter</th>
+                    <th class="hidden-xs">Facility</th>
+                    <th class="hidden-xs">Transit Providers</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% clusters.each do |cluster| %>
+                    <tr class="cursor-pointer" onclick="selectCluster(<%= cluster.id %>);">
+                        <td><label class="radio"><%= f.radio_button :cluster_id, cluster.id %> <%= cluster.name %></label></td>
+                        <td class="hidden-xs"><%= cluster.facility %></td>
+                        <td class="hidden-xs"><%= cluster.transit_providers %></td>
+                    </tr>
+                <% end %>
+                </tbody>
+            </table>
+            <% if @server_form.errors[:cluster_id].present? %>
+                <div class="help-block">
+                    <%= @server_form.errors[:cluster_id].join(', ') %>
+                </div>
+            <% end %>
+        </div>
+    </div>
+    <div id="service_levels"></div>
+    <div id="plans"></div>
+    <div id="templates"></div>
+
+    <%= f.input :coupon_code, wrapper: :medium_input %>
+
+    <div class="form-group">
+        <div class="col-md-10 col-md-offset-2">
+
+            <h3><strong>Total:</strong> $<span id="total">0.00</span>/mo</h3>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= f.button :submit, "Review Order", id: 'server_form_submit', data: { disable_with: 'Saving...' }, class: 'btn btn-primary' %>
+        </div>
+    </div>
+<% end %>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        var selected = {};
+        var total = { plan: 0, template: 0 };
+
+        function selectCluster(id) {
+            $("#server_form_cluster_id_"+id)[0].checked = true;
+            $.ajax({
+                url: "/solus/service_levels.js?cluster_id=" + id,
+                success: function() {
+                    if(selected.managed)
+                    {
+                        selectManaged(id, selected.managed);
+                    }
+                }
+            })
+        }
+        function selectManaged(cluster_id, managed) {
+            $("#server_form_managed_"+managed)[0].checked = true;
+            selected.managed = managed;
+            total.plan = 0;
+            updateTotal();
+            $.ajax({
+                url: "/solus/plans.js?cluster_id=" + cluster_id + "&managed=" + managed,
+                success: function() {
+                    if(selected.ram && selected.disk)
+                    {
+                        elem = $(".plan").filter(function() { return $(this).data('ram') == selected.ram && $(this).data('disk') == selected.disk });
+                        selectPlan(elem.data('id'));
+                    }
+                }
+            })
+        }
+        function selectPlan(id) {
+            $("#server_form_plan_id_"+id)[0].checked = true;
+            selected.ram = $("#server_form_plan_id_"+id).data('ram');
+            selected.disk = $("#server_form_plan_id_"+id).data('disk');
+            total.plan = $("#server_form_plan_id_"+id).data('amount');
+            total.template = 0;
+            updateTotal();
+            $.ajax({
+                url: "/solus/templates.js?plan_id=" + id,
+                success: function() {
+                    if(selected.template) {
+                        selectTemplate(selected.template);
+                    }
+                }
+            })
+        }
+        function selectTemplate(id) {
+            $("#server_form_template_id_"+id)[0].checked = true;
+            total.template = $("#server_form_template_id_"+id).data('amount');
+            selected.template = id;
+
+            updateTotal();
+        }
+
+        function updateTotal()
+        {
+            clearTimeout(total.update);
+            setTimeout(realUpdateTotal, 100);
+        }
+
+        function realUpdateTotal()
+        {
+            $.ajax({
+                url: "/solus/coupons.json?coupon_code=" + $("#server_form_coupon_code").val() + "&plan_amount=" + total.plan + "&template_amount=" + total.template,
+                success: function(data) {
+                    $("#total").html(((data.plan_amount + data.template_amount) / 100).toFixed(2));
+                }
+            });
+        }
+
+        $(function() {
+            $('#new_server').validate({
+                errorClass: 'help-block', // You can add help-inline instead of help-block if you like validation messages to the right of the inputs
+                errorElement: 'div',
+                errorPlacement: function(error, e) {
+                    e.parents('.form-group > div').append(error);
+                },
+                highlight: function(e) {
+                    $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                    $(e).closest('.help-block').remove();
+                },
+                success: function(e) {
+                    // You can remove the .addClass('has-success') part if you don't want the inputs to get green after success!
+                    e.closest('.form-group').removeClass('has-success has-error').addClass('has-success');
+                    e.closest('.help-block').remove();
+                },
+                rules: {
+                    "server_form[hostname]": {
+                        required: true,
+                        minlength: 4,
+                        remote: {
+                            url: "<%= escape_javascript(url_for([:validations, :hostnames]) )%>",
+                            type: "post",
+                            data: {
+                                hostname: function() {
+                                    return $( "#server_form_hostname" ).val();
+                                }
+                            }
+                        }
+                    },
+                    "server_form[cluster_id]": {
+                        required: true,
+                    },
+                    "managed": {
+                        required: true,
+                    },
+                    "server_form[plan_id]": {
+                        required: true,
+                    },
+                    "server_form[template_id]": {
+                        required: true,
+                    }
+                },
+                messages: {
+                    "server_form[hostname]": {
+                        remote: 'Must be between 4 and 255 characters, alphanumeric, dashes, and dots only'
+                    },
+                    "server_form[cluster_id]": {
+                        required: "Please select a datacenter"
+                    },
+                    "managed": {
+                        required: "Please select a service level"
+                    },
+                    "server_form[plan_id]": {
+                        required: "Please select a plan"
+                    },
+                    "server_form[template_id]": {
+                        required: "Please select an operating system"
+                    }
+                }
+            });
+
+            $("#server_form_coupon_code").on('input propertychange paste', function() {
+                updateTotal();
+            });
+        });
+    </script>
+<% end %>

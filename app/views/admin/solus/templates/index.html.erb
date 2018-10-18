@@ -1,0 +1,98 @@
+<% content_for :title do %>Templates<% end %>
+
+<% content_for :header do %>Templates<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Templates', [:admin, :solus, :templates] %></li>
+<% end %>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <%= link_to [:new, :admin, :solus, :template] do %>
+                    <i class="fa fa-plus-circle"></i> New Template
+                <% end %>
+            </li>
+
+            <li>
+                <%= link_to [:admin, :solus, :usage_reports] do %>
+                    <i class="fa fa-tasks"></i> Usage Reporting
+                <% end %>
+            </li>
+
+            <li>
+                <% if params[:show_all].present? %>
+                    <%= link_to [:admin, :solus, :templates] do %>
+                        <i class="fa fa-eye-slash"></i> Hide Inactive Templates
+                    <% end %>
+                <% else %>
+                    <%= link_to [:admin, :solus, :templates, show_all: true] do %>
+                        <i class="fa fa-eye"></i> Show Inactive Templates
+                    <% end %>
+                <% end %>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<table id="templates" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th class="col-md-1">#</th>
+        <th>Name</th>
+        <th class="hidden-xs">Description</th>
+        <th class="hidden-xs">Template</th>
+        <th class="hidden-xs">Admin Username</th>
+        <th class="hidden-xs">Virtualization Type</th>
+        <th class="hidden-xs">Plan Part</th>
+        <th class="hidden-xs">Average Install Time</th>
+        <th>Amount</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% templates.each do |template| %>
+        <tr>
+            <td class="col-md-1"><%= template.link_id :edit, :admin %></td>
+            <td><%= template.link_name :edit, :admin %></td>
+            <td class="hidden-xs"><%= template.description %></td>
+            <td class="hidden-xs"><%= template.template %></td>
+            <td class="hidden-xs"><%= template.root_username %></td>
+            <td class="hidden-xs"><%= template.virtualization_type %></td>
+            <td class="hidden-xs"><%= template.plan_part %></td>
+            <td class="hidden-xs"><%= template.render_install_time %></td>
+            <td><%= template.render_amount %></td>
+            <td><%= template.render_status %></td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#templates').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[1, "desc"]],
+                "aoColumns": [
+                    {"sType": "raw-numeric"},
+                    {"sType": "raw-string"},
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    {"sType": "raw-numeric"},
+                    {"sType": "raw-numeric"},
+                    null,
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

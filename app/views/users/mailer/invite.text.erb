@@ -1,0 +1,12 @@
+Hello,
+
+You've been invited to join the account <%= @invite.account.to_s %> at vNucleus.
+
+If you'd like to accept this invitation, please follow the link below.
+
+<%= users_invites_url(token: @invite.token) %>
+
+Thanks,
+James, Taylor, Kevin, and Steve at vNucleus
+
+To help protect the security of your account, this mailbox is not monitored for replies. If you need assistance, please open a support ticket in our client area.

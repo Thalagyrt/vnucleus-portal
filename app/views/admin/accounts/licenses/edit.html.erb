@@ -1,0 +1,22 @@
+<% content_for :title do %>Edit License <%= license.to_s %><% end %>
+
+<% content_for :header do %>Edit License<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Licenses', [:admin, @account, :licenses] %></li>
+    <li><%= link_to license.to_s, [:new, :admin, @account, :license] %></li>
+<% end %>
+
+<%= simple_form_for @license, url: [:admin, @account, @license], html: { class: 'form-horizontal form-box' } do |f| %>
+    <%= f.error_notification %>
+
+    <%= f.input :note, wrapper: :medium_input %>
+    <%= f.input :count, wrapper: :small_input %>
+    <%= f.input :free, wrapper: :boolean %>
+
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= f.button :submit, 'Save', data: { disable_with: 'Saving...' }, id: 'server_submit', class: 'btn btn-primary' %>
+        </div>
+    </div>
+<% end %>

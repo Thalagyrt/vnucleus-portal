@@ -1,0 +1,83 @@
+<% content_for :title do %>Visit <%= visit.id %><% end %>
+
+<% content_for :header do %>
+    Visit Details
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Analytics', [:admin, :analytics] %></li>
+    <li><%= link_to 'Visits', [:admin, :visits] %></li>
+    <li><%= link_to "Visit #{visit.id}", [:admin, visit] %></li>
+<% end %>
+
+<div class="row gutter30">
+    <div class="col-md-4">
+        <%= display_for visit do |d| %>
+            <%= d.display :render_user %>
+            <%= d.display :ip %>
+            <%= d.display :country %>
+            <%= d.display :region %>
+            <%= d.display :city %>
+        <% end %>
+    </div>
+    <div class="col-md-4">
+        <%= display_for visit do |d| %>
+            <%= d.display :browser %>
+            <%= d.display :os %>
+            <%= d.display :device_type %>
+            <%= d.display :landing_page do %>
+                <a href="#" data-toggle="popover" data-placement="bottom" data-content="<%= visit.landing_page %>"><%= truncate(visit.landing_page) %></a>
+            <% end %>
+            <%= d.display :referrer do %>
+                <a href="#" data-toggle="popover" data-placement="bottom" data-content="<%= visit.referrer %>"><%= truncate(visit.referrer) %></a>
+            <% end %>
+        <% end %>
+    </div>
+    <div class="col-md-4">
+        <%= display_for visit do |d| %>
+            <%= d.display :render_utm_medium %>
+            <%= d.display :render_utm_source %>
+            <%= d.display :render_utm_campaign %>
+        <% end %>
+    </div>
+</div>
+
+<table id="events" class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th class="col-md-1">#</th>
+        <th class="col-md-9">Properties</th>
+        <th class="col-md-2">Time</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% visit.events.each do |event| %>
+        <tr>
+            <td><%= event.id %></td>
+            <td><%= event.render_properties %></td>
+            <td><%= event.render_time %></td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#events').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[0, "desc"]],
+                "aoColumns": [
+                    {"sType": "numeric"},
+                    null,
+                    {"sType": "raw-numeric"},
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

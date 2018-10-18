@@ -1,0 +1,17 @@
+Ticket <%= @ticket.to_s %> was updated by <%= @update.user.full_name %>.
+
+<% if @update.body? %>---
+
+<%= @update.body %>
+
+<% end %><% if @update.secure_body? %>---
+
+This update contains additional information in the sensitive data field.
+
+<% end %>---
+
+Update #<%= @update.sequence %>
+Status: <%= @update.status_text %>
+Priority: <%= @update.priority_text %>
+Account: <%= @account.to_s %>
+You can view this ticket at <%= admin_account_ticket_url(@account, @ticket) %>

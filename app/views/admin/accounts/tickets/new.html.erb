@@ -1,0 +1,49 @@
+<% content_for :title do %>New Ticket<% end %>
+
+<% content_for :header do %>
+    New Ticket
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Tickets', [:admin, @account, :tickets] %></li>
+    <li><%= link_to 'New', [:new, :admin, @account, :ticket] %></li>
+<% end %>
+
+<%= simple_form_for @ticket_form, url: [:admin, @account, :tickets], html: { class: 'form-horizontal' } do |f| %>
+
+    <div class="form-group">
+        <label class="control-label col-md-2">Account Members</label>
+        <div class="col-md-10">
+            <span class="form-control ticket-list">
+                <%= account.render_member_names %>
+            </span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2">Account Servers</label>
+        <div class="col-md-10">
+            <span class="form-control ticket-list">
+                <%= account.render_server_names %>
+            </span>
+        </div>
+    </div>
+
+    <%= f.input :subject, wrapper: :medium_input %>
+    <%= f.input :body, as: :text, input_html: { rows: 10 } %>
+    <%= f.input :secure_body, as: :text, hint: 'will not be sent via email, please use for passwords and other sensitive data', input_html: { rows: 2 } %>
+    <%= f.input :priority, wrapper: :small_input do %>
+        <%= f.input_field :priority, include_blank: false, class: 'form-control select-chosen' %>
+        <%= content_tag :span, class: 'input-group-addon' do %>
+            <a class="cursor-pointer" data-toggle="popover" data-placement="right" data-html="true" data-content="<%= t('ticket.priority_text') %>">
+                <i class="fa fa-question-circle"></i>
+            </a>
+        <% end %>
+    <% end %>
+
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= f.button :submit, "Create Ticket", id: 'ticket_form_submit', data: { disable_with: 'Opening...' }, class: 'btn btn-primary' %>
+        </div>
+    </div>
+<% end %>

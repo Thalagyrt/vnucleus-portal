@@ -1,0 +1,23 @@
+Hi <%= @user.greeting %>,
+
+Ticket <%= @ticket.to_s %> on account <%= @ticket.account.to_s %> was created by <%= @update.user.full_name %>.
+
+<% if @update.body? %>---
+
+<%= @update.body %>
+
+<% end %><% if @update.secure_body? %>---
+
+This ticket contains additional information in the sensitive data field.
+
+<% end %>---
+
+Update #<%= @update.sequence %>
+Status: <%= @update.status_text %>
+Priority: <%= @update.priority_text %>
+You can view and reply to this ticket at <%= polymorphic_url [:users, @ticket.account, @ticket] %>
+
+Thanks,
+James, Taylor, and Kevin at vNucleus
+
+To help protect the security of your account, this mailbox is not monitored for replies. If you need assistance, please open a support ticket in our client area.

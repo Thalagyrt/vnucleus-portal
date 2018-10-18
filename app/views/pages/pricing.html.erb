@@ -1,0 +1,356 @@
+<% content_for :title do %>Pricing - Premium Managed VPS Hosting<% end %>
+
+<div id="pricing" class="landing-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h3 class="page-header">All <span class="brand">v<strong>Nucleus</strong></span> Plans Include</h3>
+                <ul class="fa-ul">
+                    <li><i class="fa fa-check text-success"></i> 24/7 Phone and Ticket Support</li>
+                    <li><i class="fa fa-check text-success"></i> Service Provisioned Within Minutes</li>
+                    <li><i class="fa fa-check text-success"></i> 99.99% Guaranteed Uptime with Service Level Agreement</li>
+                    <li><i class="fa fa-check text-success"></i> 15-Day Money Back Guarantee</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h3 class="page-header"><strong>Powerful</strong> Server Management</h3>
+                <p>We've built our own management system from the ground up to give you the power you need to manage your servers. You've got full control over your managed VPS hosting 24/7. We're here to help when you need it. Check out our <%= link_to 'client area tour', [:our_portal] %>.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h3 class="page-header"><strong>KVM</strong> Virtualization</h3>
+                <p>You won't find any underpowered, oversold containers here. We use full virtualization because it rocks: all of our VPS plans are powered by KVM, one of the best hypervisors on the market. We cut no corners in ensuring that you get the best performance possible.</p>
+            </div>
+            <div class="col-md-6">
+                <h3 class="page-header">Our <strong>Guarantee</strong></h3>
+                <p>If you're not happy with our service, just let us know within the first 15 days and we'll refund you. We're here to make you happy.</p>
+            </div>
+        </div>
+
+        <ul class="nav nav-tabs push centered-tabs" data-toggle="tabs">
+            <li class="active"><a href="#featured-plans">Featured Plans</a></li>
+            <li><a href="#managed-plans">Managed Plans</a></li>
+            <li><a href="#self-managed-plans">Self-Managed Plans</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="featured-plans">
+                <div class="row">
+                    <% featured_plans.each do |plan| %>
+                        <div class="col-sm-3">
+                            <table class="table table-borderless table-pricing <%= plan.pricing_table_feature_status_class %>">
+                                <thead>
+                                <tr>
+                                    <th>
+                                        <% if plan.highlighted? %>
+                                            <span class="logo"></span>
+                                        <% end %>
+                                        <%= plan.name %>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><strong><%= plan.render_ram %></strong> RAM</td>
+                                </tr>
+                                <tr>
+                                    <td><strong><%= plan.render_disk_space %></strong> <%= plan.disk_type %></td>
+                                </tr>
+                                <tr>
+                                    <td><strong><%= plan.render_transfer %></strong> transfer</td>
+                                </tr>
+                                <tr>
+                                    <td><strong><%= plan.vcpus %></strong> vCPUs</td>
+                                </tr>
+                                <tr>
+                                    <td><strong><%= plan.network_out %></strong> Mbit/sec</td>
+                                </tr>
+                                <tr>
+                                    <td><strong><%= plan.ip_addresses %></strong> IP <%= 'address'.pluralize(plan.ip_addresses) %></td>
+                                </tr>
+                                <tr>
+                                    <td><strong><%= plan.ipv6_addresses %></strong> IPv6 <%= 'address'.pluralize(plan.ipv6_addresses) %></td>
+                                </tr>
+                                <% if plan.managed? %>
+                                    <tr>
+                                        <td><strong>Fully</strong> Managed</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Off-Site</strong> Backups Included</td>
+                                    </tr>
+                                <% else %>
+                                    <tr>
+                                        <td><strong>Self</strong> Managed</td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                <% end %>
+                                <tr>
+                                    <td class="table-price">
+                                        <h1><%= plan.render_amount %><br><small>per month</small></h1>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <%= link_to "Sign Up", [:new, :users, :sign_up], class: 'btn btn-sm btn-primary' %>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% end %>
+                </div>
+            </div>
+            <div class="tab-pane" id="managed-plans">
+                <div class="no-more-tables">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>RAM</th>
+                            <th>Disk</th>
+                            <th>Transfer</th>
+                            <th>Connection</th>
+                            <th>vCPUs</th>
+                            <th>IPs</th>
+                            <th class="text-center">Managed</th>
+                            <th>Price</th>
+                            <th class="col-md-1"></th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <% managed_plans.each do |plan| %>
+                            <tr>
+                                <th data-title="Plan"><%= plan.name %></th>
+                                <td data-title="RAM"><%= plan.render_ram %></td>
+                                <td data-title="Disk"><%= plan.render_disk %></td>
+                                <td data-title="Transfer"><%= plan.render_transfer %></td>
+                                <td data-title="Connection"><%= plan.network_out %> Mbit/sec</td>
+                                <td data-title="vCPUs"><%= plan.vcpus %></td>
+                                <td data-title="IPs"><%= plan.ip_addresses %> IPv4 and <%= plan.ipv6_addresses %> IPv6</td>
+                                <td class="text-center" data-title="Managed"><%= plan.render_managed %></td>
+                                <td data-title="Price"><%= plan.render_amount %>/mo</td>
+                                <td class="text-center">
+                                    <%= link_to "Get Started", [:new, :users, :sign_up], class: 'btn btn-xs btn-primary' %>
+                                </td>
+                            </tr>
+                        <% end %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane" id="self-managed-plans">
+                <div class="no-more-tables">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>RAM</th>
+                            <th>Disk</th>
+                            <th>Transfer</th>
+                            <th>Connection</th>
+                            <th>vCPUs</th>
+                            <th>IPs</th>
+                            <th class="text-center">Managed</th>
+                            <th>Price</th>
+                            <th class="col-md-1"></th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <% self_managed_plans.each do |plan| %>
+                            <tr>
+                                <th data-title="Plan"><%= plan.name %></th>
+                                <td data-title="RAM"><%= plan.render_ram %></td>
+                                <td data-title="Disk"><%= plan.render_disk %></td>
+                                <td data-title="Transfer"><%= plan.render_transfer %></td>
+                                <td data-title="Connection"><%= plan.network_out %> Mbit/sec</td>
+                                <td data-title="vCPUs"><%= plan.vcpus %></td>
+                                <td data-title="IPs"><%= plan.ip_addresses %> IPv4 and <%= plan.ipv6_addresses %> IPv6</td>
+                                <td class="text-center" data-title="Managed"><%= plan.render_managed %></td>
+                                <td data-title="Price"><%= plan.render_amount %>/mo</td>
+                                <td class="text-center">
+                                    <%= link_to "Get Started", [:new, :users, :sign_up], class: 'btn btn-xs btn-primary' %>
+                                </td>
+                            </tr>
+                        <% end %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="page-header">Operating Systems</h3>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Editions</th>
+                <th>Plans</th>
+                <th>Price</th>
+            </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <th>Ubuntu Server</th>
+                    <td>14.04 LTS, 16.04 LTS</td>
+                    <td>All Plans</td>
+                    <th>FREE</th>
+                </tr>
+                <tr>
+                    <th>Debian</th>
+                    <td>8</td>
+                    <td>All Plans</td>
+                    <th>FREE</th>
+                </tr>
+                <tr>
+                    <th>CentOS</th>
+                    <td>6, 7</td>
+                    <td>All Plans</td>
+                    <th>FREE</th>
+                </tr>
+                <tr>
+                    <th>Windows Server</th>
+                    <td>2012, 2012 R2</td>
+                    <td>200 Level Minimum</td>
+                    <th>$20/mo</th>
+                </tr>
+                <tr>
+                    <th>Arch Linux</th>
+                    <td>2015.11.01</td>
+                    <td>Self-Managed Only</td>
+                    <th>FREE</th>
+                </tr>
+                <tr>
+                    <th>Gentoo</th>
+                    <td>2015.09.24</td>
+                    <td>Self-Managed Only</td>
+                    <th>FREE</th>
+                </tr>
+                <tr>
+                    <th>Slackware</th>
+                    <td>14.1</td>
+                    <td>Self-Managed Only</td>
+                    <th>FREE</th>
+                </tr>
+                <tr>
+                    <th>FreeBSD</th>
+                    <td>10.1</td>
+                    <td>Self-Managed Only</td>
+                    <th>FREE</th>
+                </tr>
+            </tbody>
+        </table>
+
+        <% if coupon.present? %>
+            <div class="coupon">
+                Use coupon code <strong><%= coupon.render_coupon_code %></strong> for <%= coupon.render_percent %> off!
+                <% if coupon.expires_at.present? %>
+                    Offer expires <%= coupon.render_expires_at %>!
+                <% end %>
+            </div>
+        <% end %>
+
+        <div class="row">
+            <div class="col-md-4">
+                <h3 class="page-header">Customer-Friendly Billing</h3>
+                <p>All servers are billed prorated. If you cancel a server, the time you've already paid for will be credited to your account; you can use that credit for other servers, or have it refunded. Pay only for what you actually use - <strong>to the minute.</strong></p>
+            </div>
+            <% if current_user.present? %>
+                <div class="col-md-4">
+                    <h3 class="page-header">Transfer Overages</h3>
+                    <p>Outbound transfer overages are billed at 10&#162;/GB at the end of a server's billing cycle. Inbound traffic is unmetered and doesn't count against your quota.</p>
+                </div>
+                <div class="col-md-4">
+                    <h3 class="page-header">Backup Overages</h3>
+                    <p>Backup overages are billed at 20&#162;/GB on the 1st of the month based on your account's maximum backup usage for the previous month. Data is retained for the configured retention period even after a server is terminated, and will be billed as an overage unless you remove the data yourself, or request that it be removed.</p>
+                </div>
+            <% else %>
+                <div class="col-md-4">
+                    <h3 class="page-header">Overages</h3>
+                    <p>Outbound transfer overages are billed at 10&#162;/GB at the end of a server's billing cycle. Inbound traffic is unmetered and doesn't count against your quota.</p>
+                    <p>Backup overages are billed at 20&#162;/GB on the 1st of the month, based on your account's maximum backup usage for the previous month. Data is retained for the configured retention period even after a server is terminated and will be billed as an overage unless you request your data to be removed or remove it yourself.</p>
+                </div>
+                <div class="col-md-4">
+                    <div class="well landing-header-well">
+                        <h3 class="page-header remove-top-margin">
+                            <span class="col-md-offset-4">Ready To Start?</span>
+                        </h3>
+                        <%= simple_form_for @sign_up_form, url: [:users, :sign_ups], html: { id: 'new_user', class: 'form-horizontal' } do |f| %>
+                            <%= f.input :email, wrapper: :label_4 %>
+                            <%= f.input :password, wrapper: :label_4 %>
+                            <%= f.input :affiliate_id, as: :hidden %>
+
+                            <div class="form-group">
+                                <div class="col-md-5 col-md-offset-4">
+                                    <%= f.button :submit, "Get Started", id: 'order_form_submit', data: { disable_with: 'Saving...' }, class: 'btn btn-primary' %>
+                                </div>
+                            </div>
+                        <% end %>
+                    </div>
+                </div>
+            <% end %>
+        </div>
+
+        <h3 class="page-header">In school? Non-profit?</h3>
+        <p class="lead">We offer a 10% discount to students and faculty of higher educational institutions, as well as to registered non-profit organizations. Please contact us for more information.</p>
+        <p>If you sign up with a .edu email address, open a support ticket before confirming your server and we'll get your pricing adjusted. If you're a non-profit, you can also open a ticket with your proof of non-profit status before confirming your server and we'll get your price adjusted.</p>
+    </div>
+</div>
+
+<%= render partial: 'footer_call' %>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            $('#new_user').validate({
+                errorClass: 'help-block',
+                errorElement: 'span',
+                errorPlacement: function(error, e) {
+                    e.parents('.form-group > div').append(error);
+                },
+                highlight: function(e) {
+                    $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                    $(e).closest('.help-block').remove();
+                },
+                success: function(e) {
+                    // You can remove the .addClass('has-success') part if you don't want the inputs to get green after success!
+                    e.closest('.form-group').removeClass('has-success has-error').addClass('has-success');
+                    e.closest('.help-block').remove();
+                },
+                rules: {
+                    "sign_up_form[email]": {
+                        required: true,
+                        remote: {
+                            url: "<%= escape_javascript(url_for([:validations, :emails]) )%>",
+                            type: "post",
+                            data: {
+                                email: function() {
+                                    return $( "#sign_up_form_email" ).val();
+                                }
+                            }
+                        }
+                    },
+                    "sign_up_form[password]": {
+                        required: true,
+                        minlength: 8,
+                    }
+                },
+                messages: {
+                    "sign_up_form[email]": {
+                        remote: 'This email address is already in use'
+                    },
+                    "sign_up_form[password]": {
+                        required: 'Please provide a password',
+                        minlength: 'Your password is too short'
+                    }
+                }
+
+            });
+        });
+    </script>
+<% end %>

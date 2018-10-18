@@ -1,0 +1,37 @@
+<% content_for :title do %><%= template.name %><% end %>
+
+<% content_for :header do %>Edit Template<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Templates', [:admin, :solus, :templates] %></li>
+    <li><%= link_to template.name, [:edit, :admin, :solus, template] %></li>
+<% end %>
+
+
+<%= simple_form_for @template, url: [:admin, :solus, @template], html: { class: 'form-horizontal' } do |f| %>
+    <%= f.input :name, wrapper: :medium_input %>
+    <%= f.input :amount, wrapper: :small_input do %>
+        <%= content_tag :span, class: 'input-group-addon' do %>
+            $
+        <% end %>
+        <%= f.input_field :amount_dollars, class: 'form-control' %>
+    <% end %>
+    <%= f.input :description, input_html: { class: 'input-xxlarge' } %>
+    <%= f.input :category %>
+    <%= f.input :template, wrapper: :medium_input %>
+    <%= f.input :root_username, wrapper: :small_input %>
+    <%= f.input :virtualization_type, wrapper: :tiny_input, input_html: { class: 'input-mini' } %>
+    <%= f.input :plan_part, wrapper: :tiny_input, input_html: { class: 'input-mini' } %>
+    <%= f.input :autocomplete_provision, wrapper: :boolean %>
+    <%= f.input :generate_root_password, wrapper: :boolean %>
+    <%= f.association :plans, input_html: { class: 'select-chosen' } %>
+    <%= f.input :status, wrapper: :small_input, input_html: { class: 'select-chosen' }, include_blank: false %>
+    <%= f.input :affinity_group, wrapper: :small_input %>
+    <%= f.input :preseed_template %>
+
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= f.button :submit, 'Update Template', data: { disable_with: 'Updating...' }, id: 'template_submit', class: 'btn btn-primary' %>
+        </div>
+    </div>
+<% end %>

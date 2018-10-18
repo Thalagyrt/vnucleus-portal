@@ -1,0 +1,37 @@
+<% content_for :title do %>Unsuspend Server <%= server.to_s %><% end %>
+
+<% content_for :header do %>Unsuspend Server<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Servers', [:admin, @account, :solus, :servers] %></li>
+    <li><%= link_to server.to_s, [:admin, @account, :solus, @server] %></li>
+    <li><%= link_to 'Unsuspend', [:new, :admin, @account, :solus, @server, :unsuspensions] %></li>
+<% end %>
+
+<div class="block form-horizontal">
+    <p>Unsuspending this server will restore client control and boot the server.</p>
+
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= link_to "Cancel", [:admin, @account, :solus, @server], class: 'btn btn-default', id: 'server_cancel' %>
+            <%= link_to "Unsuspend", [:admin, @account, :solus, @server, :unsuspensions], method: :post, class: 'btn btn-primary', id: 'server_unsuspend' %>
+        </div>
+    </div>
+</div>
+
+<div class="block">
+    <div class="block-title"><h2>System Info</h2></div>
+
+    <%= display_for server do |d| %>
+        <%= d.display :plan_name %>
+        <%= d.display :render_amount %>
+
+        <%= d.display :cluster_name %>
+        <%= d.display :render_node_name %>
+        <%= d.display :template_name %>
+
+        <% if server.suspended? %>
+            <%= d.display :render_suspension_reason %>
+        <% end %>
+    <% end %>
+</div>

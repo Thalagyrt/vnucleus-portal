@@ -1,0 +1,22 @@
+<% content_for :title do %>Edit Account <%= account.to_s %><% end %>
+
+<% content_for :header do %>Edit Account<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Edit', [:edit, :admin, account] %></li>
+<% end %>
+
+<%= simple_form_for @account, url: [:admin, @account], html: { class: 'form-horizontal form-box' } do |f| %>
+    <%= f.error_notification %>
+
+    <%= f.input :entity_name, wrapper: :medium_input %>
+    <%= f.input :nickname, wrapper: :medium_input %>
+
+    <%= f.input :affiliate_enabled, wrapper: :boolean %>
+
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= f.button :submit, 'Save', data: { disable_with: 'Saving...' }, id: 'server_submit', class: 'btn btn-primary' %>
+        </div>
+    </div>
+<% end %>

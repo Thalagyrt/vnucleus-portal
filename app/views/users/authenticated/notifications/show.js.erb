@@ -1,0 +1,2 @@
+$("#notification_<%= notification.id %> .header").html("<%= escape_javascript(render(partial: 'header', locals: { notification: notification} )) %>");
+webApp.updateNotificationCount();

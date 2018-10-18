@@ -1,0 +1,101 @@
+<% content_for :title do %>Plans<% end %>
+
+<% content_for :header do %>Plans<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Plans', [:admin, :solus, :plans] %></li>
+<% end %>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <%= link_to [:new, :admin, :solus, :plan] do %>
+                    <i class="fa fa-plus-circle"></i> New Plan
+                <% end %>
+            </li>
+
+            <li>
+                <% if params[:show_all].present? %>
+                    <%= link_to [:admin, :solus, :plans] do %>
+                        <i class="fa fa-eye-slash"></i> Hide Inactive Plans
+                    <% end %>
+                <% else %>
+                    <%= link_to [:admin, :solus, :plans, show_all: true] do %>
+                        <i class="fa fa-eye"></i> Show Inactive Plans
+                    <% end %>
+                <% end %>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<table id="plans" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th class="hidden-xs">RAM</th>
+        <th class="hidden-xs">vCPUs</th>
+        <th class="hidden-xs">Disk</th>
+        <th class="hidden-xs">BW</th>
+        <th class="hidden-xs">Network</th>
+        <th class="hidden-xs">IPv4</th>
+        <th class="hidden-xs">IPv6</th>
+        <th class="hidden-xs">Amount</th>
+        <th class="hidden-xs">Node Group</th>
+        <th>Status</th>
+        <th class="hidden-xs">Feature Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% plans.each do |plan| %>
+        <tr>
+            <td><%= plan.link_id :edit, :admin %></td>
+            <td><%= plan.link_name :edit, :admin %></td>
+            <td class="hidden-xs"><%= plan.render_ram %></td>
+            <td class="hidden-xs"><%= plan.vcpus %></td>
+            <td class="hidden-xs"><%= plan.render_disk %></td>
+            <td class="hidden-xs"><%= plan.render_transfer %></td>
+            <td class="hidden-xs"><%= plan.network_out %> Mbit/sec</td>
+            <td class="hidden-xs"><%= plan.ip_addresses %></td>
+            <td class="hidden-xs"><%= plan.ipv6_addresses %></td>
+            <td class="hidden-xs"><%= plan.render_amount %>/mo</td>
+            <td><%= plan.node_group %></td>
+            <td><%= plan.render_status %></td>
+            <td class="hidden-xs"><%= plan.render_feature_status %></td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#plans').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[2, "asc"]],
+                "aoColumns": [
+                    {"sType": "raw-numeric"},
+                    {"sType": "raw-string"},
+                    {"sType": "raw-numeric"},
+                    {"sType": "numeric"},
+                    {"sType": "raw-numeric"},
+                    {"sType": "raw-numeric"},
+                    null,
+                    {"sType": "numeric"},
+                    {"sType": "numeric"},
+                    {"sType": "raw-numeric"},
+                    null,
+                    null,
+                    null,
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

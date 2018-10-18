@@ -1,0 +1,20 @@
+<% content_for :title do %>Reset Password<% end %>
+
+<div class="block-header">
+    <div class="header-section">
+        <h1 class="text-center">Reset Password<br><small>Please enter your desired new password.</small></h1>
+    </div>
+</div>
+
+<%= simple_form_for @reset_form, url: polymorphic_url([:users, :passwords, :resets], token: token), html: { id: 'login-form', class: 'form-horizontal' } do |f| %>
+    <%= f.input :password, wrapper: :no_label, autofocus: true, placeholder: 'new password' %>
+    <%= f.input :password_confirmation, wrapper: :no_label, autofocus: true, placeholder: 'new password (again)' %>
+    <div class="form-group clearfix">
+        <div class="pull-right">
+            <%= link_to [:new, :users, :sessions, :session], class: "btn btn-sm btn-info", data: { toggle: "tooltip"}, title: "Sign In" do %>
+                <i class="fa fa-sign-in"></i>
+            <% end %>
+            <button class="btn btn-sm btn-primary" id="reset_form_submit" data-disable="Please Wait..."><i class="fa fa-angle-right"></i> Reset Password</button>
+        </div>
+    </div>
+<% end %>

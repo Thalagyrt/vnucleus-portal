@@ -1,0 +1,20 @@
+<% content_for :title do %>Out Of Band Patching<% end %>
+
+<% content_for :header do %>
+    Out Of Band Patching
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Out Of Band Patching', [:new, :admin, :solus, :out_of_band_patches] %></li>
+<% end %>
+
+<%= simple_form_for @out_of_band_patch_form, url: [:admin, :solus, :out_of_band_patches], html: { class: 'form-horizontal' } do |f| %>
+    <%= f.input :template_ids, multiple: true, collection: @templates, wrapper: :medium_input, input_html: { multiple: true, class: 'select-chosen' } %>
+    <%= f.input :managed_only, as: :boolean, wrapper: :boolean %>
+
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= f.button :submit, 'Schedule Patching', data: { disable_with: 'Scheduling...' }, id: 'plan_submit', class: 'btn btn-primary' %>
+        </div>
+    </div>
+<% end %>

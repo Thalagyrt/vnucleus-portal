@@ -1,0 +1,90 @@
+<% content_for :title do %>Terminate Server <%= server.to_s %><% end %>
+
+<% content_for :header do %>Terminate Server<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Servers', [:users, @account, :solus, :servers] %></li>
+    <li><%= link_to server.to_s, [:users, @account, :solus, @server] %></li>
+    <li><%= link_to 'Terminate', [:new, :users, @account, :solus, @server, :terminations] %></li>
+<% end %>
+
+<%= simple_form_for @server, url: [:users, @account, :solus, @server, :terminations], method: :post, html: { class: 'form-horizontal block', id: 'terminate_server' } do |f| %>
+    <p>Cancelling this server will begin the process of reclaiming this server and issuing a service credit for any remaining time.</p>
+    <p>Once this process has begun it cannot be reversed, so be sure you want to cancel this server prior to submitting your request!</p>
+    <%= f.input :termination_reason, placeholder: 'None Provided' %>
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= link_to "Cancel", [:users, @account, :solus, @server], class: 'btn btn-default', id: 'server_keep' %>
+            <%= f.button :submit, "Terminate", method: :post, class: 'btn btn-primary', id: 'server_terminate', data: { confirm: "Are you sure you want to terminate server #{@server.to_s}? This will erase all of your data.", confirm_button: 'Terminate' } %>
+        </div>
+    </div>
+<% end %>
+
+<div class="row gutter30">
+    <div class="col-md-8">
+        <div class="block">
+            <div class="block-title"><h2>System Info</h2></div>
+
+            <%= display_for server do |d| %>
+                <%= d.display :hostname %>
+
+                <%= d.display :plan_name %>
+
+                <%= d.display :render_amount %>
+                <%= d.display :next_due %>
+
+                <%= d.display :cluster_name %>
+                <%= d.display :render_node_name %>
+                <%= d.display :template_name %>
+
+                <% if server.active? %>
+                    <%= d.display :render_root_username %>
+                    <%= d.display :root_password do %>
+                        <span id="root_password"><%= link_to "Show Password", [:users, @account, :solus, @server, :root_passwords], id: 'show_password', remote: true %></span>
+                    <% end %>
+                <% end %>
+
+                <%= d.display :render_prorated_amount, label: 'Estimated Final Credit' do %>
+                    <%= server.render_prorated_amount %> (prorated to <%= server.next_due %>)
+                <% end %>
+            <% end %>
+        </div>
+
+        <div class="block full">
+            <div class="block-title"><h2>Transfer</h2></div>
+
+            <div class="text-center transfer-graph">
+                <%= image_tag url_for([:users, @account, :solus, server, :transfer_graphs]), onerror: 'this.style.display = "none"' %>
+            </div>
+
+            <div class="progress progress-striped">
+                <div class="progress-bar <%= server.transfer_class %>" style="width: <%= server.used_transfer_percentage %>%"></div>
+            </div>
+            <div class="text-center">
+                <%= server.render_used_transfer %> / <%= server.render_transfer %>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="block full">
+            <div class="block-title"><h2>IP Addresses</h2></div>
+            <div id="ip_addresses">
+                <div class="text-center"><i class="fa fa-gear fa-spin fa-4x"></i></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% content_for :javascript do %>
+    <% if server.active? %>
+        <script type="text/javascript">
+            $(function() {
+                $.ajax({
+                    type: "GET",
+                    url: "<%= url_for [:users, @account, :solus, @server, :statuses] %>"
+                });
+            });
+        </script>
+    <% end %>
+<% end %>

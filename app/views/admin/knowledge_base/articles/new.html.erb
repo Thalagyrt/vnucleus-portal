@@ -1,0 +1,24 @@
+<% content_for :title do %>Edit <%= article.to_s %><% end %>
+
+<% content_for :header do %>
+    New Knowledge Base Article
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Knowledge Base', [:admin, :knowledge_base, :articles] %></li>
+    <li><%= link_to 'New Article', [:new, :admin, :knowledge_base, :article] %></li>
+<% end %>
+
+<%= simple_form_for @article, url: [:admin, :knowledge_base, @article], html: { class: 'form-horizontal' } do |f| %>
+    <%= f.input :title, wrapper: :medium_input %>
+    <%= f.input :body, input_html: { rows: 10 } %>
+    <%= f.input :summary %>
+    <%= f.input :tag_list, wrapper: :medium_input, input_html: { class: 'input-tags' } %>
+    <%= f.input :status, wrapper: :small_input, input_html: { class: 'select-chosen' }, include_blank: false %>
+
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= f.button :submit, 'Create Article', data: { disable_with: 'Creating...' }, id: 'article_submit', class: 'btn btn-primary' %>
+        </div>
+    </div>
+<% end %>

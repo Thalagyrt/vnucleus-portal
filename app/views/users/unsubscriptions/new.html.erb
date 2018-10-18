@@ -1,0 +1,25 @@
+<% content_for :title do %>Unsubscribe<% end %>
+
+<div class="block-header">
+    <div class="header-section">
+        <h1 class="text-center">Unsubscribe<br><small>Please enter your email address and update your preferences accordingly.</small></h1>
+    </div>
+</div>
+
+<%= simple_form_for @unsubscribe_form, url: [:users, :unsubscriptions], html: { id: 'login-form', class: 'form-horizontal' } do |f| %>
+    <%= f.input :email, wrapper: :no_label, autofocus: true, placeholder: 'email' %>
+    <%= f.input :receive_security_bulletins, wrapper: :boolean_no_offset, label: 'Security Bulletins' do %>
+        <%= f.input_field :receive_security_bulletins, as: :boolean %>
+    <% end %>
+    <%= f.input :receive_product_announcements, wrapper: :boolean_no_offset, label: 'Product Announcements' do %>
+        <%= f.input_field :receive_product_announcements, as: :boolean %>
+    <% end %>
+
+    <p>Please note, this form can only unsubscribe you from our lists. If you would like to start receiving our mailers again, please <%= link_to 'update your profile', [:edit, :users, :profile] %>.</p>
+
+    <div class="form-group clearfix">
+        <div class="pull-right">
+            <button class="btn btn-sm btn-primary" id="user_form_submit" data-disable="Please Wait..."><i class="fa fa-sign-in"></i> Update Preferences</button>
+        </div>
+    </div>
+<% end %>

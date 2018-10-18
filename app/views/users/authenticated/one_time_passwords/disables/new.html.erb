@@ -1,0 +1,24 @@
+<% content_for :title do %>Disable Two Factor<% end %>
+
+<% content_for :header do %>
+    <h1>Disable Two Factor</h1>
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Two Factor Authentication', [:users, :one_time_passwords, :statuses] %></li>
+    <li><%= link_to 'Disable', [:new, :users, :one_time_passwords, :disables] %></li>
+<% end %>
+
+<div class="authenticator-status">
+    <%= simple_form_for @disable_form, url: [:users, :one_time_passwords, :disables], html: { class: 'form-horizontal' } do |f| %>
+        <%= f.input :password, hint: "Enter your password to disable two factor authentication." %>
+
+        <div class="form-group">
+            <div class="col-md-5 col-md-offset-2">
+                <%= f.button :submit, 'Disable Two Factor', data: { disable_with: 'Disabling...' }, id: 'disable_form_submit', class: 'btn btn-danger' %>
+            </div>
+        </div>
+    <% end %>
+</div>
+
+

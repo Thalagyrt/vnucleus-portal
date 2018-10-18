@@ -1,0 +1,74 @@
+<% content_for :title do %>Licenses<% end %>
+
+<% content_for :header do %>Licenses<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Licenses', [:admin, :licenses, :licenses] %></li>
+<% end %>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <%= link_to [:admin, :licenses, :usage_reports] do %>
+                    <i class="fa fa-tasks"></i> Usage Reporting
+                <% end %>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<table id="licenses" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Account</th>
+        <th>Product Code</th>
+        <th>Description</th>
+        <th>Note</th>
+        <th>Amount</th>
+        <th>Count</th>
+        <th>Total</th>
+        <th>Next Due</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% licenses.each do |license| %>
+        <tr>
+            <td><%= license.account.link_to_s :admin %></td>
+            <td><%= license.product_code %></td>
+            <td><%= license.description %></td>
+            <td><%= license.render_note %></td>
+            <td><%= license.render_amount %></td>
+            <td><%= license.count %></td>
+            <td><%= license.render_total_amount %></td>
+            <td><%= license.render_next_due %></td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#licenses').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[0, "desc"]],
+                "aoColumns": [
+                    {"sType": "raw-string"},
+                    null,
+                    null,
+                    null,
+                    {"sType": "raw-numeric"},
+                    {"sType": "numeric"},
+                    {"sType": "raw-numeric"},
+                    {"sType": "raw-numeric"},
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

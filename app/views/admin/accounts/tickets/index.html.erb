@@ -1,0 +1,58 @@
+<% content_for :title do %>Support Tickets<% end %>
+
+<% content_for :header do %>Support Tickets<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Tickets', [:admin, @account, :tickets] %></li>
+<% end %>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <%= link_to [:new, :admin, account, :ticket] do %>
+                    <i class="fa fa-plus-circle"></i> New Ticket
+                <% end %>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<table id="tickets" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th class="col-md-1 col-xs-1">#</th>
+        <th>Subject</th>
+        <th class="hidden-xs col-sm-2 col-md-3">Last Update</th>
+        <th class="hidden-xs col-md-2">Updated By</th>
+        <th class="col-md-1 col-xs-1">Priority</th>
+        <th class="col-md-1 col-xs-1">Status</th>
+    </tr>
+    </thead>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#tickets').dataTable({
+                "sAjaxSource": "<%= escape_javascript url_for([:admin, @account, :tickets, format: :json]) %>",
+                "bServerSide": true,
+                "bDestroy": true,
+                "aaSorting": [[2, "desc"]],
+                "aoColumns": [
+                    {"mDataProp": "id"},
+                    {"mDataProp": "subject"},
+                    {"mDataProp": "updated_at", "sClass": "hidden-xs"},
+                    {"mDataProp": "updated_by", "bSortable": false, "sClass": "hidden-xs"},
+                    {"mDataProp": "priority"},
+                    {"mDataProp": "status"},
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

@@ -1,0 +1,2 @@
+<div class="alert alert-info alert-header">If the keyboard is not responding, try clicking on the status bar below.</div>
+<iframe width="100%" height="810" src="<%= Rails.application.config.console_server[:vnc_uri] %>?host=<%= Rails.application.config.console_server[:hostname] %>&port=<%= Rails.application.config.console_server[:ws_port] %>&password=<%= @console.password %>&encrypt=true"></iframe>

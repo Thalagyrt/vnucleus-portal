@@ -1,0 +1,38 @@
+<% content_for :title do %>Terminate Server <%= server.to_s %><% end %>
+
+<% content_for :header do %>Terminate Server<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Servers', [:admin, @account, :solus, :servers] %></li>
+    <li><%= link_to server.to_s, [:admin, @account, :solus, @server] %></li>
+    <li><%= link_to 'Terminate', [:new, :admin, @account, :solus, @server, :terminations] %></li>
+<% end %>
+
+<%= simple_form_for @server, url: [:admin, @account, :solus, @server, :terminations], method: :post, html: { class: 'form-horizontal block' } do |f| %>
+    <p>Cancelling this server will begin the process of reclaiming this server and issuing a service credit for any remaining time.</p>
+    <p>Once this process has begun it cannot be reversed, so be sure you want to cancel this server prior to submitting your request!</p>
+    <%= f.input :termination_reason, placeholder: 'None Provided' %>
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= link_to "Cancel", [:admin, @account, :solus, @server], class: 'btn btn-default', id: 'server_keep' %>
+            <%= f.button :submit, "Terminate", method: :post, class: 'btn btn-primary', id: 'server_terminate' %>
+        </div>
+    </div>
+<% end %>
+
+<div class="block">
+    <div class="block-title"><h2>System Info</h2></div>
+
+    <%= display_for server do |d| %>
+        <%= d.display :plan_name %>
+        <%= d.display :render_amount %>
+
+        <%= d.display :cluster_name %>
+        <%= d.display :render_node_name %>
+        <%= d.display :template_name %>
+
+        <% if server.suspended? %>
+            <%= d.display :render_suspension_reason %>
+        <% end %>
+    <% end %>
+</div>

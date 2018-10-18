@@ -1,0 +1,20 @@
+<% content_for :title do %>Sign In<% end %>
+
+<div class="block-header">
+    <div class="header-section">
+        <h1 class="text-center">Welcome to vNucleus<br><small>Please enter your one-time password.</small></h1>
+    </div>
+</div>
+
+
+<%= simple_form_for @one_time_password_session_form, url: [:users, :sessions, :one_time_password], html: { id: 'login-form', class: 'form-horizontal' } do |f| %>
+    <%= f.input :otp, wrapper: :no_label, autofocus: true, placeholder: 'one time password', input_html: { autocomplete: 'off' } %>
+    <div class="form-group clearfix">
+        <div class="pull-right">
+            <%= link_to [:users, :sessions, :session], method: :delete, class: "btn btn-sm btn-info", data: { toggle: "tooltip"}, title: "Sign Out" do %>
+                <i class="fa fa-sign-out"></i>
+            <% end %>
+            <button class="btn btn-sm btn-primary" id="one_time_password_form_submit" data-disable="Please Wait..."><i class="fa fa-sign-in"></i> Sign In</button>
+        </div>
+    </div>
+<% end %>

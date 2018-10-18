@@ -1,0 +1,90 @@
+<% content_for :title do %>Blog<% end %>
+<% content_for :head do %><link rel="alternate" type="application/atom+xml" title="vNucleus Blog" href="<%= url_for [:blog, :posts, format: :atom] %>"><% end %>
+
+<div class="landing-breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <% if @author.present? %>
+                <li><%= link_to 'Blog', [:blog, :posts] %></li>
+                <li class="active"><%= @author.full_name %></li>
+            <% else %>
+                <li class="active">Blog</li>
+            <% end %>
+        </ol>
+    </div>
+</div>
+
+<div class="landing-section">
+    <div class="container">
+        <div class="row gutter30 clearfix">
+            <div class="col-md-9 col-xs-12">
+                <% if posts.present? %>
+                    <% posts.each do |post| %>
+                        <div class="blog-entry">
+                            <h1 class="page-header">
+                                <%= post.link_title %>
+                            </h1>
+
+                            <div class="blog-content">
+                                <%= post.render_synopsis %>
+                            </div>
+
+                            <% post.link_read_more do %>
+                                <div class="read-more">
+                                    <%= link_to 'Read More', post.frontend_path %>
+                                </div>
+                            <% end %>
+
+                            <div class="blog-footer">
+                                Posted by <%= post.render_user %> on <%= post.render_published_at %> in <%= post.render_tag_list %>
+                            </div>
+
+                            <div class="blog-footer clearfix">
+                                <div class="social-button">
+                                    <div class="fb-like" data-href="<%= post.frontend_url %>" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div>
+                                </div>
+                                <div class="social-button">
+                                    <a href="https://twitter.com/share" class="twitter-share-button" data-url="<%= post.frontend_url %>" data-lang="en">Tweet</a>
+                                </div>
+                            </div>
+                        </div>
+                    <% end %>
+                <% else %>
+                    <div class="block">
+                        <div class="block">
+                            <p class="text-center">No Results</p>
+                        </div>
+                    </div>
+                <% end %>
+                <div class="text-center">
+                    <%= paginate posts, theme: 'twitter-bootstrap-3' %>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-xs-12">
+                <%= render partial: 'sidebar' %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% content_for :javascript do %>
+    <script>
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '{your-app-id}',
+                xfbml      : true,
+                version    : 'v2.0'
+            });
+        };
+
+        (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<% end %>

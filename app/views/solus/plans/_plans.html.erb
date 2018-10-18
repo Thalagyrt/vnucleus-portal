@@ -1,0 +1,37 @@
+<div class="form-group">
+    <div class="col-md-2">
+        <p class="server-builder-hint hidden-sm hidden-xs" id="plan-hint">
+            <small>
+                Choose A Plan <i class="fa fa-arrow-right"></i>
+            </small>
+        </p>
+    </div>
+    <div class="col-md-10">
+        <table class="table plans">
+            <thead>
+            <tr>
+                <th class="col-md-3">Plan</th>
+                <th class="hidden-xs">RAM</th>
+                <th class="hidden-xs">Disk</th>
+                <th class="hidden-xs">Transfer</th>
+                <th class="hidden-xs">Connection</th>
+                <th class="hidden-xs">vCPUs</th>
+                <th>Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% plans.each do |plan| %>
+                <tr class="cursor-pointer" onclick="selectPlan(<%= plan.id %>);">
+                    <td><label class="radio"><input id="server_form_plan_id_<%= plan.id %>" class="plan" data-id="<%= plan.id %>" data-ram="<%= plan.ram %>" data-amount="<%= plan.amount %>" data-disk="<%= plan.disk %>" name="server_form[plan_id]" type="radio" value="<%= plan.id %>"> <%= plan.render_name %></label></td>
+                    <td class="hidden-xs"><%= plan.render_ram %></td>
+                    <td class="hidden-xs"><%= plan.render_disk %></td>
+                    <td class="hidden-xs"><%= plan.render_transfer %>/mo</td>
+                    <td class="hidden-xs"><%= plan.network_out %> Mbit/sec</td>
+                    <td class="hidden-xs"><%= plan.vcpus %></td>
+                    <td><%= plan.render_amount %>/mo</td>
+                </tr>
+            <% end %>
+            </tbody>
+        </table>
+    </div>
+</div>

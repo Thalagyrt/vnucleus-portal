@@ -1,0 +1,354 @@
+
+<!DOCTYPE html>
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+
+    <title><% if content_for? :title %><%= yield :title %> - <% end %>vNucleus</title>
+
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0">
+
+    <%= stylesheet_link_tag 'application' %>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <%= javascript_include_tag 'vendor/modernizr-2.7.1-respond-1.4.2.min' %>
+
+    <link rel="shortcut icon" href="<%= image_url "favicon.ico" %>">
+    <link rel="apple-touch-icon" href="<%= image_url "icon57.png" %>" sizes="57x57">
+    <link rel="apple-touch-icon" href="<%= image_url "icon72.png" %>" sizes="72x72">
+    <link rel="apple-touch-icon" href="<%= image_url "icon76.png" %>" sizes="76x76">
+    <link rel="apple-touch-icon" href="<%= image_url "icon114.png" %>" sizes="114x114">
+    <link rel="apple-touch-icon" href="<%= image_url "icon120.png" %>" sizes="120x120">
+    <link rel="apple-touch-icon" href="<%= image_url "icon144.png" %>" sizes="144x144">
+    <link rel="apple-touch-icon" href="<%= image_url "icon152.png" %>" sizes="152x152">
+
+    <%= csrf_meta_tags %>
+</head>
+
+<body class="header-fixed-top sidebar-left-pinned layout-accounts">
+<div id="sidebar-left">
+    <div class="sidebar-content">
+        <div class="sidebar-left-scroll">
+            <ul class="sidebar-nav">
+                <li class="visible-xs">
+                    <div class="text-center">
+                        <%= link_to [:root] do %>
+                            v<strong>Nucleus</strong>
+                        <% end %>
+                    </div>
+                </li>
+                <li>
+                    <h2 class="sidebar-header">Services</h2>
+                </li>
+                <li>
+                    <%= active_link_to [:users, account], active: [['users/authenticated/accounts'], []] do %>
+                        <i class="fa fa-dashboard"></i>Dashboard
+                    <% end %>
+                </li>
+                <% if current_power.account_server_access?(account) %>
+                    <li>
+                        <%= active_link_to [:users, account, :solus, :servers], active: [['users/authenticated/accounts/solus/servers', 'users/authenticated/accounts/solus/confirmations', 'users/authenticated/accounts/solus/terminations', 'users/authenticated/accounts/solus/reinstalls', 'users/authenticated/accounts/solus/consoles'], []] do %>
+                            <i class="fa fa-hdd-o"></i>Servers
+                        <% end %>
+                    </li>
+                    <% if account.dedicated_server_count > 0 %>
+                        <li>
+                            <%= active_link_to [:users, account, :dedicated, :servers], active: [['users/authenticated/accounts/dedicated/servers'], []] do %>
+                                <i class="fa fa-server"></i>Dedicated
+                            <% end %>
+                        </li>
+                    <% end %>
+                    <% if account.monitoring_check_count > 0 %>
+                        <li>
+                            <%= active_link_to [:users, account, :monitoring, :checks] do %>
+                                <i class="fa fa-check"></i>Monitoring
+                            <% end %>
+                        </li>
+                    <% end %>
+                <% end %>
+                <% if current_power.account_licenses?(account) %>
+                    <li>
+                        <%= active_link_to [:users, account, :licenses] do %>
+                            <i class="fa fa-certificate"></i>Licenses
+                        <% end %>
+                    </li>
+                <% end %>
+                <li>
+                    <h2 class="sidebar-header">Support</h2>
+                </li>
+                <li>
+                    <%= active_link_to [:users, account, :tickets], active: [['users/authenticated/accounts/tickets/tickets', 'users/authenticated/accounts/tickets/updates'], []] do %>
+                        <i class="fa fa-question-circle"></i>Tickets
+                    <% end %>
+                </li>
+                <li>
+                    <%= link_to [:knowledge_base, :articles], target: :blank do %>
+                        <i class="fa fa-book"></i>Knowledge Base
+                    <% end %>
+                </li>
+                <% if current_power.account_billing_access?(account) %>
+                    <li>
+                        <h2 class="sidebar-header">Billing</h2>
+                    </li>
+                    <li>
+                        <%= active_link_to [:users, account, :statements], active: [['users/authenticated/accounts/statements', 'users/authenticated/accounts/payments'], []] do %>
+                            <i class="fa fa-dollar"></i>Statements
+                        <% end %>
+                    </li>
+                    <% if current_power.account_credit_card?(account) %>
+                        <li>
+                            <%= active_link_to [:users, account, :credit_cards] do %>
+                                <i class="fa fa-credit-card"></i>Credit Card
+                            <% end %>
+                        </li>
+                    <% end %>
+                <% end %>
+                <% if current_power.account_full_access?(account) %>
+                    <li>
+                        <h2 class="sidebar-header">Management</h2>
+                    </li>
+                    <% if current_power.account_memberships?(account) %>
+                        <li>
+                            <%= active_link_to [:users, account, :memberships] do %>
+                                <i class="fa fa-group"></i>Memberships
+                            <% end %>
+                        </li>
+                    <% end %>
+                    <% if current_power.account_invites?(account) %>
+                        <li>
+                            <%= active_link_to [:users, account, :invites] do %>
+                                <i class="fa fa-plus-circle"></i>Invitations
+                            <% end %>
+                        </li>
+                    <% end %>
+                    <li>
+                        <%= active_link_to [:users, account, :events] do %>
+                            <i class="fa fa-book"></i>Event Log
+                        <% end %>
+                    </li>
+                    <% if current_power.account_affiliates?(account) %>
+                        <li>
+                            <%= active_link_to [:users, account, :affiliates] do %>
+                                <i class="fa fa-bank"></i>Affiliate Program
+                            <% end %>
+                        </li>
+                    <% end %>
+                <% end %>
+            </ul>
+
+
+        </div>
+    </div>
+</div>
+
+<div id="page-container">
+    <header class="navbar navbar-default navbar-fixed-top">
+        <ul class="nav header-nav pull-right">
+            <%= render partial: 'user_widget', locals: { user: current_user.try(:decorate) } %>
+        </ul>
+
+        <ul class="nav header-nav pull-left">
+            <li>
+                <a href="javascript:void(0)" id="sidebar-left-toggle">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </li>
+        </ul>
+
+        <%= link_to [:root], class: 'navbar-brand hidden-xs' do %>
+            <span class="logo"></span>
+            v<strong>Nucleus</strong>
+        <% end %>
+    </header>
+
+    <div id="fx-container" class="fx-opacity">
+        <div class="hidden-js alert alert-application alert-danger">
+            Our portal requires JavaScript to work correctly. Please enable JavaScript or add an exception for www.vnucleus.com in order to use this system.
+        </div>
+
+        <% unless Rails.application.config.accept_orders %>
+            <div class="alert alert-application alert-warning">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <p>We are not accepting new orders at this time. Sorry for any inconvenience!</p>
+            </div>
+        <% end %>
+
+        <% @service_notices.each do |service_notice| %>
+            <div class="alert alert-application alert-info">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <p><%= service_notice.message %></p>
+            </div>
+        <% end %>
+
+        <% if account.has_legacy_solus_servers? %>
+            <div class="alert alert-application alert-warning">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <p><%= account.render_legacy_text %></p>
+            </div>
+        <% end %>
+
+        <% if flash[:notice] %>
+            <div class="alert alert-application alert-success">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <p><%= flash[:notice] %></p>
+            </div>
+        <% end %>
+
+        <% if flash[:alert] %>
+            <div class="alert alert-application alert-danger">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <p><%= flash[:alert] %></p>
+            </div>
+        <% end %>
+
+        <% if current_user.email_confirmed? %>
+            <% if current_user.legal_accepted? %>
+                <% if current_user.profile_complete? %>
+                    <% if account.active? %>
+                        <% if current_power.account_billing_access?(account) %>
+                            <% if account.balance_owed? %>
+                                <div class="alert alert-application alert-warning">
+                                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                                    <h4>Your account has an outstanding balance of <%= account.render_balance %>.</h4>
+                                    <p>In order to avoid an interruption in service, please check your billing information.</p>
+                                    <p><%= link_to "Check Billing Information", [:users, account, :credit_cards], class: 'btn btn-warning' %></p>
+                                </div>
+                            <% end %>
+                            <% if account.credit_card_expiring? %>
+                                <div class="alert alert-application alert-warning">
+                                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                                    <h4>Your credit card expires on <%= account.stripe_expiration_date %>.</h4>
+                                    <p>In order to avoid an interruption in service, please update your billing information.</p>
+                                    <p><%= link_to "Update Billing Information", [:edit, :users, account, :credit_cards], class: 'btn btn-warning' %></p>
+                                </div>
+                            <% end %>
+                            <% if account.credit_card_invalid? %>
+                                <div class="alert alert-application alert-warning">
+                                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                                    <h4>Your billing information is out of date.</h4>
+                                    <p>In order to avoid an interruption in service, please update your billing information.</p>
+                                    <p><%= link_to "Update Billing Information", [:edit, :users, account, :credit_cards], class: 'btn btn-warning' %></p>
+                                </div>
+                            <% end %>
+                        <% end %>
+                    <% end %>
+
+                    <% if account.rejected? %>
+                        <div class="alert alert-application alert-warning">
+                            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                            <h4>Account closed.</h4>
+                            <p>This account has been rejected as fraudulent and is not available for use.</p>
+                        </div>
+                    <% end %>
+
+                    <% if account.pending_billing_information? %>
+                        <div class="alert alert-application alert-info">
+                            <h4>3 of 4: Your Billing Information</h4>
+                            <% if current_power.account_billing_access?(account) %>
+                                <p>We need your billing information before you can create your first server.</p>
+                                <p><%= link_to "Update Billing Information", [:edit, :users, account, :credit_cards], class: 'btn btn-primary' %></p>
+                            <% else %>
+                                <p>You do not have access to manage this account's billing information.</p>
+                            <% end %>
+                        </div>
+                    <% end %>
+
+                    <% if account.active? && account.pending_first_server? %>
+                        <div class="alert alert-application alert-info">
+                            <h4>4 of 4: Create Your Server</h4>
+                            <% if current_power.creatable_account_solus_servers?(account) %>
+                                <p>You're almost there! Let's create your first server.</p>
+                                <p><%= link_to "Get Started", [:new, :users, account, :solus, :server], class: 'btn btn-primary' %></p>
+                            <% else %>
+                                <p>You do not have access to manage this account's servers.</p>
+                            <% end %>
+                        </div>
+                    <% end %>
+
+                    <% if account.pending_activation? %>
+                        <div class="alert alert-application alert-warning">
+                            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                            <h4>Your account is pending manual review.</h4>
+                            <p>Someone from support will reach out to you shortly for more information.</p>
+                        </div>
+                    <% end %>
+                <% else %>
+                    <div class="alert alert-application alert-info">
+                        <h4>2 of 4: Your Profile</h4>
+                        <p>Now we need you to tell us a bit more about yourself.</p>
+                        <p>
+                            <%= link_to 'Update Profile', [:edit, :users, :profile, return_to: request.fullpath], class: 'btn btn-primary' %>
+                        </p>
+                    </div>
+                <% end %>
+            <% else %>
+                <div class="alert alert-application alert-info">
+                    <h4>1 of 4: Legal Terms</h4>
+                    <p>Before we can provide service to you, we need you to read and accept our <%= link_to 'Terms of Service', [:tos], target: 'blank', class: 'underline' %> and <%= link_to 'Acceptible Use Policy', [:aup], target: 'blank', class: 'underline' %>.</p>
+                    <p>
+                        <%= link_to 'I Accept', [:users, :legal_acceptances], method: :post, class: 'btn btn-primary' %>
+                    </p>
+                </div>
+            <% end %>
+        <% else %>
+            <div class="alert alert-application alert-info">
+                <h4>Confirm Your Email</h4>
+                <p>Please check your email for a confirmation code. We need to verify that you own the email address you have on file.</p>
+                <p>Once you've confirmed your email you'll be able to access our support system and ask our staff any questions you may have.</p>
+                <p>
+                    <%= link_to 'Re-send Code', [:users, :emails, :tokens], method: :post, class: 'btn btn-primary' %>
+                </p>
+            </div>
+        <% end %>
+
+        <div id="page-content" class="block">
+            <div class="block-header">
+                <div class="header-section clearfix">
+                    <h1>
+                        <%= yield :header %>
+                    </h1>
+                </div>
+            </div>
+
+            <ul class="breadcrumb breadcrumb-top">
+                <li><%= link_to 'My Accounts', [:users, :accounts] %></li>
+                <li><%= link_to account.to_s, [:users, account] %></li>
+                <%= yield :breadcrumbs %>
+            </ul>
+
+            <%= yield %>
+        </div>
+
+        <footer class="clearfix">
+            <div class="pull-left">
+                &copy; <span id="year-copy"></span> vNucleus / betaforce networks, llc
+            </div>
+            <div class="pull-right">
+                +1 (855) 667-2428 &middot;
+                <%= link_to 'terms of service', [:tos] %> &middot;
+                <%= link_to 'acceptable use policy', [:aup] %> &middot;
+                <%= link_to 'privacy policy', [:privacy] %>
+            </div>
+        </footer>
+
+    </div>
+</div>
+
+<a href="javascript:void(0)" id="to-top"><i class="fa fa-angle-up"></i></a>
+
+<%= javascript_include_tag 'application' %>
+<%= javascript_include_tag "https://js.stripe.com/v2/" %>
+<script type="text/javascript">
+    $(function() {
+        Stripe.setPublishableKey("<%= Rails.configuration.stripe[:publishable_key] %>");
+    });
+</script>
+
+<% if content_for? :javascript %>
+    <%= yield :javascript %>
+<% end %>
+
+<%= render partial: 'olark' %>
+
+</body>
+</html>

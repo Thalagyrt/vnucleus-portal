@@ -1,0 +1,23 @@
+<% content_for :title do %>Reset Password<% end %>
+
+<div class="block-header">
+    <div class="header-section">
+        <h1 class="text-center">Reset Password<br><small>Please enter your email address</small></h1>
+    </div>
+</div>
+
+<%= simple_form_for @token_form, url: [:users, :passwords, :tokens], html: { id: 'login-form', class: 'form-horizontal' } do |f| %>
+    <%= f.input :email, wrapper: :no_label, autofocus: true, placeholder: 'email' %>
+    <div class="form-group clearfix">
+        <div class="pull-right">
+            <%= link_to [:new, :users, :sessions, :session], class: "btn btn-sm btn-info", data: { toggle: "tooltip"}, title: "Sign In" do %>
+                <i class="fa fa-sign-in"></i>
+            <% end %>
+            <button class="btn btn-sm btn-primary" id="token_form_submit" data-disable="Please Wait..."><i class="fa fa-envelope"></i> Send Instructions</button>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <p class="text-center remove-margin"><small>Don't have an account? <%= link_to 'Sign Up', [:new, :users, :sign_up] %>.</small></p>
+    </div>
+<% end %>

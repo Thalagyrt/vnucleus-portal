@@ -1,0 +1,59 @@
+<% if user.present? %>
+    <li class="dropdown dropdown-user">
+        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
+            <i class="icon-user"></i> <%= user.render_full_name %> <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+            <% if user.is_staff? %>
+                <li>
+                    <%= link_to [:admin, :dashboard] do %>
+                        <i class="fa fa-beer fa-fw"></i> Administration
+                    <% end %>
+                </li>
+                <li class="divider"></li>
+            <% end %>
+            <% if user.current_accounts.count == 0 %>
+                <li>
+                    <%= link_to [:new, :users, :account] do %>
+                        <i class="fa fa-plus-circle fa-fw"></i> New Account
+                    <% end %>
+                </li>
+            <% elsif user.current_accounts.count == 1 %>
+                <li>
+                    <%= link_to [:users, user.current_accounts.first] do %>
+                        <i class="fa fa-dashboard fa-fw"></i> My Account
+                    <% end %>
+                </li>
+            <% else %>
+                <li>
+                    <%= link_to [:users, :accounts] do %>
+                        <i class="fa fa-dashboard fa-fw"></i> My Accounts
+                    <% end %>
+                </li>
+            <% end %>
+            <li>
+                <%= link_to [:edit, :users, :profile] do %>
+                    <i class="fa fa-user fa-fw"></i> My Profile
+                <% end %>
+            </li>
+            <li class="divider"></li>
+            <li>
+                <%= link_to [:users, :sessions, :session], method: :delete do %>
+                    <i class="fa fa-sign-out fa-fw"></i> Sign Out
+                <% end %>
+            </li>
+        </ul>
+    </li>
+
+    <li class="dropdown hidden-xs hidden-sm">
+        <%= link_to [:users, :notifications], remote: true, class: 'dropdown-toggle', id: 'notifications-dropdown-link', data: { toggle: 'dropdown' } do %>
+            <span id="notifications-count" data-ajax-url="<%= url_for [:users, :notifications, :unread_counts] %>"><%= user.notifications.unread_count %></span>
+            <i id="notifications-color" class="fa fa-envelope"></i>
+        <% end %>
+        <div class="dropdown-menu dropdown-custom dropdown-notifications pull-right" id="notifications-dropdown">
+        </div>
+    </li>
+<% else %>
+    <%= active_link_to "Sign Up", [:new, :users, :sign_up], active: [['orders/orders', 'sign_ups/sign_ups'], []], wrap_tag: :li %>
+    <%= active_link_to "Sign In", [:new, :users, :sessions, :session], wrap_tag: :li %>
+<% end %>

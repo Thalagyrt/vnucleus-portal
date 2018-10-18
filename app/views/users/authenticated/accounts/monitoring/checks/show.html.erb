@@ -1,0 +1,257 @@
+<% content_for :title do %><%= check_view.check.to_s %><% end %>
+
+<% content_for :header do %>
+    Check Status
+
+    <div class="header-controls">
+        <%= check_view.check.render_active_text %>
+        <%= check_view.check.render_status_code_text %>
+    </div>
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Monitoring', [:users, @account, :monitoring, :checks] %></li>
+    <li><%= link_to check_view.check.to_s, [:users, @account, :monitoring, check_view.check] %></li>
+<% end %>
+
+<h4 class="page-header"><%= check_view.check.status_message_short %></h4>
+
+<div class="row">
+    <div class="col-md-6">
+        <%= display_for check_view.check do |d| %>
+            <%= d.display :server do %>
+                <%= check_view.check.link_server :users %>
+            <% end %>
+            <%= d.display :render_last_run_at %>
+            <% unless check_view.check.active? %>
+                <%= d.display :render_disable_reason %>
+            <% end %>
+            <% if check_view.check.muzzled? %>
+                <%= d.display :render_muzzle_until %>
+            <% end %>
+        <% end %>
+    </div>
+    <div class="col-md-6">
+        <%= display_for check_view.check do |d| %>
+            <%= d.display :failure_count %>
+            <%= d.display :notify_after_failures %>
+            <%= d.display :render_notify_account %>
+            <%= d.display :render_notify_staff %>
+        <% end %>
+    </div>
+</div>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <%= link_to [:edit, :users, @account, :monitoring, check_view.check] do %>
+                    <i class="fa fa-pencil"></i> Edit
+                <% end %>
+            </li>
+            <li>
+                <%= link_to [:new, :users, @account, :monitoring, check_view.check, :muzzles], id: 'dropdown-muzzle-link', remote: true, class: "dropdown-toggle", data: { target: "#muzzle-modal", toggle: "modal" } do %>
+                    <i class="fa fa-volume-off"></i> Muzzle
+                <% end %>
+            </li>
+            <% if check_view.check.enabled? %>
+                <li>
+                    <%= link_to [:users, @account, :monitoring, check_view.check, :disables], method: :post, id: 'check_disable', data: { confirm: "Are you sure you want to disable check #{check_view.check.to_s}?", confirm_button: 'Disable' } do %>
+                        <i class="fa fa-stop"></i> Disable
+                    <% end %>
+                </li>
+            <% elsif check_view.check.can_enable? %>
+                <li>
+                    <%= link_to [:users, @account, :monitoring, check_view.check, :enables], method: :post, id: 'check_enable', data: { confirm: "Are you sure you want to enable check #{check_view.check.to_s}?", confirm_button: 'Enable' } do %>
+                        <i class="fa fa-play"></i> Enable
+                    <% end %>
+                </li>
+            <% end %>
+            <li>
+                <%= link_to [:users, @account, :monitoring, check_view.check], method: :delete, id: 'check_delete', data: { confirm: "Are you sure you want to delete check #{check_view.check.to_s}? This will remove all historical data!", confirm_button: 'Delete' } do %>
+                    <i class="fa fa-trash"></i> Delete
+                <% end %>
+            </li>
+        </ul>
+        <form id="daterangeform" class="navbar-form navbar-right">
+            <div class="form-group">
+                <input type="text" class="form-control" size="32" id="daterange">
+                <input type="hidden" class="form-control" name="start">
+                <input type="hidden" class="form-control" name="finish">
+            </div>
+        </form>
+    </div>
+</nav>
+
+<div class="block">
+    <div class="block-title"><h2>Response Time</h2></div>
+
+    <div id="response_time" class="chart"></div>
+</div>
+
+<% check_view.performance_metric_report.each do |report| %>
+    <div class="block">
+        <div class="block-title"><h2>Performance Data: <%= report.key %></h2></div>
+
+        <div id="performance_data_<%= report.anchor_key %>" class="chart"></div>
+    </div>
+<% end %>
+
+<div class="modal fade" id="muzzle-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-wide">
+        <div class="modal-content" id="muzzle-modal-content">
+
+        </div>
+    </div>
+</div>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            function backgroundColor(status) {
+                switch(status) {
+                    case "ok":
+                        return "#FFFFFF";
+                        break;
+                    case "warning":
+                        return "#FFF2E6";
+                        break;
+                    case "critical":
+                        return "#FFE8E6";
+                        break;
+                }
+            }
+
+            $('#daterange').daterangepicker({
+                startDate: moment(<%= check_view.start.to_i * 1000 %>),
+                endDate: moment(<%= check_view.finish.to_i * 1000 %>),
+                timePicker: true,
+                timePicker24Hour: true,
+                opens: 'left',
+                locale: {
+                    format: 'MM/DD/YYYY H:mm'
+                },
+                ranges: {
+                    'Today': [moment().startOf('day'), moment().endOf('day')],
+                    'Yesterday': [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            });
+
+            $('#daterange').on('apply.daterangepicker', function(ev, picker) {
+                $("input[name=start]").val(picker.startDate);
+                $("input[name=finish]").val(picker.endDate);
+                $("#daterangeform").submit();
+            });
+
+            $("<div id='tooltip'></div>").css({
+                position: "absolute",
+                display: "none",
+                border: "1px solid #fdd",
+                padding: "2px",
+                "background-color": "#fee",
+                opacity: 0.80
+            }).appendTo("body");
+
+            $.plot("#response_time",
+                [
+                    {
+                        data: <%= check_view.response_time_report.js_data %>,
+                        lines: {show: true},
+                    },
+                ],
+                {
+                    colors: ['#2472a4'],
+                    legend: {show: false},
+                    grid: {
+                        borderWidth: 0,
+                        hoverable: true,
+                        clickable: true,
+                        markings: [
+                            <% check_view.response_time_report.regions.each do |region| %>
+                            { xaxis: { from: <%= region[0].to_i * 1000 %>, to: <%= region[1].to_i * 1000 %> }, color: backgroundColor("<%= region[2] %>") },
+                            <% end %>
+                        ],
+                    },
+                    yaxis: {
+                        show: true,
+                        min: <%= check_view.response_time_report.min %>,
+                        max: <%= check_view.response_time_report.max %>,
+                    },
+                    xaxis: {
+                        show: true,
+                        mode: 'time',
+                        timezone: 'browser',
+                    }
+                }
+            );
+
+            $("#response_time").bind("plothover", function (event, pos, item) {
+                if (item) {
+                    var x = item.datapoint[0].toFixed(2),
+                        y = item.datapoint[1].toFixed(2);
+
+                    date = new Date(parseInt(x));
+
+                    $("#tooltip").html("Response at " + date + " = " + y + "ms")
+                        .css({top: item.pageY+5, left: item.pageX+5})
+                        .fadeIn(200);
+                } else {
+                    $("#tooltip").hide();
+                }
+            });
+
+            <% check_view.performance_metric_report.each do |report| %>
+            $.plot("#performance_data_<%= report.anchor_key %>",
+                [
+                    {
+                        data: <%= report.js_data %>,
+                        lines: {show: true},
+                    },
+                ],
+                {
+                    colors: ['#2472a4'],
+                    legend: {show: false},
+                    grid: {
+                        borderWidth: 0,
+                        hoverable: true,
+                        clickable: true,
+                        markings: [
+                            { yaxis: { from: <%= report.warn %>, to: <%= report.warn %> }, color: "#d67118" },
+                            { yaxis: { from: <%= report.crit %>, to: <%= report.crit %> }, color: "#e43725" },
+                        ],
+                    },
+                    yaxis: {
+                        show: true,
+                        min: <%= report.min %>,
+                        max: <%= report.max %>,
+                    },
+                    xaxis: {
+                        show: true,
+                        mode: 'time',
+                        timezone: 'browser',
+                    }
+                }
+            );
+
+            $("#performance_data_<%= report.anchor_key %>").bind("plothover", function (event, pos, item) {
+                if (item) {
+                    var x = item.datapoint[0].toFixed(2),
+                        y = item.datapoint[1].toFixed(2);
+
+                    date = new Date(parseInt(x));
+
+                    $("#tooltip").html("<%= escape_javascript(report.key) %> at " + date + " = " + y)
+                        .css({top: item.pageY+5, left: item.pageX+5})
+                        .fadeIn(200);
+                } else {
+                    $("#tooltip").hide();
+                }
+            });
+            <% end %>
+        });
+    </script>
+<% end %>

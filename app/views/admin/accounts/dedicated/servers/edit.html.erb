@@ -1,0 +1,74 @@
+<% content_for :title do %>Edit Dedicated Server <%= server.to_s %><% end %>
+
+<% content_for :header do %>Edit Dedicated Server<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Dedicated', [:admin, @account, :dedicated, :servers] %></li>
+    <li><%= link_to server.to_s, [:admin, @account, :dedicated, @server] %></li>
+    <li><%= link_to 'Edit', [:edit, :admin, @account, :dedicated, @server] %></li>
+<% end %>
+
+<%= simple_form_for @server, url: [:admin, @account, :dedicated, @server], html: { class: 'form-horizontal form-box' } do |f| %>
+    <%= f.error_notification %>
+
+    <%= f.input :hostname, wrapper: :medium_input %>
+    <%= f.input :amount, wrapper: :small_input do %>
+        <%= content_tag :span, class: 'input-group-addon' do %>
+            $
+        <% end %>
+        <%= f.input_field :amount_dollars, class: 'form-control' %>
+    <% end %>
+    <%= f.input :root_username, wrapper: :medium_input do %>
+        <%= f.text_field :root_username, class: 'form-control' %>
+    <% end %>
+    <%= f.input :root_password, wrapper: :medium_input do %>
+        <%= f.text_field :root_password, class: 'form-control' %>
+    <% end %>
+    <%= f.input :next_due, wrapper: :small_input do %>
+        <%= content_tag :div, class: "input-group date input-datepicker", data: { date_format: 'yyyy-mm-dd', date: @server.next_due } do %>
+            <%= f.input_field :next_due, as: :string, class: 'form-control' %>
+            <%= content_tag :span, class: 'input-group-addon' do %>
+                <i class="fa fa-calendar"></i>
+            <% end %>
+        <% end %>
+    <% end %>
+    <%= f.input :suspend_on, wrapper: :small_input do %>
+        <%= content_tag :div, class: "input-group date input-datepicker", data: { date_format: 'yyyy-mm-dd', date: @server.suspend_on } do %>
+            <%= f.input_field :suspend_on, as: :string, class: 'form-control' %>
+            <%= content_tag :span, class: 'input-group-addon' do %>
+                <i class="fa fa-calendar"></i>
+            <% end %>
+        <% end %>
+    <% end %>
+    <%= f.input :terminate_on, wrapper: :datepicker do %>
+        <%= content_tag :div, class: "input-group date input-datepicker", data: { date_format: 'yyyy-mm-dd', date: @server.terminate_on } do %>
+            <%= f.input_field :terminate_on, as: :string, class: 'form-control' %>
+            <%= content_tag :span, class: 'input-group-addon' do %>
+                <i class="fa fa-calendar"></i>
+            <% end %>
+        <% end %>
+    <% end %>
+    <%= f.input :patch_at, wrapper: :small_input do %>
+        <%= content_tag :div, class: "input-group date input-datepicker", data: { date_format: 'yyyy-mm-dd', date: @server.patch_at } do %>
+            <%= f.input_field :patch_at, as: :string, class: 'form-control' %>
+            <%= content_tag :span, class: 'input-group-addon' do %>
+                <i class="fa fa-calendar"></i>
+            <% end %>
+        <% end %>
+    <% end %>
+    <%= f.input :patch_period, wrapper: :small_input do %>
+        <%= f.input_field :patch_period, class: 'form-control' %>
+        <%= content_tag :span, class: 'input-group-addon' do %>
+            <%= f.input_field :patch_period_unit %>
+        <% end %>
+    <% end %>
+    <%= f.input :patch_out_of_band, wrapper: :boolean %>
+    <%= f.input :managed, wrapper: :boolean %>
+    <%= f.input :state, collection: @server.class.state_machine.states.map(&:name), input_html: { class: 'select-chosen' }, include_blank: false, wrapper: :small_input %>
+
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= f.button :submit, 'Save', data: { disable_with: 'Saving...' }, id: 'server_submit', class: 'btn btn-primary' %>
+        </div>
+    </div>
+<% end %>

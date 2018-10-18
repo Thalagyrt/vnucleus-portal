@@ -1,0 +1,20 @@
+<% content_for :title do %>Rename Account<% end %>
+
+<% content_for :header do %>Rename Account<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Rename', [:edit, :users, account] %></li>
+<% end %>
+
+<%= simple_form_for @account, url: [:users, @account], html: { class: 'form-horizontal form-box', id: "edit_account" } do |f| %>
+    <%= f.error_notification %>
+
+    <%= f.input :entity_name, wrapper: :medium_input %>
+    <%= f.input :nickname, wrapper: :medium_input %>
+
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2">
+            <%= f.button :submit, 'Save', data: { disable_with: 'Saving...' }, id: 'server_submit', class: 'btn btn-primary' %>
+        </div>
+    </div>
+<% end %>

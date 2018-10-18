@@ -1,0 +1,59 @@
+<% content_for :title do %>Event Log<% end %>
+
+<% content_for :header do %>Event Log<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Event Log', [:admin, @account, :events] %></li>
+<% end %>
+
+<table id="events" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Category</th>
+        <th class="hidden-xs">User</th>
+        <th>Entity</th>
+        <th>Message</th>
+        <th class="hidden-xs">IP Address</th>
+        <th>Date</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% events.each do |event| %>
+        <tr>
+            <td><%= event.to_param %></td>
+            <td><%= event.render_category %></td>
+            <td class="hidden-xs"><%= event.link_user_name :admin %></td>
+            <td><%= event.link_entity :admin %></td>
+            <td><%= event.render_message %></td>
+            <td class="hidden-xs"><%= event.render_ip_address %></td>
+            <td><%= event.render_created_at %></td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#events').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[6, "desc"]],
+                "aoColumns": [
+                    null,
+                    null,
+                    {"sType": "raw-string"},
+                    {"sType": "raw-string"},
+                    null,
+                    {"sType": "ip-address"},
+                    {"sType": "raw-numeric"},
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

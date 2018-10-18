@@ -1,0 +1,52 @@
+<% content_for :title do %>Visits<% end %>
+
+<% content_for :header do %>Visits<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Analytics', [:admin, :analytics] %></li>
+    <li><%= link_to 'Visits', [:admin, :visits] %></li>
+<% end %>
+
+<table id="visits" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th class="col-md-1">#</th>
+        <th class="col-md-2">User</th>
+        <th class="col-md-1 hidden-xs">IP</th>
+        <th class="col-md-2 hidden-xs">Landing Page</th>
+        <th class="col-md-2 hidden-xs">Referrer</th>
+        <th class="col-md-2 hidden-xs">UTM Data</th>
+        <th class="col-md-2">Time</th>
+    </tr>
+    </thead>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#visits').dataTable({
+                "sAjaxSource": "<%= escape_javascript url_for([:admin, :visits, format: :json]) %>",
+                "bDestroy": true,
+                "bServerSide": true,
+                "aaSorting": [[6, "desc"]],
+                "aoColumns": [
+                    {"mDataProp": "id"},
+                    {"mDataProp": "user", "bSortable": false},
+                    {"mDataProp": "ip", "bSortable" : false, "sClass": "hidden-xs"},
+                    {"mDataProp": "landing_page", "bSortable": false, "sClass": "hidden-xs"},
+                    {"mDataProp": "referrer", "bSortable": false, "sClass": "hidden-xs"},
+                    {"mDataProp": "utm_data", "bSortable": false, "sClass": "hidden-xs"},
+                    {"mDataProp": "created_at"},
+                ],
+                "fnDrawCallback": function() {
+                    $('[data-toggle="popover"], .enable-popover').popover({container: 'body', animation: false});
+                }
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

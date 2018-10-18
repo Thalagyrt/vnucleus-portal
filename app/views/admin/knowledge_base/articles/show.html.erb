@@ -1,0 +1,52 @@
+<% content_for :title do %><%= article.to_s %><% end %>
+
+<% content_for :header do %>
+    View Article
+
+    <div class="header-controls">
+        <%= article.render_status %>
+    </div>
+<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Knowledge Base', [:admin, :knowledge_base, :articles] %></li>
+    <li><%= link_to article.to_s, [:admin, :knowledge_base, article] %></li>
+<% end %>
+
+<div class="container">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                <li>
+                    <%= link_to [:edit, :admin, :knowledge_base, article] do %>
+                        <i class="fa fa-pencil"></i> Edit Article
+                    <% end %>
+                </li>
+                <li>
+                    <%= link_to [:admin, :knowledge_base, article], method: :delete, data: { confirm: 'Are you sure you want to delete this article?' } do %>
+                        <i class="fa fa-times"></i> Delete Article
+                    <% end %>
+                </li>
+                <% if article.published? %>
+                    <li>
+                        <%= link_to [:knowledge_base, article], target: :blank do %>
+                            <i class="fa fa-eye"></i> View In Frontend
+                        <% end %>
+                    </li>
+                <% end %>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="kb-article">
+        <h1 class="page-header">
+            <%= article.link_to_s :admin %>
+        </h1>
+        <div class="content">
+            <%= article.render_body %>
+        </div>
+        <div class="footer">
+            Last updated <%= article.render_updated_at %> | <%= article.render_tag_list %>
+        </div>
+    </div>
+</div>

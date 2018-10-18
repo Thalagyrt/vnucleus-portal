@@ -1,0 +1,27 @@
+class UpdateEventLogs < ActiveRecord::Migration
+  def up
+    execute "UPDATE accounts_events SET message='server_termination_requested' WHERE message ILIKE '%cancellation requested%'"
+    execute "UPDATE accounts_events SET message='server_termination_requested' WHERE message ILIKE '%cancellation submitted%'"
+    execute "UPDATE accounts_events SET message='credit_card_updated' WHERE message ILIKE '%credit card updated%'"
+    execute "UPDATE accounts_events SET message='server_confirmed' WHERE message ILIKE '%order submitted%'"
+    execute "UPDATE accounts_events SET message='payment_received' WHERE message ILIKE '%payment received%'"
+    execute "UPDATE accounts_events SET message='payment_failed' WHERE message ILIKE '%payment failed%'"
+    execute "UPDATE accounts_events SET message='root_password_viewed' WHERE message ILIKE '%root password%'"
+    execute "UPDATE accounts_events SET message='server_billed' WHERE message ILIKE '%server billed%'"
+    execute "UPDATE accounts_events SET message='root_password_viewed' WHERE message ILIKE '%root password%'"
+    execute "UPDATE accounts_events SET message='server_booted' WHERE message ILIKE '%server booted%'"
+    execute "UPDATE accounts_events SET message='server_rebooted' WHERE message ILIKE '%server rebooted%'"
+    execute "UPDATE accounts_events SET message='server_shut_down' WHERE message ILIKE '%server shut down%'"
+    execute "UPDATE accounts_events SET message='server_terminated' WHERE message ILIKE '%server cancelled%'"
+    execute "UPDATE accounts_events SET message='server_terminated' WHERE message ILIKE '%server terminated%'"
+    execute "UPDATE accounts_events SET message='server_details_updated' WHERE message ILIKE '%details updated%'"
+    execute "UPDATE accounts_events SET message='server_suspended' WHERE message ILIKE '%server suspended%'"
+    execute "UPDATE accounts_events SET message='server_unsuspended' WHERE message ILIKE '%server unsuspended%'"
+    execute "UPDATE accounts_events SET message='server_booted' WHERE message ILIKE '%server booted%'"
+    execute "UPDATE accounts_events SET message='server_provisioned' WHERE message ILIKE '%server provisioned%'"
+    execute "UPDATE accounts_events SET message='server_termination_requested' WHERE message ILIKE '%termination requested%'"
+    execute "DELETE from accounts_events WHERE message ILIKE '%viewed server%'"
+    execute "DELETE from accounts_events WHERE message ILIKE '%ticket%'"
+    execute "DELETE from accounts_events WHERE message ILIKE '%statement%'"
+  end
+end

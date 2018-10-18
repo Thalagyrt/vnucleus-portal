@@ -1,0 +1,10 @@
+Hi <%= @user.greeting %>,
+
+<%= @announcement.body %>
+
+Cheers,
+James, Taylor, and Kevin at vNucleus
+
+To help protect the security of your account, this mailbox is not monitored for replies. If you need assistance, please open a support ticket in our client area.
+
+<%= @announcement.render_unsubscribe(@user) %>

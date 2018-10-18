@@ -1,0 +1,71 @@
+<% content_for :title do %>Account Invitations<% end %>
+
+<% content_for :header do %>Account Invitations<% end %>
+
+<% content_for :breadcrumbs do %>
+    <li><%= link_to 'Invitations', [:users, @account, :invites] %></li>
+<% end %>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li>
+                <%= link_to [:new, :users, @account, :invite] do %>
+                    <i class="fa fa-plus-circle"></i> Invite User
+                <% end %>
+            </li>
+            <li>
+                <%= link_to [:users, @account, :memberships] do %>
+                    <i class="fa fa-users"></i> View Memberships
+                <% end %>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<table id="invites" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Email</th>
+        <th class="hidden-xs">Roles</th>
+        <th class="hidden-xs">Sent</th>
+        <th class="text-center"><i class="icon-bolt"></i> Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% invites.each do |invite| %>
+        <tr>
+            <td><%= invite.email %></td>
+            <td class="hidden-xs"><%= invite.render_roles %></td>
+            <td class="hidden-xs"><%= invite.render_created_at %></td>
+            <td class="text-center">
+                <%= link_to [:users, @account, invite], id: "remove_invite_#{invite.id}", class: 'btn btn-sm btn-danger', method: :delete, data: { confirm: "Are you sure you want to remove #{invite.email}'s invitation?", confirm_button: 'Remove' } do %>
+                    <i class="fa fa-times"></i>
+                <% end %>
+            </td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<% content_for :javascript do %>
+    <script type="text/javascript">
+        $(function() {
+            webApp.datatables();
+
+            $('#invites').dataTable({
+                "bDestroy": true,
+                "aaSorting": [[0, "desc"]],
+                "aoColumns": [
+                    null,
+                    null,
+                    null,
+                    { "bSortable": false },
+                ]
+            });
+
+            $('.dataTables_filter input').addClass('form-control').attr('placeholder', 'Search');
+            $('.dataTables_length select').addClass('form-control');
+        });
+    </script>
+<% end %>

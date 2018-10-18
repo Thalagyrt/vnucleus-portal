@@ -1,0 +1,18 @@
+<% if updates.present? %>
+    $("#updates_container .ajax-spinner").hide();
+
+    Ticket.minimumSequence = <%= updates.maximum(:sequence) + 1 %>;
+    $("#updates_container").append("<%= escape_javascript(render(partial: 'update', collection: updates)) %>");
+    <% if ticket.open? %>
+        $('#open_ticket_buttons').show();
+        $('#closed_ticket_buttons').hide();
+    <% else %>
+        $('#open_ticket_buttons').hide();
+        $('#closed_ticket_buttons').show();
+    <% end %>
+
+    $("#ticket_status").html("<%= escape_javascript(ticket.render_status) %>");
+    $("#ticket_priority").html("<%= escape_javascript(ticket.render_priority) %>");
+
+    $("span.user .badge").tooltip();
+<% end %>

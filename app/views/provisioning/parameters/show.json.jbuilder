@@ -1,0 +1,2 @@
+json.root_password server.root_password
+json.hostname server.hostname

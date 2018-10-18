@@ -1,0 +1,6 @@
+$("#update_form_container").html("<%= escape_javascript(render(partial: 'form')) %>");
+$("#preview_container").html("");
+fetchUpdates();
+$('html, body').animate({
+    scrollTop: $("#latest").offset().top
+}, 200);

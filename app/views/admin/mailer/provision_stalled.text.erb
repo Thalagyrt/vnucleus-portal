@@ -1,0 +1,9 @@
+The provision of server <%= @server.to_s%> on account <%= @account.to_s %> has stalled! Please take immediate action!
+
+Hostname: <%= @server.hostname %>
+Location: <%= @server.cluster_name %>
+Plan: <%= @server.plan_name %>
+Price: <%= @server.render_amount_plaintext %>/mo
+Operating System: <%= @server.template_name %>
+
+You can view this server at <%= admin_account_solus_server_url(@server.account, @server) %>

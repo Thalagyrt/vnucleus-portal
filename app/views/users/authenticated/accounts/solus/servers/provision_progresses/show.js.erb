@@ -1,0 +1,7 @@
+if (Provisioner.state != "<%= server.state %>") {
+    Provisioner.state = "<%= server.state %>";
+    clearTimeout(Provisioner.timeout);
+
+    $("#state").html("<%= escape_javascript(server.render_state) %>");
+    <%= render server.state %>
+}

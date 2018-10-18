@@ -1,0 +1,41 @@
+<div class="form-group">
+    <div class="col-md-2">
+        <p class="server-builder-hint hidden-sm hidden-xs" id="service-level-hint">
+            <small>
+                Choose A Service Level <i class="fa fa-arrow-right"></i>
+            </small>
+        </p>
+    </div>
+    <div class="col-md-10">
+        <table class="table plans">
+            <thead>
+            <tr>
+                <th class="col-md-3">Service Level</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr class="cursor-pointer" onclick="selectManaged(<%= @cluster.id %>, 'true');">
+                    <td><label class="radio"><input id="server_form_managed_true" name="managed" type="radio" value="true"> Managed</label></td>
+                    <td>
+                        <p><span class="brand">v<strong>Nucleus</strong></span> will proactively monitor and manage your server 24/7 to ensure it's running at its best.</p>
+                        <p class="remove-margin"><span class="brand">v<strong>Nucleus</strong></span> <strong>Managed Includes:</strong></p>
+                        <ul class="fa-ul">
+                            <li><i class="fa fa-check text-success"></i> 24/7 Phone and Ticket Support</li>
+                            <li><i class="fa fa-check text-success"></i> 24/7 Service Monitoring and Restoration</li>
+                            <li><i class="fa fa-check text-success"></i> Proactive Patch Management</li>
+                            <li><i class="fa fa-check text-success"></i> Managed Off-Site Backups</li>
+                            <li><i class="fa fa-check text-success"></i> Initial and Ongoing Security Hardening</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr class="cursor-pointer" onclick="selectManaged(<%= @cluster.id %>, 'false');">
+                    <td><label class="radio"><input id="server_form_managed_false" name="managed" type="radio" value="false"> Self-Managed</label></td>
+                    <td>
+                        <p><span class="brand">v<strong>Nucleus</strong></span> will help you get up and running, but you are responsible for ongoing management of your server.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
